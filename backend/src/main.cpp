@@ -7,7 +7,7 @@
 #include "../logs/include/utils.h"
 
 int main() {
-    /*
+    
     // Initialize resources and read files
     if (!loadUtterances("data/Utterances.txt")) {
         handleFileError("Utterances.txt");
@@ -27,6 +27,7 @@ int main() {
             showGoodbye();
             break;
         }
+        
         // Core chat logic (menu navigation and plan display)
         if (!handleUserInput(userInput)) {
             handleUnknownInput(userInput);
@@ -34,6 +35,5 @@ int main() {
     }
 
     cleanupResources(); // if you manage dynamic memory/files
-    */
     return 0;
 }

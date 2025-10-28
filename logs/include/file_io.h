@@ -1,24 +1,92 @@
-using namespace std;
 #ifndef FILE_IO_H
 #define FILE_IO_H
 
 #include <vector>
 #include <string>
+using namespace std;
 
-// classes for loaded data
-class Utterance { string userInput; string response; };
-class LoanPlan { string area, type, amount, terms ; };
+// Stores a user input phrase and its bot response
+class Utterance
+{
+private:
+    string userInput;
+    string response;
 
-// Global vectors to share in multiple modules
+public:
+    string getUserInput()
+    {
+        return userInput;
+    }
+
+    string getResponse()
+    {
+        return response;
+    }
+
+    void setUserInput(string input)
+    {
+        userInput = input;
+    }
+
+    void setResponse(string response)
+    {
+        this->response = response;
+    }
+};
+
+// Stores a loan plan (for later)
+class LoanPlan
+{
+private:
+    string area, type, amount, terms;
+
+public:
+    string getArea()
+    {
+        return area;
+    }
+
+    string getType()
+    {
+        return type;
+    }
+
+    string getAmount()
+    {
+        return amount;
+    }
+
+    string getTerms()
+    {
+        return terms;
+    }
+
+    void setArea(string area)
+    {
+        this->area = area;
+    }
+
+    void setType(string type)
+    {
+        this->type = type;
+    }
+
+    void setAmount(string amount)
+    {
+        this->amount = amount;
+    }
+
+    void setTerms(string terms)
+    {
+        this->terms = terms;
+    }
+};
+
+// Declare shared data
 extern vector<Utterance> utterancesList;
 extern vector<LoanPlan> loanPlans;
 
-// Loads utterances from text file into utterancesList vector
-bool loadUtterances(const string& filePath);
+bool loadUtterances(const string &filePath);
+bool loadLoanPlans(const string &filePath);
 
-// Loads loan plan data (such as from Home.txt) into loanPlans vector
-bool loadLoanPlans(const string& filePath);
-
-
-
-#endif // FILE_IO_H
+#endif
