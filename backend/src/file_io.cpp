@@ -1,4 +1,4 @@
-#include "../include/file_io.h"
+#include "../../logs/include/file_io.h"
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -33,18 +33,19 @@ bool loadUtterances(const string &filePath)
                 foundHash = true;
                 continue;
             }
+
             if (!foundHash)
                 inp += line[i];
             else
                 out += line[i];
         }
-        
+
         if (!inp.empty() || !out.empty())
         {
-            Utterance u;
-            u.userInput = inp;
-            u.response = out;
-            utterancesList.push_back(u);
+            Utterance newUtterance;
+            newUtterance.setUserInput(inp);
+            newUtterance.setResponse(out);
+            utterancesList.push_back(newUtterance);
         }
     }
     utterancesFile.close();
