@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
+#include <iostream>
 using namespace std;
 
 // Stores a user input phrase and its bot response
@@ -11,26 +13,25 @@ class Utterance
 private:
     string userInput;
     string response;
+    unordered_map<string, string> responseTable;
 
 public:
-    string getUserInput()
+    void setResponse(string userInput, string response)
     {
-        return userInput;
+        responseTable[userInput] = response;
     }
 
-    string getResponse()
+    string getResponse(string userInput)
     {
-        return response;
-    }
-
-    void setUserInput(string input)
-    {
-        userInput = input;
-    }
-
-    void setResponse(string response)
-    {
-        this->response = response;
+        if (responseTable.count(userInput))
+        {
+            return responseTable[userInput];
+        }
+        else // if  no user input then standard  reply is given.
+        {
+            userInput = "*";
+            return responseTable[userInput];
+        }
     }
 };
 
@@ -38,55 +39,81 @@ public:
 class LoanPlan
 {
 private:
-    string area, type, amount, terms;
+    string size, installments, price, downPayment;
 
 public:
-    string getArea()
+    void setprice(string price)
     {
-        return area;
+        this->price = price;
+    }
+    void setSize(string size)
+    {
+        this->size = size;
+    }
+    void setInstallments(string installments)
+    {
+        this->installments = installments;
+    }
+    void setDownPayment(string downPayment)
+    {
+        this->downPayment = downPayment;
     }
 
-    string getType()
+    string getprice()
     {
-        return type;
+        return this->price;
     }
-
-    string getAmount()
+    string getSize()
     {
-        return amount;
+        return this->size;
     }
-
-    string getTerms()
+    string getInstallments()
     {
-        return terms;
+        return this->installments;
     }
-
-    void setArea(string area)
+    string getDownPayment()
     {
-        this->area = area;
+        return this->downPayment;
     }
-
-    void setType(string type)
+    void display()
     {
-        this->type = type;
-    }
-
-    void setAmount(string amount)
-    {
-        this->amount = amount;
-    }
-
-    void setTerms(string terms)
-    {
-        this->terms = terms;
+        cout << "Size: " << this->size << " ";
+        cout << "Installments: " << this->installments << " ";
+        cout << "Price: " << this->price << " ";
+        cout << "DownPayment: " << this->downPayment << " ";
+        cout << endl;
     }
 };
+class LoanPlanManager
+{
+private:
+    string area;
+    unordered_map<string, vector<LoanPlan>> loanTable;
 
-// Declare shared data
-extern vector<Utterance> utterancesList;
-extern vector<LoanPlan> loanPlans;
-
-bool loadUtterances(const string &filePath);
-bool loadLoanPlans(const string &filePath);
+public:
+    void setArea(string area, LoanPlan &lp)
+    {
+        loanTable[area].push_back(lp);
+    }
+    void displayLoanPlan(string area)
+    {
+        if (loanTable.count(area))
+        {
+            for (int i = 0; i < loanTable[area].size(); i++)
+            {
+                cout << "Area: " << area << " ";
+                loanTable[area][i].display();
+            }
+        }
+        else
+        {
+            cout <<"No such area found."<<endl;
+        }
+    }
+};
+bool loadUtterances(string filePath);
+bool loadLoanPlans(string filePath);
+extern Utterance uttrObj;
+extern LoanPlanManager LoanPlanManagerObj;
 
 #endif

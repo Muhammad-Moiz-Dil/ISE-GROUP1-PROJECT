@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build ISE Chatbot",
+      "type": "shell",
+      "command": "C:/msys64/ucrt64/bin/g++.exe",
+      "args": [
+        "-Wall",
+        "-Wextra",
+        "-g3",
+        // Saare .cpp files ko yahan include karo:
+        "${workspaceFolder}/backend/src/main.cpp",
+        "${workspaceFolder}/backend/src/file_io.cpp",
+        "${workspaceFolder}/backend/src/chatbot.cpp",
+        "${workspaceFolder}/backend/src/error_handling.cpp",
+        "${workspaceFolder}/backend/src/utils.cpp",
+        
+        // Header files ka search path:
+        "-I",
+        "${workspaceFolder}/logs/include",
+        
+        // Output file:
+        "-o",
+        "${workspaceFolder}/backend/src/output/main.exe"
+      ],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}

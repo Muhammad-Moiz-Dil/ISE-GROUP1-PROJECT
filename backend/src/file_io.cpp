@@ -1,61 +1,68 @@
 #include "../../logs/include/file_io.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
+#include <unordered_map>
 using namespace std;
 
-// Make space for global vectors
-vector<Utterance> utterancesList;
-vector<LoanPlan> loanPlans;
-
-bool loadUtterances(const string &filePath)
+Utterance uttrObj;
+LoanPlanManager LoanPlanManagerObj;
+bool loadUtterances(string filePath)
 {
-    utterancesList.clear();
-
-    ifstream utterancesFile;
-    utterancesFile.open(filePath.c_str());
-
-    if (!utterancesFile)
+    ifstream readData;
+    readData.open(filePath);
+    if (!readData.is_open())
     {
-        cout << "Error: Could not open " << filePath << endl;
+        cout << "File not opened." << endl;
         return false;
     }
-
-    string line;
-    while (getline(utterancesFile, line))
+    else
     {
-        string inp = "", out = "";
-        bool foundHash = false;
-
-        for (int i = 0; i < line.size(); ++i)
+        string line;
+        while (getline(readData, line))
         {
-            if (!foundHash && line[i] == '#')
-            {
-                foundHash = true;
-                continue;
-            }
+            int pos = line.find('#');
+            string userInput = line.substr(0, pos);
+            string resposne = line.substr(pos + 1);
 
-            if (!foundHash)
-                inp += line[i];
-            else
-                out += line[i];
-        }
-
-        if (!inp.empty() || !out.empty())
-        {
-            Utterance newUtterance;
-            newUtterance.setUserInput(inp);
-            newUtterance.setResponse(out);
-            utterancesList.push_back(newUtterance);
+            uttrObj.setResponse(userInput, resposne);
         }
     }
-    utterancesFile.close();
+    readData.close();
     return true;
 }
-
-// Dummy implementation for completeness (reuse later)
-bool loadLoanPlans(const string &filePath)
+bool loadLoanPlans(string filePath)
 {
-    loanPlans.clear();
-    // Implement similarly later as above
+    ifstream readData;
+    readData.open(filePath);
+    if (!readData.is_open())
+    {
+        cout << "File not opened." << endl;
+        return false;
+    }
+    else
+    {
+        string line;
+        while (getline(readData, line))
+        {
+            stringstream ss(line);
+            string area, size, instStr, priceStr, dpStr;
+
+            getline(ss, area, '#');
+            getline(ss, size, '#');
+            getline(ss, instStr, '#');
+            getline(ss, priceStr, '#');
+            getline(ss, dpStr, '#');
+
+            LoanPlan lp;
+            lp.setSize(size);
+            lp.setDownPayment(dpStr);
+            lp.setInstallments(instStr);
+            lp.setprice(priceStr);
+
+            LoanPlanManagerObj.setArea(area, lp);
+        }
+    }
+    readData.close();
     return true;
 }
