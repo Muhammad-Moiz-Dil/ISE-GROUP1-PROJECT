@@ -3,12 +3,12 @@
 #include <iostream>
 using namespace std;
 
-bool loadUtterances(const string &filePath)
+bool  loadUtterances(string filePath)
 {
     Utterance uttrObj;
     ifstream readData;
 
-    readData.open(filePath);
+    readData.open("Utterances.txt");
     if (!readData.is_open())
     {
         cout << "File not opened." << endl;
@@ -26,10 +26,8 @@ bool loadUtterances(const string &filePath)
             uttrObj.setResponse(userInput,resposne);
         }
     }
+    readData.close();
+    return true;
 }
 
 // Dummy implementation for completeness (reuse later)
-bool loadLoanPlans(const string &filePath)
-{
-    
-}

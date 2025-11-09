@@ -1,11 +1,11 @@
 #include <iostream>
-#include "../../logs/include/file_io.h"
+#include "file_io.h"
 using namespace std;
 
 int main()
 {
     // Load the utterances file into utterancesList at the very start
-    if (!loadUtterances("../data/Utterances.txt"))
+    if (!loadUtterances("Utterances.txt"))
     {
         cout << "Chatbot could not load utterances. Exiting." << endl;
         return 1;

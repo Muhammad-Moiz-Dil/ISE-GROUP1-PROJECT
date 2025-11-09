@@ -79,7 +79,7 @@ public:
         this->terms = terms;
     }
 };
-bool loadUtterances(const string &filePath);
+bool loadUtterances(string filePath);
 bool loadLoanPlans(const string &filePath);
 
 #endif
