@@ -7,6 +7,7 @@ using namespace std;
 
 Utterance uttrObj;
 LoanPlanManager LoanPlanManagerObj;
+
 bool loadUtterances(string filePath)
 {
     ifstream readData;
@@ -31,6 +32,7 @@ bool loadUtterances(string filePath)
     readData.close();
     return true;
 }
+
 bool loadLoanPlans(string filePath)
 {
     ifstream readData;
