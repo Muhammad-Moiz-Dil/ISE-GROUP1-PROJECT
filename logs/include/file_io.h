@@ -6,9 +6,14 @@ using namespace std;
 #include <string>
 
 // classes for loaded data
-class Utterance { string userInput; string response; };
-class LoanPlan { string area, type, amount, terms ; };
-
+class Utterance 
+{ 
+    string userInput; string response; 
+};
+class LoanPlan 
+{ 
+    string area, type, amount, terms ; 
+};
 // Global vectors to share in multiple modules
 extern vector<Utterance> utterancesList;
 extern vector<LoanPlan> loanPlans;
