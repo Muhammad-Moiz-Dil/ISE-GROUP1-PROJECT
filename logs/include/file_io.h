@@ -19,7 +19,7 @@ public:
         responseTable[userInput]  = response;
     }
 
-    string getResponse(string userInput,  string response)
+    string getResponse(string userInput)
     {
         if(responseTable.count(userInput))
         {
@@ -27,7 +27,8 @@ public:
         }
         else      //if  no user input then standard  reply is given.
         {
-
+            userInput = "*";
+            return responseTable[userInput];
         }
     }
 };
