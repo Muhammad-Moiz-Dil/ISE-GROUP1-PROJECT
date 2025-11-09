@@ -1,6 +1,5 @@
 #include <iostream>
 #include "file_io.h"
-
 using namespace std;
 
 int main()
