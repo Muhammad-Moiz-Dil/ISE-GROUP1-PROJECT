@@ -1,29 +1,84 @@
-using namespace std;
 #ifndef FILE_IO_H
 #define FILE_IO_H
 
 #include <vector>
 #include <string>
+#include <unordered_map>
+using namespace std;
 
-// classes for loaded data
-class Utterance 
-{ 
-    string userInput; string response; 
+// Stores a user input phrase and its bot response
+class Utterance
+{
+private:
+    string userInput;
+    string response;
+    unordered_map<string,string> responseTable;
+public:
+    void setResponse(string userInput,  string response)
+    {
+        responseTable[userInput]  = response;
+    }
+
+    string getResponse(string userInput,  string response)
+    {
+        if(responseTable.count(userInput))
+        {
+            return responseTable[userInput];
+        }
+        else      //if  no user input then standard  reply is given.
+        {
+
+        }
+    }
 };
-class LoanPlan 
-{ 
-    string area, type, amount, terms ; 
+
+// Stores a loan plan (for later)
+class LoanPlan
+{
+private:
+    string area, type, amount, terms;
+public:
+    string getArea()
+    {
+        return area;
+    }
+
+    string getType()
+    {
+        return type;
+    }
+
+    string getAmount()
+    {
+        return amount;
+    }
+
+    string getTerms()
+    {
+        return terms;
+    }
+
+    void setArea(string area)
+    {
+        this->area = area;
+    }
+
+    void setType(string type)
+    {
+        this->type = type;
+    }
+
+    void setAmount(string amount)
+    {
+        this->amount = amount;
+    }
+
+    void setTerms(string terms)
+    {
+        this->terms = terms;
+    }
 };
-// Global vectors to share in multiple modules
-extern vector<Utterance> utterancesList;
-extern vector<LoanPlan> loanPlans;
+bool loadUtterances(const string &filePath);
+bool loadLoanPlans(const string &filePath);
 
-// Loads utterances from text file into utterancesList vector
-bool loadUtterances(const string& filePath);
-
-// Loads loan plan data (such as from Home.txt) into loanPlans vector
-bool loadLoanPlans(const string& filePath);
-
-
-
-#endif // FILE_IO_H
+#endif

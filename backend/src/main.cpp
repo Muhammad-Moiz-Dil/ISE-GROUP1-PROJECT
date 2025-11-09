@@ -1,39 +1,52 @@
-// The entry point for the CLI program. Calls initialization, sets up the loop, and brings together all logic.
-
 #include <iostream>
-#include "../logs/include/chatbot.h"
-#include "../logs/include/error_handling.h"
-#include "../logs/include/file_io.h"
-#include "../logs/include/utils.h"
+#include "../../logs/include/file_io.h"
+using namespace std;
 
-int main() {
-    /*
-    // Initialize resources and read files
-    if (!loadUtterances("data/Utterances.txt")) {
-        handleFileError("Utterances.txt");
-        return 1; // Clean exit on error
-    }
-
-    if (!loadLoanPlans("data/Home.txt")) {
-        handleFileError("Home.txt");
+int main()
+{
+    // Load the utterances file into utterancesList at the very start
+    if (!loadUtterances("../data/Utterances.txt"))
+    {
+        cout << "Chatbot could not load utterances. Exiting." << endl;
         return 1;
     }
 
-    // Main chatbot loop
-    showWelcome();
-    while (true) {
-        std::string userInput = getUserInput();
-        if (userInput == "X" || userInput == "x") {
-            showGoodbye();
+    cout << "Chatbot ready! Type your message (X to exit)." << endl;
+
+    // Main Chat Loop
+    while (true)
+    {
+        cout << "> ";
+        string userInput;
+        getline(cin, userInput);
+
+        // Exit condition
+        if (userInput == "X" || userInput == "x")
             break;
+
+        // Find a matching response
+        bool found = false;
+        string defaultResponse = "";
+        for (int i = 0; i < utterancesList.size(); ++i)
+        {
+            // Store defaultResponse if trigger is '*'
+            if (utterancesList[i].getUserInput() == "*")
+                defaultResponse = utterancesList[i].getResponse();
+
+            // Direct match
+            if (utterancesList[i].getUserInput() == userInput)
+            {
+                cout << utterancesList[i].getResponse() << endl;
+                found = true;
+                break;
+            }
         }
-        // Core chat logic (menu navigation and plan display)
-        if (!handleUserInput(userInput)) {
-            handleUnknownInput(userInput);
-        }
+
+        // If no match, use defaultResponse
+        if (!found && defaultResponse != "")
+            cout << defaultResponse << endl;
     }
 
-    cleanupResources(); // if you manage dynamic memory/files
-    */
+    cout << "Chatbot session ended." << endl;
     return 0;
 }
