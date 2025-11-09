@@ -3,17 +3,17 @@
 
 using namespace std;
 
-// Build Command: g++ -I../../logs/include main.cpp file_io.cpp -o main.exe; if ($?) { .\main.exe }
+// Build Command (run while in src): g++ -I../../logs/include main.cpp file_io.cpp -o main.exe; if ($?) { .\main.exe }
 
 int main()
 {
     // Load the utterances file into utterancesList at the very start
-    if (!loadUtterances("C:/Users/talha/Documents/Work_Place/University_FAST/Semester-3/Intro To Software Engineering/ISE-Project/backend/src/output/Utterances.txt"))
+    if (!loadUtterances("output/Utterances.txt"))
     {
         cout << "Chatbot could not load utterances. Exiting." << endl;
         return 1;
     }
-    if (!loadLoanPlans("C:/Users/talha/Documents/Work_Place/University_FAST/Semester-3/Intro To Software Engineering/ISE-Project/backend/src/output/Home.txt"))
+    if (!loadLoanPlans("output/Home.txt"))
     {
         cout << "Chatbot could not load home plans. Exiting." << endl;
         return 1;
