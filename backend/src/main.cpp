@@ -5,7 +5,7 @@ using namespace std;
 int main()
 {
     // Load the utterances file into utterancesList at the very start
-    if (!loadUtterances("Utterances.txt"))
+    if (!loadUtterances("C:/Users/Rafay Dil/Desktop/ISE PROJECT/backend/src/output/Utterances.txt"))
     {
         cout << "Chatbot could not load utterances. Exiting." << endl;
         return 1;

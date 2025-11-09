@@ -8,7 +8,7 @@ bool  loadUtterances(string filePath)
     Utterance uttrObj;
     ifstream readData;
 
-    readData.open("Utterances.txt");
+    readData.open(filePath);
     if (!readData.is_open())
     {
         cout << "File not opened." << endl;
