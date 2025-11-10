@@ -4,10 +4,15 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include <iostream>
-using namespace std;
+using std::string;
+using std::vector;
+using std::unordered_map;
 
-// Stores a user input phrase and its bot response
+/*
+ * Stores user input phrases and their corresponding bot responses for quick lookup.
+ * Uses an unordered_map for fast retrieval based on user input strings.
+ * Provides fallback response (*) when no match is found.
+*/
 class Utterance
 {
 private:
@@ -16,74 +21,38 @@ private:
     unordered_map<string, string> responseTable;
 
 public:
-    void setResponse(string userInput, string response)
-    {
-        responseTable[userInput] = response;
-    }
-
-    string getResponse(string userInput)
-    {
-        if (responseTable.count(userInput))
-        {
-            return responseTable[userInput];
-        }
-        else // if  no user input then standard  reply is given.
-        {
-            userInput = "*";
-            return responseTable[userInput];
-        }
-    }
+    void setResponse(string userInput, string response);
+    string getResponse(string userInput);
 };
 
-// Stores a loan plan (for later)
+/*
+ * Represents a single loan plan with details like size, installments, price, and down payment.
+ * Used to store and display loan information for different property areas.
+*/
 class LoanPlan
 {
 private:
-    string size, installments, price, downPayment;
+    string size;
+    string installments;
+    string price;
+    string downPayment;
 
 public:
-    void setprice(string price)
-    {
-        this->price = price;
-    }
-    void setSize(string size)
-    {
-        this->size = size;
-    }
-    void setInstallments(string installments)
-    {
-        this->installments = installments;
-    }
-    void setDownPayment(string downPayment)
-    {
-        this->downPayment = downPayment;
-    }
-
-    string getprice()
-    {
-        return this->price;
-    }
-    string getSize()
-    {
-        return this->size;
-    }
-    string getInstallments()
-    {
-        return this->installments;
-    }
-    string getDownPayment()
-    {
-        return this->downPayment;
-    }
-    void display()
-    {
-        cout << "Size: " << this->size << " ";
-        cout << "Installments: " << this->installments << " ";
-        cout << "Price: " << this->price << " ";
-        cout << "DownPayment: " << this->downPayment << " ";
-        cout << endl;
-    }
+    void setprice(string price);
+    void setSize(string size);
+    void setInstallments(string installments);
+    void setDownPayment(string downPayment);
+    string getprice();
+    string getSize();
+    string getInstallments();
+    string getDownPayment();
+    void display();
 };
+
+/*
+ * Manages multiple loan plans organized by area using an unordered_map.
+ * Allows storage and retrieval of loan plans for specific areas.
+*/
 class LoanPlanManager
 {
 private:
@@ -91,28 +60,13 @@ private:
     unordered_map<string, vector<LoanPlan>> loanTable;
 
 public:
-    void setArea(string area, LoanPlan &lp)
-    {
-        loanTable[area].push_back(lp);
-    }
-    void displayLoanPlan(string area)
-    {
-        if (loanTable.count(area))
-        {
-            for (int i = 0; i < loanTable[area].size(); i++)
-            {
-                cout << "Area: " << area << " ";
-                loanTable[area][i].display();
-            }
-        }
-        else
-        {
-            cout <<"No such area found."<<endl;
-        }
-    }
+    void setArea(string area, LoanPlan &lp);
+    void displayLoanPlan(string area);
 };
+
 bool loadUtterances(string filePath);
 bool loadLoanPlans(string filePath);
+
 extern Utterance uttrObj;
 extern LoanPlanManager LoanPlanManagerObj;
 

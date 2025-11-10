@@ -1,0 +1,36 @@
+// Tests whether data files load correctly into memory
+
+Test ID:       FL-001
+Purpose:       Load Utterances.txt successfully
+Input:         Run program with valid Utterances.txt
+Expected:      Program starts without error, all responses available
+
+Actual:        Program runs without error
+Result:        Pass        
+
+---------------------------------------------------------
+Test ID:       FL-002
+Purpose:       Handle missing Utterances.txt
+Input:         Delete or rename Utterances.txt, then run program
+Expected:      Error message: "File not opened." Program exits
+
+Actual:        Output: "File not opened.\n", "Chatbot could not load utterances. Exiting."
+Result:        Pass
+
+---------------------------------------------------------
+Test ID:       FL-003
+Purpose:       Load Home.txt successfully
+Input:         Run program with valid Home.txt
+Expected:      Program starts, loan data loaded
+
+Actual:        Program runs without error
+Result:        Pass        
+
+---------------------------------------------------------
+Test ID:       FL-004
+Purpose:       Handle missing Home.txt
+Input:         Delete or rename Home.txt, then run program
+Expected:      Error message: "File not opened." Program exits
+
+Actual:        Output: "File not opened.\n", "Chatbot could not load home plans. Exiting."
+Result:        Pass
