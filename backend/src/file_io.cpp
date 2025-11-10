@@ -15,87 +15,87 @@ using std::ifstream;
 Utterance uttrObj;
 LoanPlanManager LoanPlanManagerObj;
 
-// //  === Utterance class methods ===
-// /*
-//  * Stores a user input and its corresponding chatbot response.
-//  * @param userInput: the phrase or keyword the user types.
-//  * @param response: the bot's reply to that input.
-//  * @return: void.
-// */
-// void Utterance::setResponse(string userInput, string response)
-// {
-//     responseTable[userInput] = response;
-// }
+//  === Utterance class methods ===
+/*
+ * Stores a user input and its corresponding chatbot response.
+ * @param userInput: the phrase or keyword the user types.
+ * @param response: the bot's reply to that input.
+ * @return: void.
+*/
+void Utterance::setResponse(string userInput, string response)
+{
+    responseTable[userInput] = response;
+}
 
-// /*
-//  * Retrieves the chatbot response for a given user input.
-//  * @param userInput: the user's typed message.
-//  * @return: the matching response string, or fallback (*) if not found. "No reply found" as a fallback.
-// */
-// string Utterance::getResponse(string userInput)
-// {
-//     if (responseTable.count(userInput))
-//         return responseTable[userInput];
+/*
+ * Retrieves the chatbot response for a given user input.
+ * @param userInput: the user's typed message.
+ * @return: the matching response string, or fallback (*) if not found. "No reply found" as a fallback.
+*/
+string Utterance::getResponse(string userInput)
+{
+    if (responseTable.count(userInput))
+        return responseTable[userInput];
 
-//     // Fallback to "*"
-//     else if (responseTable.count("*"))
-//         return responseTable["*"];
+    // Fallback to "*"
+    else if (responseTable.count("*"))
+        return responseTable["*"];
         
-//     else
-//         return "[No reply found]";
-// }
+    else
+        return "[No reply found]";
+}
 
-// // LoanPlan class methods
-// void LoanPlan::setprice(string price) { this->price = price; }
-// void LoanPlan::setSize(string size) { this->size = size; }
-// void LoanPlan::setInstallments(string installments) { this->installments = installments; }
-// void LoanPlan::setDownPayment(string downPayment) { this->downPayment = downPayment; }
-// string LoanPlan::getprice() { return price; }
-// string LoanPlan::getSize() { return size; }
-// string LoanPlan::getInstallments() { return installments; }
-// string LoanPlan::getDownPayment() { return downPayment; }
+// LoanPlan class methods
+void LoanPlan::setprice(string price) { this->price = price; }
+void LoanPlan::setSize(string size) { this->size = size; }
+void LoanPlan::setInstallments(string installments) { this->installments = installments; }
+void LoanPlan::setDownPayment(string downPayment) { this->downPayment = downPayment; }
+string LoanPlan::getprice() { return price; }
+string LoanPlan::getSize() { return size; }
+string LoanPlan::getInstallments() { return installments; }
+string LoanPlan::getDownPayment() { return downPayment; }
 
-// void LoanPlan::display()
-// {
-//     cout << "Size: " << size << " ";
-//     cout << "Installments: " << installments << " ";
-//     cout << "Price: " << price << " ";
-//     cout << "DownPayment: " << downPayment << " ";
-//     cout << endl;
-// }
+void LoanPlan::display()
+{
+    cout << "Size: " << size << " ";
+    cout << "Installments: " << installments << " ";
+    cout << "Price: " << price << " ";
+    cout << "DownPayment: " << downPayment << " ";
+    cout << endl;
+}
 
-// // === LoanPlanManager methods ===
-// /*
-//  * Adds a loan plan to the manager under a specific area.
-//  * @param area: the area identifier (e.g., "1", "2").
-//  * @param lp: reference to the LoanPlan object to store.
-//  * @return: void.
-// */
-// void LoanPlanManager::setArea(string area, LoanPlan &lp)
-// {
-//     loanTable[area].push_back(lp);
-// }
+// === LoanPlanManager methods ===
+/*
+ * Adds a loan plan to the manager under a specific area.
+ * @param area: the area identifier (e.g., "1", "2").
+ * @param lp: reference to the LoanPlan object to store.
+ * @return: void.
+*/
+void LoanPlanManager::setArea(string area, LoanPlan &lp)
+{
+    loanTable[area].push_back(lp);
+}
 
-// /*
-//  * Displays all loan plans stored for a given area.
-//  * @param area: the area identifier to look up.
-//  * @return: void.
-// */
-// void LoanPlanManager::displayLoanPlan(string area)
-// {
-//     if (loanTable.count(area))
-//     {
-//         for (int i = 0; i < loanTable[area].size(); i++)
-//         {
-//             cout << "Area: " << area << " ";
-//             loanTable[area][i].display();
-//         }
-//     }
-//     else
-//     {
-//         cout << "No such area found." << endl;
-//     }
-// }
+/*
+ * Displays all loan plans stored for a given area.
+ * @param area: the area identifier to look up.
+ * @return: void.
+*/
+void LoanPlanManager::displayLoanPlan(string area)
+{
+    if (loanTable.count(area))
+    {
+        for (int i = 0; i < loanTable[area].size(); i++)
+        {
+            cout << "Area: " << area << " ";
+            loanTable[area][i].display();
+        }
+    }
+    else
+    {
+        cout << "No such area found." << endl;
+    }
+}
 
 // === file_io methods ===
 /*

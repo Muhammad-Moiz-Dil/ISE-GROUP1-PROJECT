@@ -1,0 +1,81 @@
+// Tests to ensure user-to-response matching works as expected
+
+Test ID:       RL-001
+Purpose:       Match exact greeting ("Hi")
+Input:         Hi
+Expected:      Hello! Please press A if you want to apply for a loan. Press X to exit
+
+Actual:        Output: "Hello! Please press A if you want to apply for a loan. Press X to exit"
+Result:        Pass   
+
+---------------------------------------------------------
+Test ID:       RL-002
+Purpose:       Match exact greeting ("Hello")
+Input:         Hello
+Expected:      Hi! Please press A if you want to apply for a loan. Press X to exit
+
+Actual:        Output: "Hi! Please press A if you want to apply for a loan. Press X to exit"
+Result:        Pass
+
+---------------------------------------------------------
+Test ID:       RL-003
+Purpose:       Fallback for unknown input (wildcard *)
+Input:         random text
+Expected:      Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit
+
+Actual:        Output: "Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit"
+Result:        Pass
+
+---------------------------------------------------------
+Test ID:       RL-004
+Purpose:       Navigate to loan application menu
+Input:         Hi > A
+Expected:      Please select the category you want to apply for. Press H for a home loan...
+
+Actual:        Output: "Please select the category you want to apply for. Press H for a home loan..."
+Result:        Pass 
+
+---------------------------------------------------------
+Test ID:       RL-005
+Purpose:       Select home loan option
+Input:         H
+Expected:      You are applying for a home loan. Please select area. Options are 1, 2, 3, 4
+
+Actual:        Output: "You are applying for a home loan. Please select area. Options are 1, 2, 3, 4" 
+Result:        Pass
+
+---------------------------------------------------------
+Test ID:       RL-006
+Purpose:       Exit program with 'X'
+Input:         X
+Expected:      Program exits, shows goodbye message
+
+Actual:        Output: "CHATBOT SESSION ENDED!"
+Result:        Pass
+
+---------------------------------------------------------
+Test ID:       RL-007
+Purpose:       Handle empty input
+Input:         (press Enter without typing)
+Expected:      Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit
+
+Actual:        Output: "Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit"
+Result:        Pass
+
+---------------------------------------------------------
+Test ID:       RL-008
+Purpose:       Handle twisted inputs
+Input:         A > H
+Expected:      You are applying for a home loan. Please select area. Options are 1, 2, 3, 4
+
+Actual:        Output: ""
+Result:        Fail
+
+---------------------------------------------------------
+Test ID:       RL-009
+Purpose:       Handle twisted inputs
+Input:         H > A > H > A
+Expected:      Please select the category you want to apply for. Press H for a home loan, C for a car loan, S for a scooter loan, P for a personal loan. Press X to exit
+
+Actual:        Output: "No such area found."
+Result:        Fail
