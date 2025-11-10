@@ -30,70 +30,71 @@ int main()
     cout << "\033[1;36m" // Cyan for closing border
          << "=============================================\n";
     cout << "\033[0m\n"; // Reset colors
-
-    // Main Chat Loop
-    while (true)
-    {
+    
+    string state = "MAIN_MENU";  // Track current state
+    
+    while (true) {
         string userInput;
+        cout << "=> ";
         getline(cin, userInput);
-
-        // Exit condition
-        if (userInput == "X" || userInput == "x")
-        {
-            break;
-        }
-
-        // Find a matching response and output it
-        cout << uttrObj.getResponse(userInput) << endl;
-
-        getline(cin, userInput);
-
-        //  if users enters x in between selecting the loan type so it exits.
-        if (userInput == "X" || userInput == "x")
-        {
-            break;
-        }
         
-        // No use of the small case letter check as in txt files Upper case letters are defined only.
-        if (userInput == "A") 
-        {
+        // Exit check
+        if (userInput == "X" || userInput == "x") break;
+        
+        // Handle based on current state
+        if (state == "MAIN_MENU") {
             cout << uttrObj.getResponse(userInput) << endl;
-            getline(cin, userInput);
-
-            if (userInput == "X" || userInput == "x")
-            {
-                break;
-            }
-
-            if (userInput == "H")
-            {
-                cout << uttrObj.getResponse(userInput) << endl;
-                getline(cin, userInput);
-
-                if (userInput == "X" || userInput == "x")
-                {
-                    break;
-                }
-
-                LoanPlanManagerObj.displayLoanPlan(userInput);
-            }
             
-            else if (userInput == "C")
-            {
-                // Increament from Sir will be expected from sir in near Future.
+            if (userInput == "A") {
+                state = "LOAN_CATEGORY";  // Move to next state
             }
-            else if (userInput == "S")
+            else if (userInput == "H")
             {
-                // Increament from Sir will be expected from sir in near Future.
+                state = "HOME_LOAN_AREA";
             }
-            else if (userInput == "P")
+        }
+        if (state == "LOAN_CATEGORY") {
+            if (userInput == "H") {
+                cout << uttrObj.getResponse(userInput) << endl;
+                state = "HOME_LOAN_AREA";
+            }
+            else if (userInput == "C" || userInput == "S" || userInput == "P") {
+                cout << "Coming soon!" << endl;
+                state = "MAIN_MENU";
+            }
+            else {
+                cout << "Invalid input. Please press H, C, S, or P." << endl;
+            }
+        }
+        if (state == "HOME_LOAN_AREA") 
+        {
+            //cout <<"Moiz";
+            string options;
+            getline(cin, options);
+            if(options == "1")
             {
-                // Increament from Sir will be expected from sir in near Future.
+                userInput = "Area 1";
+            }
+            else if(options == "2")
+            {
+                userInput = "Area 2";
+            }
+             else if(options == "3")
+            {
+                userInput = "Area 3";
+            }
+             else if(options == "4")
+            {
+                userInput = "Area 4";
             }
             else
             {
-                cout << "Invalid Input." << endl;
+                cout << "Not a valid Input."<<endl;
+                state = "MAIN_MENU";
+                continue;
             }
+            LoanPlanManagerObj.displayLoanPlan(userInput);
+            state = "MAIN_MENU";  // Go back to start
         }
     }
 

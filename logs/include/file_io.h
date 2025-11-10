@@ -36,16 +36,19 @@ private:
     string installments;
     string price;
     string downPayment;
+    int monthlyInstallments;
 
 public:
     void setprice(string price);
     void setSize(string size);
     void setInstallments(string installments);
     void setDownPayment(string downPayment);
+    void setMonthlyInstallments(int monthlyInstallments);
     string getprice();
     string getSize();
     string getInstallments();
     string getDownPayment();
+    int getMonthlyInstallments();
     void display();
 };
 
