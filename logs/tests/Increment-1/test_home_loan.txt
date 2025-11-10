@@ -1,0 +1,18 @@
+// Tests for displaying home loan data from Home.txt
+
+Test ID:       HL-001
+Purpose:       Display Area 1 loan plans
+Input:         A > H > 1
+Expected:      Shows all 3 loan plans for Area 1 (size, installments, price, down payment)
+
+Actual:        Output: "No such area found."
+Result:        Fail
+
+---------------------------------------------------------
+Test ID:       HL-002
+Purpose:       Handle invalid area input
+Input:         A > H > 99
+Expected:      "No such area found."
+
+Actual:        Output: "Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit"
+Result:        Fail  
