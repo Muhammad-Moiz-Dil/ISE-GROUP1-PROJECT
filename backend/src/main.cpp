@@ -3,17 +3,17 @@
 
 using namespace std;
 
-// Build Command: g++ -I../../logs/include main.cpp file_io.cpp -o main.exe; if ($?) { .\main.exe }
+// Build Command (run while in src): g++ -I../../logs/include main.cpp file_io.cpp -o main.exe; if ($?) { .\main.exe }
 
 int main()
 {
     // Load the utterances file into utterancesList at the very start
-    if (!loadUtterances("C:/Users/Rafay Dil/Desktop/ISE Project/backend/src/output/Utterances.txt"))
+    if (!loadUtterances("output/Utterances.txt"))
     {
         cout << "Chatbot could not load utterances. Exiting." << endl;
         return 1;
     }
-    if (!loadLoanPlans("C:/Users/Rafay Dil/Desktop/ISE Project/backend/src/output/Home.txt"))
+    if (!loadLoanPlans("output/Home.txt"))
     {
         cout << "Chatbot could not load home plans. Exiting." << endl;
         return 1;
@@ -43,33 +43,41 @@ int main()
             break;
         }
 
-        // Find a matching response
+        // Find a matching response and output it
         cout << uttrObj.getResponse(userInput) << endl;
+
         getline(cin, userInput);
+
         //  if users enters x in between selecting the loan type so it exits.
         if (userInput == "X" || userInput == "x")
         {
             break;
         }
-        if (userInput == "A") // No use of the small case letter check as in txt files Upper case letters are defined only.
+        
+        // No use of the small case letter check as in txt files Upper case letters are defined only.
+        if (userInput == "A") 
         {
             cout << uttrObj.getResponse(userInput) << endl;
-            //  cin.ignore();
             getline(cin, userInput);
+
             if (userInput == "X" || userInput == "x")
             {
                 break;
             }
+
             if (userInput == "H")
             {
                 cout << uttrObj.getResponse(userInput) << endl;
                 getline(cin, userInput);
+
                 if (userInput == "X" || userInput == "x")
                 {
                     break;
                 }
+
                 LoanPlanManagerObj.displayLoanPlan(userInput);
             }
+            
             else if (userInput == "C")
             {
                 // Increament from Sir will be expected from sir in near Future.
