@@ -43,33 +43,41 @@ int main()
             break;
         }
 
-        // Find a matching response
+        // Find a matching response and output it
         cout << uttrObj.getResponse(userInput) << endl;
+
         getline(cin, userInput);
+
         //  if users enters x in between selecting the loan type so it exits.
         if (userInput == "X" || userInput == "x")
         {
             break;
         }
-        if (userInput == "A") // No use of the small case letter check as in txt files Upper case letters are defined only.
+        
+        // No use of the small case letter check as in txt files Upper case letters are defined only.
+        if (userInput == "A") 
         {
             cout << uttrObj.getResponse(userInput) << endl;
-            //  cin.ignore();
             getline(cin, userInput);
+
             if (userInput == "X" || userInput == "x")
             {
                 break;
             }
+
             if (userInput == "H")
             {
                 cout << uttrObj.getResponse(userInput) << endl;
                 getline(cin, userInput);
+
                 if (userInput == "X" || userInput == "x")
                 {
                     break;
                 }
+
                 LoanPlanManagerObj.displayLoanPlan(userInput);
             }
+            
             else if (userInput == "C")
             {
                 // Increament from Sir will be expected from sir in near Future.
