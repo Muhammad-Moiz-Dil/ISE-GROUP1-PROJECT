@@ -35,6 +35,7 @@ int main()
     
     while (true) {
         string userInput;
+        cout << "=> ";
         getline(cin, userInput);
         
         // Exit check
