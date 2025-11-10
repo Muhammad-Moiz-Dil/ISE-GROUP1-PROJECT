@@ -3,18 +3,20 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-using std::string;
-using std::vector;
-using std::unordered_map;
+#include <algorithm>
+#include <cctype>
 using std::cout;
 using std::endl;
-using std::stringstream;
+using std::find_if;
 using std::ifstream;
+using std::string;
+using std::stringstream;
+using std::unordered_map;
+using std::vector;
 
 // Global object definitions
 Utterance uttrObj;
 LoanPlanManager LoanPlanManagerObj;
-
 
 //  === Utterance class methods ===
 /*
@@ -22,7 +24,7 @@ LoanPlanManager LoanPlanManagerObj;
  * @param userInput: the phrase or keyword the user types.
  * @param response: the bot's reply to that input.
  * @return: void.
-*/
+ */
 void Utterance::setResponse(string userInput, string response)
 {
     responseTable[userInput] = response;
@@ -32,7 +34,7 @@ void Utterance::setResponse(string userInput, string response)
  * Retrieves the chatbot response for a given user input.
  * @param userInput: the user's typed message.
  * @return: the matching response string, or fallback (*) if not found. "No reply found" as a fallback.
-*/
+ */
 string Utterance::getResponse(string userInput)
 {
     if (responseTable.count(userInput))
@@ -41,7 +43,7 @@ string Utterance::getResponse(string userInput)
     // Fallback to "*"
     else if (responseTable.count("*"))
         return responseTable["*"];
-        
+
     else
         return "[No reply found]";
 }
@@ -51,10 +53,12 @@ void LoanPlan::setprice(string price) { this->price = price; }
 void LoanPlan::setSize(string size) { this->size = size; }
 void LoanPlan::setInstallments(string installments) { this->installments = installments; }
 void LoanPlan::setDownPayment(string downPayment) { this->downPayment = downPayment; }
+void LoanPlan::setMonthlyInstallments(int monthlyInstallment) { this->monthlyInstallments = monthlyInstallment; }
 string LoanPlan::getprice() { return price; }
 string LoanPlan::getSize() { return size; }
 string LoanPlan::getInstallments() { return installments; }
 string LoanPlan::getDownPayment() { return downPayment; }
+int LoanPlan::getMonthlyInstallments() { return monthlyInstallments; }
 
 void LoanPlan::display()
 {
@@ -62,6 +66,7 @@ void LoanPlan::display()
     cout << "Installments: " << installments << " ";
     cout << "Price: " << price << " ";
     cout << "DownPayment: " << downPayment << " ";
+    cout << "Monthly Installments: " << monthlyInstallments << " ";
     cout << endl;
 }
 
@@ -71,7 +76,7 @@ void LoanPlan::display()
  * @param area: the area identifier (e.g., "1", "2").
  * @param lp: reference to the LoanPlan object to store.
  * @return: void.
-*/
+ */
 void LoanPlanManager::setArea(string area, LoanPlan &lp)
 {
     loanTable[area].push_back(lp);
@@ -81,7 +86,7 @@ void LoanPlanManager::setArea(string area, LoanPlan &lp)
  * Displays all loan plans stored for a given area.
  * @param area: the area identifier to look up.
  * @return: void.
-*/
+ */
 void LoanPlanManager::displayLoanPlan(string area)
 {
     if (loanTable.count(area))
@@ -103,7 +108,7 @@ void LoanPlanManager::displayLoanPlan(string area)
  * Loads chatbot utterances from a text file into memory.
  * @param filePath: path to the Utterances.txt file.
  * @return: true if file loaded successfully, false otherwise.
-*/
+ */
 bool loadUtterances(string filePath)
 {
     ifstream utterancesFile;
@@ -129,11 +134,26 @@ bool loadUtterances(string filePath)
     return true;
 }
 
+string trim(const string &s)
+{
+    string result = s;
+    // remove leading spaces and carriage returns
+    result.erase(result.begin(), std::find_if(result.begin(), result.end(),
+                                              [](unsigned char ch)
+                                              { return !std::isspace(ch) && ch != '\r'; }));
+    // remove trailing spaces and carriage returns
+    result.erase(std::find_if(result.rbegin(), result.rend(),
+                              [](unsigned char ch)
+                              { return !std::isspace(ch) && ch != '\r'; })
+                     .base(),
+                 result.end());
+    return result;
+}
 /*
  * Loads loan plan data from a text file into memory.
  * @param filePath: path to the Home.txt (or loan data) file.
  * @return: true if file loaded successfully, false otherwise.
-*/
+ */
 bool loadLoanPlans(string filePath)
 {
     ifstream homeFile;
@@ -146,6 +166,7 @@ bool loadLoanPlans(string filePath)
     else
     {
         string line;
+        int i = 0;
         while (getline(homeFile, line))
         {
             stringstream ss(line);
@@ -156,12 +177,49 @@ bool loadLoanPlans(string filePath)
             getline(ss, installmentStr, '#');
             getline(ss, priceStr, '#');
             getline(ss, downpaymentStr, '#');
+            if (i == 0) // ignore the first line of txt file.
+            {
+                i++;
+                continue;
+            }
 
+            cout << area << endl;
+            cout << size << endl;
+            cout << installmentStr << endl;
+            cout << priceStr << endl;
+            cout << downpaymentStr << endl;
+
+            string inst = trim(installmentStr);
+            int installments = stoi(inst);
+            int totalPrice = 0;
+            int downPayments = 0;
+            string actualPrice = "";
+            for(int i =0; i<priceStr.length(); i++)
+            {
+                if(priceStr[i] != ',')
+                {
+                    actualPrice = actualPrice + priceStr[i];
+                }
+            }
+            totalPrice = stoi(actualPrice);
+
+            string actualDownPayment = "";
+             for(int i =0; i<downpaymentStr.length(); i++)
+            {
+                if(downpaymentStr[i] != ',')
+                {
+                    actualDownPayment = actualDownPayment + downpaymentStr[i];
+                }
+            }
+            downPayments = stoi(actualDownPayment);
+
+            int monthlyInstallment = (totalPrice - downPayments) / installments;
             LoanPlan loanPlanObj;
             loanPlanObj.setSize(size);
             loanPlanObj.setDownPayment(downpaymentStr);
             loanPlanObj.setInstallments(installmentStr);
             loanPlanObj.setprice(priceStr);
+            loanPlanObj.setMonthlyInstallments(monthlyInstallment);
 
             LoanPlanManagerObj.setArea(area, loanPlanObj);
         }

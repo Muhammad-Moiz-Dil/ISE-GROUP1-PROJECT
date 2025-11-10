@@ -53,7 +53,7 @@ int main()
                 state = "HOME_LOAN_AREA";
             }
         }
-        else if (state == "LOAN_CATEGORY") {
+        if (state == "LOAN_CATEGORY") {
             if (userInput == "H") {
                 cout << uttrObj.getResponse(userInput) << endl;
                 state = "HOME_LOAN_AREA";
@@ -66,7 +66,33 @@ int main()
                 cout << "Invalid input. Please press H, C, S, or P." << endl;
             }
         }
-        else if (state == "HOME_LOAN_AREA") {
+        if (state == "HOME_LOAN_AREA") 
+        {
+            //cout <<"Moiz";
+            string options;
+            getline(cin, options);
+            if(options == "1")
+            {
+                userInput = "Area 1";
+            }
+            else if(options == "2")
+            {
+                userInput = "Area 2";
+            }
+             else if(options == "3")
+            {
+                userInput = "Area 3";
+            }
+             else if(options == "4")
+            {
+                userInput = "Area 4";
+            }
+            else
+            {
+                cout << "Not a valid Input."<<endl;
+                state = "MAIN_MENU";
+                continue;
+            }
             LoanPlanManagerObj.displayLoanPlan(userInput);
             state = "MAIN_MENU";  // Go back to start
         }
