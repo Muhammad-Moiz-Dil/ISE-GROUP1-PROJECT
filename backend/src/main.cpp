@@ -1,109 +1,128 @@
-#include <iostream>
+#include <drogon/drogon.h>
+#include <string>
+#include <sstream>
 #include "../../logs/include/file_io.h"
 
+using namespace drogon;
 using namespace std;
 
-// Build Command (run while in src): g++ -I../../logs/include main.cpp file_io.cpp -o main.exe; if ($?) { .\main.exe }
-
-int main()
-{
-    // Load the utterances file into utterancesList at the very start
-    if (!loadUtterances("output/Utterances.txt"))
-    {
-        cout << "Chatbot could not load utterances. Exiting." << endl;
+int main() {
+    // Load data files
+    if (!loadUtterances("src/output/Utterances.txt")) {
+        cerr << "Chatbot could not load utterances. Exiting." << endl;
         return 1;
     }
-    if (!loadLoanPlans("output/Home.txt"))
-    {
-        cout << "Chatbot could not load home plans. Exiting." << endl;
+    if (!loadLoanPlans("src/output/Home.txt")) {
+        cerr << "Chatbot could not load home plans. Exiting." << endl;
         return 1;
     }
 
-    cout << "\033[1;36m" // Cyan for header border
-         << "=============================================\n";
-    cout << "\033[1;32m" // Green for title
-         << "           WELCOME TO SMART CHATBOT!        \n";
-    cout << "\033[1;36m" // Cyan again for separator
-         << "---------------------------------------------\n";
-    cout << "\033[1;33m" // Yellow for message line
-         << "    Type your message below (X to exit):\n";
-    cout << "\033[1;36m" // Cyan for closing border
-         << "=============================================\n";
-    cout << "\033[0m\n"; // Reset colors
-    
-    string state = "MAIN_MENU";  // Track current state
-    
-    while (true) {
-        string userInput;
-        cout << "=> ";
-        getline(cin, userInput);
-        
-        // Exit check
-        if (userInput == "X" || userInput == "x") break;
-        
-        // Handle based on current state
-        if (state == "MAIN_MENU") {
-            cout << uttrObj.getResponse(userInput) << endl;
-            
-            if (userInput == "A") {
-                state = "LOAN_CATEGORY";  // Move to next state
-            }
-            else if (userInput == "H")
-            {
-                state = "HOME_LOAN_AREA";
-            }
-        }
-        if (state == "LOAN_CATEGORY") {
-            if (userInput == "H") {
-                cout << uttrObj.getResponse(userInput) << endl;
-                state = "HOME_LOAN_AREA";
-            }
-            else if (userInput == "C" || userInput == "S" || userInput == "P") {
-                cout << "Coming soon!" << endl;
-                state = "MAIN_MENU";
-            }
-            else {
-                cout << "Invalid input. Please press H, C, S, or P." << endl;
-            }
-        }
-        if (state == "HOME_LOAN_AREA") 
-        {
-            //cout <<"Moiz";
-            string options;
-            getline(cin, options);
-            if(options == "1")
-            {
-                userInput = "Area 1";
-            }
-            else if(options == "2")
-            {
-                userInput = "Area 2";
-            }
-             else if(options == "3")
-            {
-                userInput = "Area 3";
-            }
-             else if(options == "4")
-            {
-                userInput = "Area 4";
-            }
-            else
-            {
-                cout << "Not a valid Input."<<endl;
-                state = "MAIN_MENU";
-                continue;
-            }
-            LoanPlanManagerObj.displayLoanPlan(userInput);
-            state = "MAIN_MENU";  // Go back to start
-        }
-    }
+    // Set HTTP server address and port
+    app().addListener("0.0.0.0", 18080);
 
-    cout << "\n";
-    cout << "\033[1;31m" // Bright Red
-         << "=============================================\n";
-    cout << "          CHATBOT SESSION ENDED!           \n";
-    cout << "=============================================\n";
-    cout << "\033[0m\n"; // Reset color
+    // CORS settings
+    app().registerPostHandlingAdvice(
+        [](const HttpRequestPtr& req, const HttpResponsePtr& resp) {
+            resp->addHeader("Access-Control-Allow-Origin", "*");
+            resp->addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+            resp->addHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With");
+            resp->addHeader("Access-Control-Max-Age", "3600");
+            resp->addHeader("Access-Control-Allow-Credentials", "true");
+        });
+
+    // Chat endpoint
+    app().registerHandler(
+        "/chat",
+        [](const HttpRequestPtr& req,
+           std::function<void(const HttpResponsePtr&)>&& callback) {
+            // Handle OPTIONS for CORS preflight
+            if (req->method() == Options) {
+                auto resp = HttpResponse::newHttpResponse();
+                callback(resp);
+                return;
+            }
+
+            // Parse JSON body
+            Json::Value jsonBody = *req->getJsonObject();
+            string userInput = jsonBody["message"].asString();
+            string state = jsonBody["state"].asString();
+            string response;
+            string newState = state;
+
+            // Convert input to uppercase for case-insensitive comparison
+            if (!userInput.empty()) {
+                userInput[0] = toupper(userInput[0]);
+            }
+
+            // State machine
+            if (state == "MAIN_MENU") {
+                // First, check if the input matches any greeting in Utterances.txt
+                string greetingResponse = uttrObj.getResponse(userInput);
+                
+                if (userInput == "A") {
+                    response = uttrObj.getResponse("A");
+                    newState = "LOAN_CATEGORY";
+                } else if (userInput == "H") {
+                    response = uttrObj.getResponse("H");
+                    newState = "HOME_LOAN_AREA";
+                } else if (userInput == "X") {
+                    response = "Thank you for using our service. Goodbye!";
+                    // Optionally, you might want to handle the exit condition here
+                } else if (greetingResponse != "[No reply found]" && greetingResponse != uttrObj.getResponse("*")) {
+                    // If we found a specific greeting response, use it
+                    response = greetingResponse;
+                } else {
+                    // Default response for unrecognized input in main menu
+                    response = uttrObj.getResponse("*");
+                }
+            }
+            else if (state == "LOAN_CATEGORY") {
+                if (userInput == "H") {
+                    response = uttrObj.getResponse("H");
+                    newState = "HOME_LOAN_AREA";
+                } else if (userInput == "C" || userInput == "S" || userInput == "P") {
+                    response = "Coming soon!";
+                    newState = "MAIN_MENU";
+                } else if (userInput == "X") {
+                    response = "Returning to main menu.";
+                    newState = "MAIN_MENU";
+                } else {
+                    response = "Invalid input. Please press H, C, S, P, or X to exit.";
+                }
+            }
+            else if (state == "HOME_LOAN_AREA") {
+                if (userInput == "1" || userInput == "2" || userInput == "3" || userInput == "4") {
+                    // Get the area details from the LoanPlanManager
+                    string areaName = "Area " + userInput;
+                    string areaDetails = LoanPlanManagerObj.getLoanPlanDetails(areaName);
+                    
+                    if (!areaDetails.empty()) {
+                        response = "Home Loan Details for " + areaName + ":\n" + areaDetails;
+                        response += "\nType 'A' to apply for another loan or 'X' to exit.";
+                    } else {
+                        response = "Could not find details for " + areaName + ". Please try another area (1-4).";
+                    }
+                    newState = "MAIN_MENU";
+                } else {
+                    response = "Invalid area selection. Please select an area between 1 and 4.";
+                    newState = "HOME_LOAN_AREA";
+                }
+            }
+            // Add other state handlers here...
+
+            // Prepare response
+            Json::Value jsonResp;
+            jsonResp["response"] = response;
+            jsonResp["newState"] = newState;
+
+            auto resp = HttpResponse::newHttpJsonResponse(jsonResp);
+            callback(resp);
+        },
+        {Post, Options});
+
+    // Start the server
+    cout << "Server running on http://0.0.0.0:18080" << endl;
+    app().run();
 
     return 0;
 }

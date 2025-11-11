@@ -1,0 +1,1 @@
+/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/chatbot.dir/src/main.cpp.o CMakeFiles/chatbot.dir/src/file_io.cpp.o -o chatbot  -Wl,-rpath,/opt/homebrew/lib /opt/homebrew/lib/libdrogon.1.9.11.dylib /opt/homebrew/lib/libtrantor.1.5.24.dylib /opt/homebrew/lib/libjsoncpp.dylib /opt/homebrew/lib/libjsoncpp.26.dylib

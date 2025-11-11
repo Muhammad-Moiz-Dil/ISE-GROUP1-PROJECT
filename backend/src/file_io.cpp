@@ -103,6 +103,23 @@ void LoanPlanManager::displayLoanPlan(string area)
     }
 }
 
+string LoanPlanManager::getLoanPlanDetails(string area) {
+    stringstream ss;
+    if (loanTable.count(area)) {
+        for (size_t i = 0; i < loanTable[area].size(); i++) {
+            ss << "Area: " << area << " ";
+            ss << "Size: " << loanTable[area][i].getSize() << " ";
+            ss << "Price: " << loanTable[area][i].getprice() << " ";
+            ss << "Down Payment: " << loanTable[area][i].getDownPayment() << " ";
+            ss << "Installments: " << loanTable[area][i].getInstallments() << " ";
+            ss << "Monthly Payment: " << loanTable[area][i].getMonthlyInstallments() << "\n";
+        }
+        return ss.str();
+    } else {
+        return "No loan plans found for Area " + area + ".\n";
+    }
+}
+
 // === file_io methods ===
 /*
  * Loads chatbot utterances from a text file into memory.

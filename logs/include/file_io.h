@@ -65,6 +65,7 @@ private:
 public:
     void setArea(string area, LoanPlan &lp);
     void displayLoanPlan(string area);
+    string getLoanPlanDetails(string area);
 };
 
 bool loadUtterances(string filePath);
