@@ -1,4 +1,5 @@
 #include "../../logs/include/file_io.h"
+#include "../../logs/include/utils.h"
 
 #include <fstream>
 #include <iostream>
@@ -60,42 +61,51 @@ string LoanPlan::getInstallments() { return installments; }
 string LoanPlan::getDownPayment() { return downPayment; }
 int LoanPlan::getMonthlyInstallments() { return monthlyInstallments; }
 
-void LoanPlan::display()
+void LoanPlan::display(bool showMonthly)
 {
-    cout << "Size: " << size << " ";
-    cout << "Installments: " << installments << " ";
-    cout << "Price: " << price << " ";
-    cout << "DownPayment: " << downPayment << " ";
-    cout << "Monthly Installments: " << monthlyInstallments << " ";
+    cout << " Size: " << size << " | ";
+    cout << "Installments: " << installments << " | ";
+    cout << "Price: " << price << " | ";
+    cout << "Down Payment: " << downPayment;
+    
+    if (showMonthly)
+    {
+        cout << " | Monthly: " << monthlyInstallments << " PKR";
+    }
+    
     cout << endl;
 }
 
+
 // === LoanPlanManager methods ===
-/*
- * Adds a loan plan to the manager under a specific area.
- * @param area: the area identifier (e.g., "1", "2").
- * @param lp: reference to the LoanPlan object to store.
- * @return: void.
- */
 void LoanPlanManager::setArea(string area, LoanPlan &lp)
 {
     loanTable[area].push_back(lp);
 }
 
-/*
- * Displays all loan plans stored for a given area.
- * @param area: the area identifier to look up.
- * @return: void.
- */
+int LoanPlanManager::getPlanCount(string area)
+{
+    if (loanTable.count(area))
+    {
+        return loanTable[area].size();
+    }
+    return 0;
+}
+
 void LoanPlanManager::displayLoanPlan(string area)
 {
     if (loanTable.count(area))
     {
+        cout << "\n" << area << " - Available Loan Plans:" << endl;
+        cout << "====================================================================================" << endl;
+        
         for (int i = 0; i < loanTable[area].size(); i++)
         {
-            cout << "Area: " << area << " ";
-            loanTable[area][i].display();
+            cout << "Plan " << (i + 1) << ": ";
+            loanTable[area][i].display(false);
         }
+        
+        cout << "====================================================================================" << endl;
     }
     else
     {
@@ -103,12 +113,23 @@ void LoanPlanManager::displayLoanPlan(string area)
     }
 }
 
+void LoanPlanManager::displayMonthlyInstallment(string area, int planIndex)
+{
+    if (loanTable.count(area) && planIndex >= 0 && planIndex < loanTable[area].size())
+    {
+        cout << "\nMonthly Installment for Plan " << (planIndex + 1) << ": ";
+        cout << loanTable[area][planIndex].getMonthlyInstallments() << " PKR" << endl;
+        cout << "==========================================================================" << endl;
+    }
+    else
+    {
+        cout << "Invalid plan selection." << endl;
+    }
+}
+
+
+
 // === file_io methods ===
-/*
- * Loads chatbot utterances from a text file into memory.
- * @param filePath: path to the Utterances.txt file.
- * @return: true if file loaded successfully, false otherwise.
- */
 bool loadUtterances(string filePath)
 {
     ifstream utterancesFile;
@@ -127,6 +148,12 @@ bool loadUtterances(string filePath)
             string userInput = line.substr(0, pos);
             string response = line.substr(pos + 1);
 
+            // Convert userInput to lowercase before storing
+            for (int i = 0; i < userInput.length(); i++)
+            {
+                userInput[i] = tolower(userInput[i]);
+            }
+
             uttrObj.setResponse(userInput, response);
         }
     }
@@ -134,26 +161,6 @@ bool loadUtterances(string filePath)
     return true;
 }
 
-string trim(const string &s)
-{
-    string result = s;
-    // remove leading spaces and carriage returns
-    result.erase(result.begin(), std::find_if(result.begin(), result.end(),
-                                              [](unsigned char ch)
-                                              { return !std::isspace(ch) && ch != '\r'; }));
-    // remove trailing spaces and carriage returns
-    result.erase(std::find_if(result.rbegin(), result.rend(),
-                              [](unsigned char ch)
-                              { return !std::isspace(ch) && ch != '\r'; })
-                     .base(),
-                 result.end());
-    return result;
-}
-/*
- * Loads loan plan data from a text file into memory.
- * @param filePath: path to the Home.txt (or loan data) file.
- * @return: true if file loaded successfully, false otherwise.
- */
 bool loadLoanPlans(string filePath)
 {
     ifstream homeFile;
@@ -188,9 +195,9 @@ bool loadLoanPlans(string filePath)
             int totalPrice = 0;
             int downPayments = 0;
             string actualPrice = "";
-            for(int i =0; i<priceStr.length(); i++)
+            for (int i = 0; i < priceStr.length(); i++)
             {
-                if(priceStr[i] != ',')
+                if (priceStr[i] != ',')
                 {
                     actualPrice = actualPrice + priceStr[i];
                 }
@@ -198,9 +205,9 @@ bool loadLoanPlans(string filePath)
             totalPrice = stoi(actualPrice);
 
             string actualDownPayment = "";
-             for(int i =0; i<downpaymentStr.length(); i++)
+            for (int i = 0; i < downpaymentStr.length(); i++)
             {
-                if(downpaymentStr[i] != ',')
+                if (downpaymentStr[i] != ',')
                 {
                     actualDownPayment = actualDownPayment + downpaymentStr[i];
                 }

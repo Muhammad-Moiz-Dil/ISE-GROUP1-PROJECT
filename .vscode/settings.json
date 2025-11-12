@@ -106,6 +106,7 @@
     "xtr1common": "cpp",
     "xutility": "cpp",
     "string": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "algorithm": "cpp"
   }
 }
