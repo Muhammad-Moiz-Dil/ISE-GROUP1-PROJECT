@@ -45,20 +45,22 @@ int main()
         if (state == "MAIN_MENU") {
             cout << uttrObj.getResponse(userInput) << endl;
             
-            if (userInput == "A") {
+            if (userInput == "A" || userInput == "a" ) {
                 state = "LOAN_CATEGORY";  // Move to next state
             }
-            else if (userInput == "H")
+            else if (userInput == "H" || userInput == "h")
             {
                 state = "HOME_LOAN_AREA";
             }
         }
         if (state == "LOAN_CATEGORY") {
-            if (userInput == "H") {
+            if (userInput == "H" || userInput == "h") 
+            {
+                userInput = "H";
                 cout << uttrObj.getResponse(userInput) << endl;
                 state = "HOME_LOAN_AREA";
             }
-            else if (userInput == "C" || userInput == "S" || userInput == "P") {
+            else if (userInput == "C" || userInput == "S" || userInput == "P" || userInput == "c" || userInput == "s" || userInput == "p") {
                 cout << "Coming soon!" << endl;
                 state = "MAIN_MENU";
             }
@@ -68,7 +70,6 @@ int main()
         }
         if (state == "HOME_LOAN_AREA") 
         {
-            //cout <<"Moiz";
             string options;
             getline(cin, options);
             if(options == "1")

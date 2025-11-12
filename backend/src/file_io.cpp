@@ -183,12 +183,6 @@ bool loadLoanPlans(string filePath)
                 continue;
             }
 
-            cout << area << endl;
-            cout << size << endl;
-            cout << installmentStr << endl;
-            cout << priceStr << endl;
-            cout << downpaymentStr << endl;
-
             string inst = trim(installmentStr);
             int installments = stoi(inst);
             int totalPrice = 0;
