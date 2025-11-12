@@ -1,4 +1,6 @@
-// Tests whether data files load correctly into memory
+====================================================
+TEST CASES: Loading Files Feature
+====================================================
 
 Test ID:       FL-001
 Purpose:       Load Utterances.txt successfully

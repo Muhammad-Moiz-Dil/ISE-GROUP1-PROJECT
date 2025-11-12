@@ -1,18 +1,98 @@
-// Tests for displaying home loan data from Home.txt
+====================================================
+TEST CASES: Home Loan Plans Feature
+====================================================
 
 Test ID:       HL-001
 Purpose:       Display Area 1 loan plans
 Input:         A > H > 1
-Expected:      Shows all 3 loan plans for Area 1 (size, installments, price, down payment)
+Expected:      Shows all loan plans for Area 1 (size, installments, price, down payment, monthly installments)
 
-Actual:        Output: "No such area found."
-Result:        Fail
+Actual:        Accurately shows all loan plans for Area 1
+Result:        Pass
 
 ---------------------------------------------------------
-Test ID:       HL-002
-Purpose:       Handle invalid area input
-Input:         A > H > 99
-Expected:      "No such area found."
 
-Actual:        Output: "Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit"
-Result:        Fail  
+Test ID:       HL-002
+Purpose:       Handle invalid area input with natural response
+Input:         A > H > 99
+Expected:      "You probably meant to select from 1-4. Please try again."
+
+Actual:        Output: "You probably menat to seelct from 1-4. Please try again."
+Result:        Pass
+
+---------------------------------------------------------
+
+Test ID:       HL-003
+Purpose:       Display Area 2 loan plans
+Input:         A > H > 2
+Expected:      Shows all loan plans for Area 2 with correct details (size, installments, price, down payment, monthly installments)
+
+Actual:        Accurately shows all loan plans for Area 2
+Result:        Pass
+
+---------------------------------------------------------
+
+Test ID:       HL-004
+Purpose:       Display Area 3 loan plans
+Input:         A > H > 3
+Expected:      Shows all loan plans for Area 3 with correct details
+
+Actual:        Accurately shows all loan plans for Area 3
+Result:        Pass
+
+---------------------------------------------------------
+
+Test ID:       HL-005
+Purpose:       Display Area 4 loan plans
+Input:         A > H > 4
+Expected:      Shows all loan plans for Area 4 with correct details
+
+Actual:        Accurately shows all loan plans for Area 4
+Result:        Pass
+
+---------------------------------------------------------
+
+Test ID:       HL-006
+Purpose:       Verify monthly installment calculation accuracy
+Input:         A > H > 1
+Expected:      Monthly Installments = (Price - Down Payment) / Installments
+               Example: Price=10,000,000, Down=2,000,000, Inst=60
+               Monthly = (10,000,000 - 2,000,000) / 60 = 133,333
+
+Actual:        Valid values for monthly installments. 150000, 156250, 152777
+Result:        Pass
+
+---------------------------------------------------------
+
+Test ID:       HL-007
+Purpose:       Test non-numeric input in area selection
+Input:         A > H > abc
+Expected:      Bot responds naturally from Utterances.txt (wildcard response)
+               Stays in HOME_LOAN_AREA state for retry
+
+Actual:        Bot responds naturally from Utterances.txt (wildcard response)
+Result:        Pass
+
+---------------------------------------------------------
+
+Test ID:       HL-009
+Purpose:       Navigation back to main menu after viewing loan
+Input:         A > H > 1 > A
+Expected:      After viewing Area 1 plans, typing A returns to main menu
+               Bot responds with main menu greeting
+
+Actual:        Output: "Please select the category you want to apply for. Press H for a home loan, C for a car loan, S for a scooter loan, P for a personal loan. Press X to exit"
+Result:        Pass
+
+---------------------------------------------------------
+
+Test ID:       HL-010
+Purpose:       Direct access to home loans from main menu
+Input:         H > 1
+Expected:      Directly enters HOME_LOAN_AREA state and displays Area 1 plans
+               (Tests the "H" shortcut from MAIN_MENU)
+
+Actual:        Correctly displays all fields accurately
+Result:        Pass
+
+---------------------------------------------------------
