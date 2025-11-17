@@ -2,6 +2,7 @@
 #define CHATBOT_H
 
 #include <string>
+using std::string; 
 
 /**
  * Displays a welcome header for the chatbot session.
@@ -69,7 +70,7 @@ void handleViewMonthlyInstallments(std::string userInput, std::string lowerInput
  * @param state: reference to current state string (modified to return to MAIN_MENU)
  * @return void
  */
-void handleApplicationSubmission(std::string &state);
+void handleApplicationSubmission(string &state, string &currentArea);
 
 /**
  * Handles querying applications by CNIC number
