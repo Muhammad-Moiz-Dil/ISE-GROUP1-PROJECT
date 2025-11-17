@@ -63,4 +63,19 @@ void handleHomeLoanArea(std::string userInput, std::string lowerInput, std::stri
  */
 void handleViewMonthlyInstallments(std::string userInput, std::string lowerInput, std::string &state, std::string &currentArea);
 
+// [Increment - 2]
+/**
+ * Handles application submission flow - collects all required fields from user
+ * @param state: reference to current state string (modified to return to MAIN_MENU)
+ * @return void
+ */
+void handleApplicationSubmission(std::string &state);
+
+/**
+ * Handles querying applications by CNIC number
+ * @param state: reference to current state string (modified to return to MAIN_MENU)
+ * @return void
+ */
+void handleQueryApplications(std::string &state);
+
 #endif
