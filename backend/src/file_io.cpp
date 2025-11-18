@@ -204,6 +204,7 @@ bool loadCarPlans(const string &filePath)
             carPlanObj.setEngine(Engine);
             carPlanObj.setUsed(Used);
             carPlanObj.setUsedManufacturingYear(Manufacturing);
+            carPlanObj.setMake(make);
 
 
             CarPlanManagerObj.setMake(make, carPlanObj);
