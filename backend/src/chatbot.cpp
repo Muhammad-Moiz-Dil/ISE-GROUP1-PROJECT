@@ -1,6 +1,7 @@
 #include "../../logs/include/chatbot.h"
 #include "../../logs/include/file_io.h"
 #include "../../logs/include/loan_plan.h"
+#include "../../logs/include/car.h"
 #include "../../logs/include/utils.h"
 #include "../../logs/include/application.h"
 #include <iostream>
@@ -14,6 +15,7 @@ using std::getline;
 using std::string;
 using std::ifstream;
 
+string currentMake = "";
 void runChatbot()
 {
     displayWelcomeHeader();
@@ -57,12 +59,23 @@ void runChatbot()
         {
             handleHomeLoanArea(userInput, lowerInput, state, currentArea);
         }
+        else if(state == "CAR_LOAN_AREA")
+        {
+            handleCarLoan(userInput, lowerInput,state, currentArea);
+        }
+        else if(state == "SCOOTER_LOAN_AREA")
+        {
+
+        }
+        else if(state == "VIEW_CAR_MONTHLY_INSTALLMENTS")
+        {
+            handleViewCarMonthlyInstallments(userInput, lowerInput, state, currentMake);
+        }
         else if (state == "VIEW_MONTHLY_INSTALLMENTS")
         {
             handleViewMonthlyInstallments(userInput, lowerInput, state, currentArea);
         }
     }
-
     displayGoodbyeFooter();
 }
 
@@ -96,19 +109,85 @@ void handleLoanCategory(string userInput, string lowerInput, string &state)
     {
         state = "HOME_LOAN_AREA";
     }
-    else if (userInput == "C" || userInput == "c" ||
-             userInput == "S" || userInput == "s" ||
-             userInput == "P" || userInput == "p")
+    else if (userInput == "C" || userInput == "c")
     {
-        cout << "Coming soon! Let's get you back to the main menu." << endl;
-        state = "MAIN_MENU";
+        state = "CAR_LOAN_AREA";
+    }
+    else if(userInput == "S" || userInput == "s")
+    {
+        state = "SCOOTER_LOAN_AREA";
     }
     else if (userInput == "A" || userInput == "a")
     {
         return;
     }
 }
+string getInput()
+{
+    string userInput;
+    getline(cin, userInput);
+    return userInput;
+}
+ void handleCarLoan(string userInput, string lowerInput,string  &state, string& currentArea)
+ {
+    cout<<"Select options 1 2"<<endl;
+    userInput = getInput();
+    if(userInput == "1")
+    {
+        currentMake = "Make 1";
+        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        if (planCount > 0)  // Check if area exists
+        {
+            CarPlanManagerObj.displayCarPlan(currentMake);
+            cout << "\nWould you like to view monthly installments for any plan?\n";
+            cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
+            state = "VIEW_CAR_MONTHLY_INSTALLMENTS";
+        }
+        else
+        {
+            cout << "No such modal found." << endl;
+            state = "MAIN_MENU";  // Return to main menu
+        }
+    }
+    else if(userInput == "2")
+    {
+        currentMake = "Make 2";
+        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        if (planCount > 0)  // Check if area exists
+        {
+            CarPlanManagerObj.displayCarPlan(currentMake);
+            cout << "\nWould you like to view monthly installments for any plan?\n";
+            cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
+            state = "VIEW_CAR_MONTHLY_INSTALLMENTS";
+        }
+        else
+        {
+            cout << "No such modal found." << endl;
+            state = "MAIN_MENU";  // Return to main menu
+        }
+    }
+    else
+    {
+        bool isNumeric = true;
+        for (char c : userInput)
+        {
+            if (!isdigit(c))
+            {
+                isNumeric = false;
+                break;
+            }
+        }
 
+        if (isNumeric && userInput.length() > 0)
+        {
+            cout << "You probably meant to select from 1-4. Please try again." << endl;
+        }
+        else
+        {
+            cout << uttrObj.getResponse(lowerInput) << endl;
+        }
+    }
+ }
 void handleHomeLoanArea(string userInput, string lowerInput, string &state, string &currentArea)
 {
     if (userInput == "1")
@@ -205,7 +284,70 @@ void handleHomeLoanArea(string userInput, string lowerInput, string &state, stri
         }
     }
 }
-
+void handleViewCarMonthlyInstallments(string userInput, string lowerInput, string &state, string &currentMake)
+{
+     int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+    
+    // Check if user wants to return to main menu
+    if (userInput == "A" || userInput == "a")
+    {
+        state = "MAIN_MENU";
+        cout << uttrObj.getResponse(lowerInput) << endl;
+        return;
+    }
+    
+    // Check if user wants to submit application
+    if (userInput == "S" || userInput == "s")
+    {
+        state = "SUBMIT_APPLICATION";
+        return;
+    }
+    
+    // Check if input is a valid plan number
+    bool isNumeric = true;
+    bool hasNegativeSign = false;
+    
+    // Check for negative sign at start
+    if (!userInput.empty() && userInput[0] == '-')
+    {
+        hasNegativeSign = true;
+    }
+    
+    // Check if all characters (after optional negative sign) are digits
+    for (int i = (hasNegativeSign ? 1 : 0); i < userInput.length(); i++)
+    {
+        if (!isdigit(userInput[i]))
+        {
+            isNumeric = false;
+            break;
+        }
+    }
+    
+    // If it's a number (positive or negative)
+    if (isNumeric && userInput.length() > 0 && (hasNegativeSign || isdigit(userInput[0])))
+    {
+        int planChoice = stoi(userInput);
+        
+        if (planChoice >= 1 && planChoice <= planCount)
+        {
+            CarPlanManagerObj.displayMonthlyInstallment(currentMake, planChoice - 1);
+            
+            cout << "\nWhat would you like to do next?" << endl;
+            cout << " S - Submit loan application" << endl;
+            cout << " (Enter plan number 1-" << planCount << " to view another)" << endl;
+            cout << " A - Return to main menu" << endl;
+        }
+        else
+        {
+            cout << "You probably meant to select from 1-" << planCount << ". Please try again." << endl;
+        }
+    }
+    else
+    {
+        // Non-numeric input
+        cout << uttrObj.getResponse(lowerInput) << endl;
+    }
+}
 void handleViewMonthlyInstallments(string userInput, string lowerInput, string &state, string &currentArea)
 {
     userInput = trim(userInput);

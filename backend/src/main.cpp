@@ -25,6 +25,12 @@ int main()
         return 1;
     }
 
+    if (!loadCarPlans("output/Car.txt"))
+    {
+        cout << "Chatbot could not load car plans. Exiting." << endl;
+        return 1;
+    }
+
     // NEW: Load applications (file may not exist initially - that's okay)
     appManager.loadApplications("output/applications.txt");
 

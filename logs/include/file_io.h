@@ -52,7 +52,7 @@ bool loadUtterances(const string& filePath);
  * @return true if loaded successfully, false otherwise
  */
 bool loadLoanPlans(const string& filePath);
-
+bool loadCarPlans(const string& filePath);
 // Global Utterance object declaration
 extern Utterance uttrObj;
 

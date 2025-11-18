@@ -1,5 +1,6 @@
 #include "file_io.h"
 #include "loan_plan.h"  // Need this to populate LoanPlanManager
+#include "car.h"
 #include "utils.h"       // for trim() function
 #include <iostream>
 #include <fstream>
@@ -14,7 +15,6 @@ using std::stringstream;
 
 // Global Utterance object definition
 Utterance uttrObj;
-
 // ==================== Utterance Class Methods ====================
 
 void Utterance::setResponse(string userInput, string response)
@@ -134,7 +134,81 @@ bool loadLoanPlans(const string &filePath)
             LoanPlanManagerObj.setArea(area, loanPlanObj);
         }
     }
-
     homeFile.close();
+    return true;
+}
+
+bool loadCarPlans(const string &filePath)
+{
+    ifstream carFile;
+    carFile.open(filePath);
+    if (!carFile.is_open())
+    {
+        cout << "File not opened." << endl;
+        return false;
+    }
+    else
+    {
+        string line;
+        int i = 0;
+        while (getline(carFile, line))
+        {
+            stringstream ss(line);
+            string make, modal, Engine, Used, Manufacturing, installments,Price,DownPayment;
+
+            getline(ss, make, '#');
+            getline(ss, modal, '#');
+            getline(ss, Engine, '#');
+            getline(ss, Used, '#');
+            getline(ss, Manufacturing, '#');
+            getline(ss, installments, '#');
+            getline(ss, Price, '#');
+            getline(ss, DownPayment, '#');
+            if (i == 0) // ignore the first line of txt file.
+            {
+                i++;
+                continue;
+            }
+
+            string inst = trim(installments);
+            int Installments = stoi(inst);
+            int totalPrice = 0;
+            int downPayments = 0;
+            string actualPrice = "";
+            for (int i = 0; i < Price.length(); i++)
+            {
+                if (Price[i] != ',')
+                {
+                    actualPrice = actualPrice + Price[i];
+                }
+            }
+            totalPrice = stoi(actualPrice);
+
+            string actualDownPayment = "";
+            for (int i = 0; i < DownPayment.length(); i++)
+            {
+                if (DownPayment[i] != ',')
+                {
+                    actualDownPayment = actualDownPayment + DownPayment[i];
+                }
+            }
+            downPayments = stoi(actualDownPayment);
+
+            int monthlyInstallment = (totalPrice - downPayments) / Installments;
+            CarPlan carPlanObj;
+            carPlanObj.setModel(modal);
+            carPlanObj.setDownPayment(DownPayment);
+            carPlanObj.setInstallments(installments);
+            carPlanObj.setPrice(Price);
+            carPlanObj.setMonthlyInstallments(monthlyInstallment);
+            carPlanObj.setEngine(Engine);
+            carPlanObj.setUsed(Used);
+            carPlanObj.setUsedManufacturingYear(Manufacturing);
+
+
+            CarPlanManagerObj.setMake(make, carPlanObj);
+        }
+    }
+    carFile.close();
     return true;
 }
