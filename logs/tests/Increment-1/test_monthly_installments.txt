@@ -146,7 +146,7 @@ Input:         A > H > 1 > 1 > A > H > 2 > 1 > A
 Expected:      Shows Area 1 Plan 1, returns to main, then Area 2 Plan 1
                All transitions smooth
 
-Actual:        Correclty shows Area 1 Plan 1, returns to main, then shows Area 2 Plan 1
+Actual:        Correctly shows Area 1 Plan 1, returns to main, then shows Area 2 Plan 1
 Result:        Pass
 
 ---------------------------------------------------------

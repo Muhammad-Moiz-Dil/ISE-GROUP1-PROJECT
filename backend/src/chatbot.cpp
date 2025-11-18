@@ -1,5 +1,6 @@
 #include "../../logs/include/chatbot.h"
 #include "../../logs/include/file_io.h"
+#include "../../logs/include/loan_plan.h"
 #include "../../logs/include/utils.h"
 #include "../../logs/include/application.h"  
 #include <iostream>
