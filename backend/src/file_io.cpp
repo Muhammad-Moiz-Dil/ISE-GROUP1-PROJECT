@@ -6,6 +6,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
+#include <iomanip>
 using std::cout;
 using std::endl;
 using std::find_if;
@@ -14,6 +15,11 @@ using std::string;
 using std::stringstream;
 using std::unordered_map;
 using std::vector;
+using std:: setprecision;
+using std:: fixed;
+using std:: left;
+using std:: right;
+using std:: setw;
 
 // Global object definitions
 Utterance uttrObj;
@@ -119,6 +125,65 @@ void LoanPlanManager::displayMonthlyInstallment(string area, int planIndex)
     {
         cout << "\nMonthly Installment for Plan " << (planIndex + 1) << ": ";
         cout << loanTable[area][planIndex].getMonthlyInstallments() << " PKR" << endl;
+
+        int installmentAmount =  loanTable[area][planIndex].getMonthlyInstallments();
+        string noOfInstallments =  loanTable[area][planIndex].getInstallments() ;
+        string loan =  loanTable[area][planIndex].getprice();
+        string dp =  loanTable[area][planIndex].getDownPayment();
+
+        int n = stoi(noOfInstallments);
+        loan  = trim(loan);
+        dp = trim(dp);
+        int price = stoi(loan);
+        int Dp = stoi(dp);
+        price = price - Dp;
+
+         int currentBalance = price;
+            
+            cout << "\n--- Monthly Loan Amortization Schedule ---" << endl;
+            cout << "Original Loan Amount (Principal): " << price << " PKR" << endl;
+            cout << "Monthly Installment: " << installmentAmount << " PKR" << endl;
+            cout << "Total Installments: " << n << " months" << endl;
+
+            // Set up table formatting
+            cout << fixed << setprecision(2);
+            cout << "==========================================================================" << endl;
+            cout << left << setw(8) << "MONTH" 
+                 << right << setw(18) << "START BALANCE" 
+                 << right << setw(18) << "PAYMENT" 
+                 << right << setw(18) << "REMAINING BALANCE" << endl;
+            cout << "==========================================================================" << endl;
+
+            for (int i = 1; i <= n; ++i) {
+                int payment = installmentAmount;
+                int remainingBalance = currentBalance - payment;
+                
+                // If this is the final payment and the remaining balance is less than the installment, 
+                // adjust the payment amount to fully pay off the loan.
+                if (remainingBalance < 0 && i == n) {
+                    payment = currentBalance;
+                    remainingBalance = 0;
+                } else if (remainingBalance < 0 && i < n) {
+                    // This scenario shouldn't happen if the calculation is correct 
+                    // (i.e., installment * n >= price), but we handle it just in case.
+                    payment = currentBalance;
+                    remainingBalance = 0;
+                }
+
+                cout << left << setw(8) << i 
+                     << right << setw(18) << currentBalance 
+                     << right << setw(18) << payment
+                     << right << setw(18) << remainingBalance << endl;
+
+                // Update the balance for the next month
+                currentBalance = remainingBalance;
+
+                // Stop if the loan is fully paid off early
+                if (currentBalance <= 0) {
+                    break;
+                }
+            }
+        
         cout << "==========================================================================" << endl;
     }
     else

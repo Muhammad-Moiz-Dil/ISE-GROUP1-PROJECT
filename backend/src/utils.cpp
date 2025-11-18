@@ -42,7 +42,10 @@ string trim(const string &s)
     // Build result string
     for (int i = start; i <= end; i++)
     {
-        result += s[i];
+        if (s[i] != ',' && s[i] != ' ')
+        {
+            result += s[i];
+        }
     }
 
     return result;
