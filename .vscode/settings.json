@@ -107,6 +107,13 @@
     "xutility": "cpp",
     "string": "cpp",
     "vector": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "fstream": "cpp",
+    "iomanip": "cpp",
+    "list": "cpp",
+    "optional": "cpp",
+    "sstream": "cpp",
+    "unordered_map": "cpp",
+    "xhash": "cpp"
   }
 }

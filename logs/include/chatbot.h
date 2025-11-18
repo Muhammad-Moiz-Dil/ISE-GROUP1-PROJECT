@@ -79,4 +79,7 @@ void handleApplicationSubmission(string &state, string &currentArea);
  */
 void handleQueryApplications(std::string &state);
 
+void handleCarLoan(string &userInput, string &lowerInput, string &state, string &currentMake);
+void handleViewCarMonthlyInstallments(string userInput, string lowerInput, string &state, string &currentMake);
+
 #endif

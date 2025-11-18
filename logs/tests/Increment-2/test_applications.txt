@@ -1,0 +1,657 @@
+====================================================
+TEST CASES: Application Form - Input Validation
+====================================================
+
+// Navigate to application form: >> Hi >> A >> H >> 1 >> 1 >> S
+
+SECTION 1: PERSONAL INFORMATION VALIDATION
+====================================================
+
+Test ID:       APP-001
+Purpose:       Valid full name (alphabetic with spaces)
+Flow:          >> S
+               [form starts]
+               Full Name: Muhammad Talha
+               Father's Name: [continues normally]
+Expected:      Accepts "Muhammad Talha", moves to next field
+Actual:        Correctly accepts "Muhammad Talha"
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-002
+Purpose:       Reject name with only numbers
+Flow:          >> S
+               Full Name: 12345
+            Error: Name cannot contain only numbers. Please enter a valid name.
+               Full Name: [re-prompts]
+Expected:      Shows error, re-prompts for Full Name
+Actual:        Correctly displays error message and re-prompts for full name.
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-003
+Purpose:       Reject empty name
+Flow:          >> S
+               Full Name: [press Enter without typing]
+            Error: Name cannot be empty. Please enter your full name.
+               Full Name: [re-prompts]
+Expected:      Shows error, re-prompts for Full Name
+Actual:        Correctly displays error message and re-prompts for full name.
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-004
+Purpose:       Reject name with special characters only
+Flow:          >> S
+               Full Name: @#$%
+            Error: Name contains invalid characters. Please use only letters and spaces.
+               Full Name: [re-prompts]
+Expected:      Shows error, re-prompts for Full Name
+Actual:        Correctly displays error message and re-prompts for full name.
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-005
+Purpose:       Accept name with valid special chars (hyphens, apostrophes)
+Flow:          >> S
+               Full Name: Muhammad O'Connor-Khan
+               Father's Name: [continues normally]
+Expected:      Accepts name with hyphens and apostrophes
+Actual:        Correctly accepts name with given special chars
+Result:        Pass
+
+====================================================
+SECTION 2: CNIC VALIDATION
+====================================================
+
+Test ID:       APP-006
+Purpose:       Valid CNIC (exactly 13 digits)
+Flow:          [after personal info]
+               CNIC (13 digits, no dashes): 3520212345678
+               CNIC Expiry Date (DD-MM-YYYY): [continues]
+Expected:      Accepts 13-digit CNIC
+Actual:        Correclty accepts valid 13 digit CNIC
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-007
+Purpose:       Reject CNIC with less than 13 digits
+Flow:          CNIC (13 digits, no dashes): 12345
+            Error: CNIC must be exactly 13 digits. Please try again.
+               CNIC (13 digits, no dashes): [re-prompts]
+Expected:      Shows error, re-prompts for CNIC
+Actual:        Correctly shows error message and re-prompts for CNIC
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-008
+Purpose:       Reject CNIC with more than 13 digits
+Flow:          CNIC (13 digits, no dashes): 35202123456789999
+            Error: CNIC must be exactly 13 digits. Please try again.
+               CNIC (13 digits, no dashes): [re-prompts]
+Expected:      Shows error, re-prompts for CNIC
+Actual:        Correctly shows error message and re-prompts for CNIC 
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-009
+Purpose:       Reject CNIC with letters
+Flow:          CNIC (13 digits, no dashes): 352abc1234567
+            Error: CNIC must contain only numbers. Please try again.
+               CNIC (13 digits, no dashes): [re-prompts]
+Expected:      Shows error, re-prompts for CNIC
+Actual:        Correctly shows error message and re-prompts for CNIC
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-010
+Purpose:       Reject CNIC with dashes (common mistake)
+Flow:          CNIC (13 digits, no dashes): 35202-1234567-8
+            Error: CNIC must be 13 digits without dashes or spaces.
+               CNIC (13 digits, no dashes): [re-prompts]
+Expected:      Shows error, re-prompts for CNIC
+Actual:        Correctly shows error message and re-prompts for CNIC
+Result:        Pass
+
+====================================================
+SECTION 3: CONTACT NUMBER VALIDATION
+====================================================
+
+Test ID:       APP-011
+Purpose:       Valid contact number (11 digits starting with 03)
+Flow:          Contact Number (03xxxxxxxxx): 03001234567
+               Email Address: [continues]
+Expected:      Accepts 11-digit number starting with 03
+Actual:        Correctly accepts valid 11-digit number
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-012
+Purpose:       Reject contact not starting with 03
+Flow:          Contact Number (03xxxxxxxxx): 92301234567
+            Error: Contact must start with 03. Please try again.
+               Contact Number (03xxxxxxxxx): [re-prompts]
+Expected:      Shows error, re-prompts for Contact
+Actual:        Correctly shows error message and re-prompts for contact
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-013
+Purpose:       Reject contact with wrong length (too short)
+Flow:          Contact Number (03xxxxxxxxx): 0300123
+            Error: Contact must be 11 digits. Please try again.
+               Contact Number (03xxxxxxxxx): [re-prompts]
+Expected:      Shows error, re-prompts for Contact
+Actual:        Correctly shows error message and re-prompts for contact
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-014
+Purpose:       Reject contact with letters
+Flow:          Contact Number (03xxxxxxxxx): 0300abc4567
+            Error: Contact must contain only numbers. Please try again.
+               Contact Number (03xxxxxxxxx): [re-prompts]
+Expected:      Shows error, re-prompts for Contact
+Actual:        Correctly shows error message and re-prompts for contact
+Result:        Pass
+
+====================================================
+SECTION 4: EMAIL VALIDATION
+====================================================
+
+Test ID:       APP-015
+Purpose:       Valid email format
+Flow:          Email Address: talha@student.edu.pk
+               CNIC (13 digits, no dashes): [continues]
+Expected:      Accepts valid email
+Actual:        Correctly accepts valid email
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-016
+Purpose:       Reject email without @ symbol
+Flow:          Email Address: talhastudent.edu.pk
+            Error: Email must contain '@'. Please enter a valid email.
+               Email Address: [re-prompts]
+Expected:      Shows error, re-prompts for Email
+Actual:        Correctly shows error message and re-prompts for email
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-017
+Purpose:       Reject email without domain
+Flow:          Email Address: talha@
+            Error: Email must have a domain (e.g., @gmail.com). Please try again.
+               Email Address: [re-prompts]
+Expected:      Shows error, re-prompts for Email
+Actual:        Correctly shows error message and re-prompts for email
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-018
+Purpose:       Reject email with spaces
+Flow:          Email Address: talha @student.edu.pk
+            Error: Email cannot contain spaces. Please try again.
+               Email Address: [re-prompts]
+Expected:      Shows error, re-prompts for Email
+Actual:        Correctly shows error message and re-prompts for email
+Result:        Pass
+
+====================================================
+SECTION 5: DATE VALIDATION
+====================================================
+
+Test ID:       APP-019
+Purpose:       Valid CNIC expiry date format (DD-MM-YYYY)
+Flow:          CNIC Expiry Date (DD-MM-YYYY): 25-12-2030
+               
+               Employment Status:
+               1. Self-employed
+               [continues]
+Expected:      Accepts valid date format
+Actual:        Correctly accepts valid date
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-020
+Purpose:       Reject invalid date format (wrong order)
+Flow:          CNIC Expiry Date (DD-MM-YYYY): 2030-12-25
+            Error: Date must be in DD-MM-YYYY format. Please try again.
+               CNIC Expiry Date (DD-MM-YYYY): [re-prompts]
+Expected:      Shows error, re-prompts for date
+Actual:        Correctly shows error message and re-prompts for date
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-021
+Purpose:       Reject invalid day (day > 31)
+Flow:          CNIC Expiry Date (DD-MM-YYYY): 32-12-2030
+            Error: Invalid day. Day must be between 01-31. Please try again.
+               CNIC Expiry Date (DD-MM-YYYY): [re-prompts]
+Expected:      Shows error, re-prompts for date
+Actual:        Correctly shows error message and re-prompts for date
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-022
+Purpose:       Reject invalid day (day = 00)
+Flow:          CNIC Expiry Date (DD-MM-YYYY): 00-12-2030
+            Error: Invalid day. Day must be between 01-31. Please try again.
+               CNIC Expiry Date (DD-MM-YYYY): [re-prompts]
+Expected:      Shows error, re-prompts for date
+Actual:        Correctly shows error message and re-prompts for date
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-023
+Purpose:       Reject invalid month (month > 12)
+Flow:          CNIC Expiry Date (DD-MM-YYYY): 25-13-2030
+            Error: Invalid month. Month must be between 01-12. Please try again.
+               CNIC Expiry Date (DD-MM-YYYY): [re-prompts]
+Expected:      Shows error, re-prompts for date
+Actual:        Correctly shows error message and re-prompts for date
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-024
+Purpose:       Reject date with slashes instead of dashes
+Flow:          CNIC Expiry Date (DD-MM-YYYY): 25/12/2030
+            Error: Please use dashes (-) not slashes (/). Format: DD-MM-YYYY
+               CNIC Expiry Date (DD-MM-YYYY): [re-prompts]
+Expected:      Shows error, re-prompts for date
+Actual:        Correctly shows error message and re-prompts for date
+Result:        Pass
+
+====================================================
+SECTION 6: FINANCIAL INFORMATION VALIDATION
+====================================================
+
+Test ID:       APP-025
+Purpose:       Valid number of dependents (non-negative)
+Flow:          Number of Dependents: 3
+               Annual Income (PKR): [continues]
+Expected:      Accepts valid number
+Actual:        Correctly accepts valid number
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-026
+Purpose:       Accept zero dependents
+Flow:          Number of Dependents: 0
+               Annual Income (PKR): [continues]
+Expected:      Accepts zero (valid for single person)
+Actual:        Correctly accepts zero
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-027
+Purpose:       Reject negative dependents
+Flow:          Number of Dependents: -5
+            Error: Please enter a valid number (0 or greater).
+               Number of Dependents: [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-028
+Purpose:       Reject non-numeric dependents
+Flow:          Number of Dependents: abc
+            Error: Please enter a valid number (0 or greater).
+               Number of Dependents: [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-029
+Purpose:       Valid annual income (positive number)
+Flow:          Annual Income (PKR): 500000
+               Average Monthly Electricity Bill (PKR): [continues]
+Expected:      Accepts valid income
+Actual:        Correctly accepts valid income
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-030
+Purpose:       Reject negative income
+Flow:          Annual Income (PKR): -100000
+            Error: Please enter a valid amount.
+               Annual Income (PKR): [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-031
+Purpose:       Reject zero income
+Flow:          Annual Income (PKR): 0
+            Error: Income must be greater than zero.
+               Annual Income (PKR): [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-032
+Purpose:       Reject non-numeric income
+Flow:          Annual Income (PKR): fifty thousand
+            Error: Please enter a valid number.
+               Annual Income (PKR): [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+====================================================
+SECTION 7: MENU CHOICE VALIDATION
+====================================================
+
+Test ID:       APP-033
+Purpose:       Valid employment choice (1-4)
+Flow:          Employment Status:
+               1. Self-employed
+               2. Salaried
+               3. Retired
+               4. Unemployed
+               Choose (1-4): 2
+               
+               Marital Status:
+               [continues, sets employment to "Salaried"]
+Expected:      Accepts choice, sets to "Salaried"
+Actual:        Correctly accepts and sets to "Salaried"
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-034
+Purpose:       Reject out-of-range employment choice
+Flow:          Choose (1-4): 5
+            Error: Please choose between 1-4.
+               Choose (1-4): [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-035
+Purpose:       Reject non-numeric menu choice
+Flow:          Choose (1-4): abc
+            Error: Please enter a number between 1-4.
+               Choose (1-4): [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-036
+Purpose:       Reject zero as menu choice
+Flow:          Choose (1-4): 0
+            Error: Please choose between 1-4.
+               Choose (1-4): [re-prompts]
+Expected:      Shows error, re-prompts
+Actual:        Correctly shows error message and re-prompts
+Result:        Pass
+
+====================================================
+SECTION 8: EXISTING LOAN VALIDATION
+====================================================
+
+Test ID:       LOAN-001
+Purpose:       No existing loan (N)
+Flow:          Do you have any existing loans? (Y/N): N
+               
+               REFEREE INFORMATION:
+               [continues to referee section]
+Expected:      Skips loan details, moves to referees
+Actual:        Correctly skips and moves to referees
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-002
+Purpose:       Has existing loan (Y) - all valid inputs
+Flow:          Do you have any existing loans? (Y/N): Y
+               Is the loan active? (Y/N): Y
+               Total Loan Amount (PKR): 500000
+               Amount Returned (PKR): 100000
+               Amount Still Due (PKR): 400000
+               Bank Name: HBL
+               Loan Category (Car/Home/Bike): Car
+               
+               REFEREE INFORMATION:
+               [continues]
+Expected:      Accepts all loan details, moves to referees
+Actual:        Correctly accepts and moves to referees
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-003
+Purpose:       Invalid Y/N response for existing loan
+Flow:          Do you have any existing loans? (Y/N): Maybe
+               Error: Please enter Y or N.
+               Do you have any existing loans? (Y/N): 5
+               Error: Please enter Y or N.
+               Do you have any existing loans? (Y/N): Y
+               [continues]
+Expected:      Rejects invalid responses, accepts Y or N only
+Actual:        Correctly rejects invalid responses
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-004
+Purpose:       Exit during existing loan questions
+Flow:          Do you have any existing loans? (Y/N): Y
+               Is the loan active? (Y/N): X
+               
+               Application canceled. Returning to main menu.
+Expected:      Exits form, returns to main menu
+Actual:        Correctly exits form
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-005
+Purpose:       Invalid loan amount (too large)
+Flow:          Total Loan Amount (PKR): 6969969696
+               Error: Amount is too large. Please enter a reasonable value.
+               Total Loan Amount (PKR): [re-prompts]
+Expected:      Catches overflow error, re-prompts
+Actual:        Correctly catches and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-006
+Purpose:       Negative loan amount
+Flow:          Total Loan Amount (PKR): -500000
+               Error: Please enter a valid number.
+               Total Loan Amount (PKR): [re-prompts]
+Expected:      Rejects negative amount
+Actual:        Correctly rejects negative amount
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-007
+Purpose:       Zero loan amount
+Flow:          Total Loan Amount (PKR): 0
+               Error: Loan amount must be greater than zero.
+               Total Loan Amount (PKR): [re-prompts]
+Expected:      Rejects zero amount
+Actual:        Correctly rejects zero
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-008
+Purpose:       Non-numeric loan amount
+Flow:          Total Loan Amount (PKR): five hundred thousand
+               Error: Please enter a valid number.
+               Total Loan Amount (PKR): [re-prompts]
+Expected:      Rejects non-numeric input
+Actual:        Correctly rejects non-numeric
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-009
+Purpose:       Invalid loan category
+Flow:          Loan Category (Car/Home/Bike): Motorcycle
+               Error: Please enter Car, Home, or Bike.
+               Loan Category (Car/Home/Bike): car
+               [continues - case insensitive]
+Expected:      Rejects invalid category, accepts car/home/bike (case-insensitive)
+Actual:        Correctly rejects invalid
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-010
+Purpose:       Empty bank name
+Flow:          Bank Name: [press Enter]
+               Error: Bank name cannot be empty.
+               Bank Name: HBL
+               [continues]
+Expected:      Rejects empty input, re-prompts
+Actual:        Correctly rejects and re-prompts
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       LOAN-011
+Purpose:       Amount returned greater than total (business logic validation)
+Flow:          Total Loan Amount (PKR): 500000
+               Amount Returned (PKR): 600000
+               Error: Amount returned cannot be greater than total loan amount (500000 PKR).
+               Amount Returned (PKR): 100000
+               Amount Still Due (PKR): 0
+               Bank Name: HBL
+               [continues]
+Expected:      Rejects when returned > total, shows error with total amount
+Actual:        Correctly rejects and shows error
+Result:        Pass
+
+====================================================
+SECTION 9: DOCUMENT PATHS (MINIMAL VALIDATION)
+====================================================
+
+Test ID:       DOC-001
+Purpose:       Valid file paths with naming convention
+Flow:          Path to CNIC Front Image: output/application_documents/3520212345678_CNIC_FRONT.jpg
+               Path to CNIC Back Image: output/application_documents/3520212345678_CNIC_BACK.jpg
+               Path to Electricity Bill: output/application_documents/3520212345678_ELECTRICITY_BILL.pdf
+               Path to Salary Slip: output/application_documents/3520212345678_SALARY_SLIP.pdf
+               
+               Review and confirm submission? (Y/N):
+Expected:      Accepts all paths, moves to confirmation
+Actual:        Correctly accepts and moves to confirmation
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       DOC-002
+Purpose:       Empty file paths rejected
+Flow:          Path to CNIC Front Image: [press Enter]
+               Error: Path cannot be empty.
+               Path to CNIC Front Image: output/application_documents/3520212345678_CNIC_FRONT.jpg
+               [continues]
+Expected:      Rejects empty, accepts valid path
+Actual:        Correctly rejects
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       DOC-003
+Purpose:       Exit during document path input
+Flow:          Path to CNIC Front Image: X
+               
+               Application canceled. Returning to main menu.
+               
+               >> [back at main menu]
+Expected:      Exits form, returns to main menu
+Actual:        Correctly exits form
+Result:        Pass
+
+Test ID:       DOC-004
+Purpose:       File does not exist at specified path
+Flow:          Path to CNIC Front Image: output/application_documents/nonexistent_file.jpg
+               Error: File not found at the specified path. Please check and try again.
+               Path to CNIC Front Image: output/application_documents/3520212345678_CNIC_FRONT.jpg
+               [continues]
+Expected:      Rejects non-existent file, accepts valid file path
+Actual:        Correctly rejects
+Result:        Pass
+
+
+====================================================
+SECTION 10: FINAL CONFIRMATION
+====================================================
+
+Test ID:       CONF-001
+Purpose:       Confirm submission (Y)
+Flow:          Review and confirm submission? (Y/N): Y
+               
+               Application saved successfully!
+               Your Application ID: 1005
+               
+               >> [back at main menu]
+Expected:      Saves application, shows ID, returns to menu
+Actual:        Correctly saves and shows ID
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       CONF-002
+Purpose:       Cancel submission (N)
+Flow:          Review and confirm submission? (Y/N): N
+               
+               Submission canceled.
+               
+               >> [back at main menu]
+Expected:      Does NOT save, returns to menu
+Actual:        Correctly does NOT save
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       CONF-003
+Purpose:       Exit at confirmation (X)
+Flow:          Review and confirm submission? (Y/N): X
+               
+               Application canceled.
+               
+               >> [back at main menu]
+Expected:      Exits without saving, returns to menu
+Actual:        Correctly exits
+Result:        Pass
+
+====================================================
+SECTION 11: EDGE CASES & TRIMMING
+====================================================
+
+Test ID:       APP-EDGE-001
+Purpose:       Name with leading/trailing spaces
+Flow:          Full Name:   Muhammad Talha   
+               Father's Name: [continues, name stored as "Muhammad Talha"]
+Expected:      Trims spaces, accepts as "Muhammad Talha"
+Actual:        Correctly trims spaces
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-EDGE-002
+Purpose:       CNIC with spaces (user mistake)
+Flow:          CNIC (13 digits, no dashes): 3520 2 1234 567 8
+               [removes spaces, validates]
+               orError: CNIC must be 13 digits without spaces.
+Expected:      Either auto-clean spaces OR show error
+Actual:        Correctly auto-clean or show error
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-EDGE-003
+Purpose:       Very long name (50+ characters)
+Flow:          Full Name: Muhammad Talha Ahmed Syed Khan Qureshi Abdullah Mahmood
+               Father's Name: [continues normally]
+Expected:      Accepts long name (no artificial limit)
+Actual:        Correctly accepts long names
+Result:        Pass
+
+----------------------------------------------------
+Test ID:       APP-EDGE-004
+Purpose:       Email with uppercase letters
+Flow:          Email Address: Talha@STUDENT.EDU.PK
+               CNIC: [continues, email stored in lowercase or as-is]
+Expected:      Accepts email (case doesn't matter)
+Actual:        Correctly accepts email
+Result:        Pass
+
+====================================================
+END OF TEST CASES - 60 Total Tests
+====================================================
