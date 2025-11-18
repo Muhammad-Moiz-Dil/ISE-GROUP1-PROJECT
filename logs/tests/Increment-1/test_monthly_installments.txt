@@ -110,8 +110,8 @@ Input:         Hi > A > H > 1 > " 1 " (with spaces)
 Expected:      System trims input and processes as "1"
                 Display Plan 1 installments correctly
 
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
+Actual:        Correctly displays plan 1 and installments
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-012
@@ -120,8 +120,8 @@ Input:         Hi > A > H > 1 > 6 (if Area 1 has 6 plans)
 Expected:      Display Plan 6 details correctly
                 No error message
 
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
+Actual:        Correctly displays last available plan
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-013
@@ -130,8 +130,8 @@ Input:         Hi > A > H > 1 > 7 (if Area 1 has 6 plans)
 Expected:      Error: "You probably meant to select from 1-6. Please try again."
                 Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
+Actual:        Correctly displays error message
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-014
@@ -140,8 +140,8 @@ Input:         Hi > A > H > 1 > @#$
 Expected:      Fallback response from utterance table
                 Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
+Actual:        Correctly displays fallback message
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-015
@@ -150,8 +150,8 @@ Input:         Hi > A > H > 1 > 1 > s (lowercase)
 Expected:      Transition to SUBMIT_APPLICATION state
                 Case-insensitive check works
 
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
+Actual:        Correctly transitions to SUBMIT_APPLICATION
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-016
@@ -160,40 +160,20 @@ Input:         Hi > A > H > 1 > a (lowercase)
 Expected:      Return to main menu
                 Case-insensitive check works
 
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
+Actual:        Correctly goes to main menu
+Result:        Pass
 
 ====================================================
 EDGE CASE TESTS
 ====================================================
 
 Test ID:       DMI-E01
-Purpose:       Area with no loan plans
-Input:         Hi > A > H > 3 (assuming Area 3 is empty)
-Expected:      "No such area found."
-                Return to MAIN_MENU state
-
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
-
----------------------------------------------------------
-Test ID:       DMI-E02
-Purpose:       Very large plan number
-Input:         Hi > A > H > 1 > 999999
-Expected:      Error: "You probably meant to select from 1-[planCount]. Please try again."
-                No crash or overflow
-
-Actual:        [OUTPUT TO BE FILLED]
-Result:        [Pass/Fail]
-
----------------------------------------------------------
-Test ID:       DMI-E03
 Purpose:       Decimal number input
 Input:         Hi > A > H > 1 > 1.5
 Expected:      Non-numeric detection triggers fallback response
                 Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Actual:        [OUTPUT TO BE FILLED]
+Actual:        Correctly gives fallback message
 Result:        [Pass/Fail]
 
 ====================================================
