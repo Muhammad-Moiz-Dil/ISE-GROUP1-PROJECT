@@ -1,162 +1,201 @@
 ====================================================
-TEST CASES: Monthly Installments Feature
+TEST CASES: Dynamic Monthly Installments Feature
 ====================================================
 
-Test ID:       MI-001
-Purpose:       View monthly installment for first plan in Area 1
-Input:         A > H > 1 > 1
-Expected:      Displays Plan 1 monthly installment (150,000 PKR)
+Test ID:       DMI-001
+Purpose:       Successfully view loan plan details
+Input:         Hi > A > H > 1 > 1
+Expected:      Display Area 1, Plan 1 details with monthly installment breakdown
+                Prompt: "What would you like to do next?"
+                Options: S (submit), plan number (view another), A (return)
 
-Actual:        Accurately displays plan 1's monthly installment
+Actual:        Correctly outputs monthly installments and prompts
 Result:        Pass
 
 ---------------------------------------------------------
+Test ID:       DMI-002
+Purpose:       View multiple plans sequentially
+Input:         Hi > A > H > 1 > 1 > 2
+Expected:      Display Plan 1, then Plan 2 monthly installments correctly
+                Each plan shows correct calculations
 
-Test ID:       MI-002
-Purpose:       View monthly installment for second plan in Area 1
-Input:         A > H > 1 > 2
-Expected:      Displays Plan 2 monthly installment (156,250 PKR)
-
-Actual:        
-Result:        
-
----------------------------------------------------------
-
-Test ID:       MI-003
-Purpose:       View monthly installment for third plan in Area 1
-Input:         A > H > 1 > 3
-Expected:      Displays Plan 3 monthly installment (152,777 PKR)
-
-Actual:        
-Result:        
-
----------------------------------------------------------
-
-Test ID:       MI-004
-Purpose:       View multiple plans sequentially in same area
-Input:         A > H > 1 > 1 > 2 > 3
-Expected:      Shows Plan 1, then Plan 2, then Plan 3 monthly installments
-               Bot prompts after each: "View another plan?"
-
-Actual:        Accurately shows all plans in sequence, one after another.
+Actual:        Correctly outputs monthly installments and prompts
 Result:        Pass
 
 ---------------------------------------------------------
+Test ID:       DMI-003
+Purpose:       Return to main menu from installment view
+Input:         Hi > A > H > 1 > A
+Expected:      Return to main menu
+                Display: "Please select the category you want to apply for. Press H for a home loan, C for a car loan, S for a scooter loan, P for a personal loan. Press X to exit"
 
-Test ID:       MI-005
-Purpose:       Return to main menu from monthly installments view
-Input:         A > H > 1 > A
-Expected:      Returns to main menu without showing any monthly installment
-               Bot displays main menu greeting
-
-Actual:        Gracefully returns to main menu and outputs greeting message
+Actual:        Correctly returns to main menu 
 Result:        Pass
 
 ---------------------------------------------------------
+Test ID:       DMI-004
+Purpose:       Handle invalid plan number (too high)
+Input:         Hi > A > H > 1 > 99
+Expected:      Error message: "You probably meant to select from 1-[planCount]. Please try again."
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Test ID:       MI-006
-Purpose:       View plan, then return to main menu
-Input:         A > H > 1 > 2 > A
-Expected:      Shows Plan 2 monthly installment, then returns to main menu
-
-Actual:        
+Actual:        Correctly outputs error message
 Result:        Pass
 
 ---------------------------------------------------------
+Test ID:       DMI-005
+Purpose:       Handle invalid plan number (zero)
+Input:         Hi > A > H > 1 > 0
+Expected:      Error message: "You probably meant to select from 1-[planCount]. Please try again."
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Test ID:       MI-007
-Purpose:       Invalid plan number (too high)
-Input:         A > H > 1 > 5
-Expected:      "You probably meant to select from 1-3. Please try again"
-               Stays in VIEW_MONTHLY_INSTALLMENTS state
-
-Actual:        Output: "You probably meant to select from 1-3. Please try again"
+Actual:        Correctly outputs error message
 Result:        Pass
 
 ---------------------------------------------------------
+Test ID:       DMI-006
+Purpose:       Handle negative plan number
+Input:         Hi > A > H > 1 > -5
+Expected:      Error message: "You probably meant to select from 1-[planCount]. Please try again."
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Test ID:       MI-008
-Purpose:       Invalid plan number (zero)
-Input:         A > H > 1 > 0
-Expected:      "You probably meant to select from 1-3. Please try again"
-               Stays in VIEW_MONTHLY_INSTALLMENTS state
-
-Actual:        Output: "You probably meant to select from 1-3. Please try again"
+Actual:        Correctly outputs error message
 Result:        Pass
 
 ---------------------------------------------------------
+Test ID:       DMI-007
+Purpose:       Handle non-numeric input
+Input:         Hi > A > H > 1 > abc
+Expected:      Fallback response: "Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit"
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Test ID:       MI-009
-Purpose:       Non-numeric input in plan selection
-Input:         A > H > 1 > abc
-Expected:      Natural response from Utterances.txt (wildcard response)
-               Stays in VIEW_MONTHLY_INSTALLMENTS state
+Actual:        Correctly gives fallback message
+Result:        [Pass/Fail]
 
-Actual:        Correctly gives a natural response from Utterances.txt (wildcard response)
+---------------------------------------------------------
+Test ID:       DMI-008
+Purpose:       Handle empty input (just press Enter)
+Input:         Hi > A > H > 1 > [ENTER]
+Expected:      Fallback response: "Hi! I'll be happy to help. Please press A if you want to apply for loan. Press X to exit"
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
+
+Actual:        Correctly gives fallback message
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+Test ID:       DMI-009
+Purpose:       Navigate to application submission
+Input:         Hi > A > H > 1 > 1 > S
+Expected:      Transition to SUBMIT_APPLICATION state
+                Display: "LOAN APPLICATION FORM"
+
+Actual:        Correctly transitions to SUBMIT_APPLICATION
 Result:        Pass
 
 ---------------------------------------------------------
+Test ID:       DMI-010
+Purpose:       Verify calculation accuracy (Plan 1)
+Input:         Hi > A > H > 1 > 1
+Expected:      Monthly Installment = (Price - Down Payment) / Installments
+                Example: (10,000,000 - 1,000,000) / 60 = 150,000/month
+                Verify calculation is correct
 
-Test ID:       MI-010
-Purpose:       Test Area 2 monthly installments
-Input:         A > H > 2 > 1
-Expected:      Displays Plan 1 monthly installment for Area 2
-               Dynamic plan count based on Area 2 data
-
-Actual:        Correctly outputs plan 1's monthly installment for Area 2
-Result:        Pass
+Actual:        Correctly displays monthly installment value.
+Result:        [Pass/Fail]
 
 ---------------------------------------------------------
+Test ID:       DMI-011
+Purpose:       Handle plan with leading/trailing spaces
+Input:         Hi > A > H > 1 > " 1 " (with spaces)
+Expected:      System trims input and processes as "1"
+                Display Plan 1 installments correctly
 
-Test ID:       MI-011
-Purpose:       Test non-existent Area 3 monthly installments
-Input:         A > H > 3 > 1
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+Test ID:       DMI-012
+Purpose:       Test boundary - select last available plan
+Input:         Hi > A > H > 1 > 6 (if Area 1 has 6 plans)
+Expected:      Display Plan 6 details correctly
+                No error message
+
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+Test ID:       DMI-013
+Purpose:       Test boundary - one past last plan
+Input:         Hi > A > H > 1 > 7 (if Area 1 has 6 plans)
+Expected:      Error: "You probably meant to select from 1-6. Please try again."
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
+
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+Test ID:       DMI-014
+Purpose:       Handle special characters in input
+Input:         Hi > A > H > 1 > @#$
+Expected:      Fallback response from utterance table
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
+
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+Test ID:       DMI-015
+Purpose:       Test lowercase 's' for submission
+Input:         Hi > A > H > 1 > 1 > s (lowercase)
+Expected:      Transition to SUBMIT_APPLICATION state
+                Case-insensitive check works
+
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+Test ID:       DMI-016
+Purpose:       Test lowercase 'a' for main menu
+Input:         Hi > A > H > 1 > a (lowercase)
+Expected:      Return to main menu
+                Case-insensitive check works
+
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
+
+====================================================
+EDGE CASE TESTS
+====================================================
+
+Test ID:       DMI-E01
+Purpose:       Area with no loan plans
+Input:         Hi > A > H > 3 (assuming Area 3 is empty)
 Expected:      "No such area found."
+                Return to MAIN_MENU state
 
-Actual:        Output: "No such area found."
-Result:        Pass    
-
----------------------------------------------------------
-
-Test ID:       MI-012
-Purpose:       Verify plan list doesn't show monthly installments
-Input:         A > H > 1
-Expected:      Shows Plan 1, 2, 3 WITHOUT monthly installment values
-               Only shows: Size, Installments, Price, Down Payment
-
-Actual:        Correctly shows plans without monthly installments
-Result:        Pass
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
 
 ---------------------------------------------------------
+Test ID:       DMI-E02
+Purpose:       Very large plan number
+Input:         Hi > A > H > 1 > 999999
+Expected:      Error: "You probably meant to select from 1-[planCount]. Please try again."
+                No crash or overflow
 
-Test ID:       MI-013
-Purpose:       Verify dynamic plan count prompt
-Input:         A > H > 1
-Expected:      Prompt says "Enter plan number 1-X" where X = actual plan count
-               (e.g., if 3 plans exist, says "1-3")
-
-Actual:        Output: "Enter plan number 1-X"
-Result:        Pass
-
----------------------------------------------------------
-
-Test ID:       MI-014
-Purpose:       Navigate through multiple areas
-Input:         A > H > 1 > 1 > A > H > 2 > 1 > A
-Expected:      Shows Area 1 Plan 1, returns to main, then Area 2 Plan 1
-               All transitions smooth
-
-Actual:        Correctly shows Area 1 Plan 1, returns to main, then shows Area 2 Plan 1
-Result:        Pass
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
 
 ---------------------------------------------------------
+Test ID:       DMI-E03
+Purpose:       Decimal number input
+Input:         Hi > A > H > 1 > 1.5
+Expected:      Non-numeric detection triggers fallback response
+                Stay in VIEW_MONTHLY_INSTALLMENTS state
 
-Test ID:       MI-015
-Purpose:       Exit from monthly installments view
-Input:         A > H > 1 > 2 > X
-Expected:      Shows Plan 2 monthly installment, then exits chatbot
+Actual:        [OUTPUT TO BE FILLED]
+Result:        [Pass/Fail]
 
-Actual:        
-Result:        
-
----------------------------------------------------------
+====================================================
+END OF TEST CASES
+====================================================

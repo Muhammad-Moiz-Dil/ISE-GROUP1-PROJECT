@@ -125,9 +125,6 @@ void LoanPlanManager::displayMonthlyInstallment(string area, int planIndex)
 {
     if (loanTable.count(area) && planIndex >= 0 && planIndex < loanTable[area].size())
     {
-        cout << "\nMonthly Installment for Plan " << (planIndex + 1) << ": ";
-        cout << loanTable[area][planIndex].getMonthlyInstallments() << " PKR" << endl;
-
         int installmentAmount =  loanTable[area][planIndex].getMonthlyInstallments();
         string noOfInstallments =  loanTable[area][planIndex].getInstallments() ;
         string loan =  loanTable[area][planIndex].getprice();

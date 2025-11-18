@@ -17,10 +17,23 @@ void runChatbot()
     displayWelcomeHeader();
 
     string state = "MAIN_MENU";
-    string currentArea = "";  // Track which area user is viewing
+    string currentArea = "";
 
     while (true)
     {
+        // Check for action states that don't need input
+        if (state == "SUBMIT_APPLICATION")
+        {
+            handleApplicationSubmission(state, currentArea);
+            continue;
+        }
+        else if (state == "QUERY_APPLICATIONS")
+        {
+            handleQueryApplications(state);
+            continue;
+        }
+
+        // Now get input for interactive states
         string userInput;
         cout << ">> ";
         getline(cin, userInput);
@@ -46,19 +59,6 @@ void runChatbot()
         {
             handleViewMonthlyInstallments(userInput, lowerInput, state, currentArea);
         }
-        else if (state == "APPLICATION_SUBMISSION")
-        {
-            handleApplicationSubmission(state, currentArea);
-        }
-        else if (state == "QUERY_APPLICATIONS")
-        {
-            handleQueryApplications(state);
-        }
-        else if (state == "SUBMIT_APPLICATION")
-        {
-            handleApplicationSubmission(state, currentArea);
-        }
-
     }
 
     displayGoodbyeFooter();
@@ -114,7 +114,7 @@ void handleHomeLoanArea(string userInput, string lowerInput, string &state, stri
         currentArea = "Area 1";
         int planCount = LoanPlanManagerObj.getPlanCount(currentArea);
         
-        if (planCount > 0)  // ✅ Check if area exists
+        if (planCount > 0)  // Check if area exists
         {
             LoanPlanManagerObj.displayLoanPlan(currentArea);
             cout << "\nWould you like to view monthly installments for any plan?\n";
@@ -225,27 +225,37 @@ void handleViewMonthlyInstallments(string userInput, string lowerInput, string &
     
     // Check if input is a valid plan number
     bool isNumeric = true;
-    for (char c : userInput)
+    bool hasNegativeSign = false;
+    
+    // Check for negative sign at start
+    if (!userInput.empty() && userInput[0] == '-')
     {
-        if (!isdigit(c))
+        hasNegativeSign = true;
+    }
+    
+    // Check if all characters (after optional negative sign) are digits
+    for (int i = (hasNegativeSign ? 1 : 0); i < userInput.length(); i++)
+    {
+        if (!isdigit(userInput[i]))
         {
             isNumeric = false;
             break;
         }
     }
     
-    if (isNumeric && userInput.length() > 0)
+    // If it's a number (positive or negative)
+    if (isNumeric && userInput.length() > 0 && (hasNegativeSign || isdigit(userInput[0])))
     {
         int planChoice = stoi(userInput);
+        
         if (planChoice >= 1 && planChoice <= planCount)
         {
             LoanPlanManagerObj.displayMonthlyInstallment(currentArea, planChoice - 1);
             
-            // MODIFIED: Ask if they want to submit, see another, or go back
             cout << "\nWhat would you like to do next?" << endl;
-            cout << "  S - Submit loan application" << endl;
-            cout << "  (Enter plan number 1-" << planCount << " to view another)" << endl;
-            cout << "  A - Return to main menu" << endl;
+            cout << " S - Submit loan application" << endl;
+            cout << " (Enter plan number 1-" << planCount << " to view another)" << endl;
+            cout << " A - Return to main menu" << endl;
         }
         else
         {
@@ -254,11 +264,10 @@ void handleViewMonthlyInstallments(string userInput, string lowerInput, string &
     }
     else
     {
+        // Non-numeric input
         cout << uttrObj.getResponse(lowerInput) << endl;
     }
 }
-
-
 
 void displayWelcomeHeader()
 {
