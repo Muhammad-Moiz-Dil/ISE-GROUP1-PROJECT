@@ -97,6 +97,14 @@ void handleMainMenu(string userInput, string lowerInput, string &state)
     {
         state = "HOME_LOAN_AREA";
     }
+    else if (userInput == "C" || userInput == "c")
+    {
+        state = "CAR_LOAN";
+    }
+    else if (userInput == "S" || userInput == "s")
+    {
+        state = "SCOOTER_LOAN_AREA";
+    }
     else if (userInput == "3")
     {
         state = "SUBMIT_APPLICATION";
@@ -111,7 +119,7 @@ void handleScooterLoan(string &userInput, string &lowerInput, string &state,stri
     if (userInput == "1")
     {
         currentScooterMake = "Make 1";
-        int planCount = CarPlanManagerObj.getPlanCount(currentScooterMake);
+        int planCount = ScooterPlanManagerObj.getPlanCount(currentScooterMake);
         
         if (planCount > 0)
         {
@@ -350,7 +358,7 @@ void handleViewScooterMonthlyInstallments(string userInput, string  lowerInput, 
     userInput = trim(userInput); 
     lowerInput = toLower(userInput); 
     
-    int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+    int planCount = ScooterPlanManagerObj.getPlanCount(currentMake);
 
     // Check if user wants to return to main menu
     if (userInput == "A" || userInput == "a")

@@ -179,6 +179,7 @@ void ScooterPlanManager::displayMonthlyInstallment(const string &make, int planI
         int n = stoi(noOfInstallments);
         
         scooterPriceStr = trim(scooterPriceStr);
+        cout << scooterPriceStr<<endl;
         int price = stoi(scooterPriceStr);
 
         dpStr = trim(dpStr);
@@ -187,6 +188,7 @@ void ScooterPlanManager::displayMonthlyInstallment(const string &make, int planI
         price -= dp;
         int currentBalance = price;
 
+         cout << dpStr<<endl;
         cout << "\n--- Monthly Scooter Payment Schedule ---" << endl;
         cout << "Original Scooter Price: " << price << " PKR" << endl;
         cout << "Monthly Installment: " << installmentAmount << " PKR" << endl;
