@@ -79,9 +79,9 @@ void handleApplicationSubmission(string &state, string &currentArea);
  */
 void handleQueryApplications(std::string &state);
 
-void handleCarLoan(string &userInput, string &lowerInput, string &state, string &currentMake);
-void handleViewCarMonthlyInstallments(string userInput, string lowerInput, string &state, string &currentMake);
-void handleScooterLoan(string &userInput, string &lowerInput, string &state,string &currentMake);
-void handleViewScooterMonthlyInstallments(string userInput, string  lowerInput, string &state,string &currentMake);
+void handleCarLoan(string &userInput, string &lowerInput, string &state, string &currentCarMake);
+void handleViewCarMonthlyInstallments(string userInput, string lowerInput, string &state, string &currentCarMake);
+void handleScooterLoan(string &userInput, string &lowerInput, string &state,string &currentScooterMake);
+void handleViewScooterMonthlyInstallments(string userInput, string  lowerInput, string &state,string &currentScooterMake);
 
 #endif

@@ -96,3 +96,169 @@ Actual:        Correctly displays all fields accurately
 Result:        Pass
 
 ---------------------------------------------------------
+
+====================================================
+END OF HOME PLAN TEST CASES - 10 Total Tests
+====================================================
+
+====================================================
+TEST CASES: Car Loan Plans Feature
+====================================================
+
+Test ID:       CL-001
+Purpose:       Display Make 1 car plans
+Input:         A > C > 1
+Expected:      Shows all car plans for Make 1 (make, model, engine, year, installments, price, down payment)
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       CL-002
+Purpose:       Handle invalid make input with natural response
+Input:         A > C > 99
+Expected:      "You probably meant to select from 1-2. Please try again."
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       CL-003
+Purpose:       Display Make 2 car plans
+Input:         A > C > 2
+Expected:      Shows all car plans for Make 2 with correct details
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       CL-004
+Purpose:       View monthly installment for car plan
+Input:         A > C > 1 > 1
+Expected:      Displays monthly payment schedule with:
+               - Original Car Price (after down payment)
+               - Monthly Installment amount
+               - Month-by-month breakdown
+               Shows options: S (Submit), plan number, A (Main menu)
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       CL-005
+Purpose:       Navigation back to main menu from car plans
+Input:         A > C > 1 > A
+Expected:      Returns to main menu with loan category options
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       CL-006
+Purpose:       Test non-numeric input in make selection
+Input:         A > C > abc
+Expected:      Bot responds naturally from Utterances.txt
+               Stays in CAR_LOAN state for retry
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       CL-007
+Purpose:       Direct access to car loans from main menu
+Input:         C > 1
+Expected:      Directly enters CAR_LOAN state and displays Make 1 plans
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+====================================================
+TEST CASES: Scooter Loan Plans Feature
+====================================================
+
+Test ID:       SL-001
+Purpose:       Display Make 1 scooter plans
+Input:         A > S > 1
+Expected:      Shows all scooter plans for Make 1 (make, model, engine, year, installments, price, down payment)
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       SL-002
+Purpose:       Handle invalid make input with natural response
+Input:         A > S > 99
+Expected:      "You probably meant to select from 1-2. Please try again."
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       SL-003
+Purpose:       Display Make 2 scooter plans
+Input:         A > S > 2
+Expected:      Shows all scooter plans for Make 2 with correct details
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       SL-004
+Purpose:       View monthly installment for scooter plan
+Input:         A > S > 1 > 1
+Expected:      Displays monthly payment schedule with breakdown
+               Shows options: S (Submit), plan number, A (Main menu)
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       SL-005
+Purpose:       Navigation back to main menu from scooter plans
+Input:         A > S > 1 > A
+Expected:      Returns to main menu with loan category options
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       SL-006
+Purpose:       Test non-numeric input in make selection
+Input:         A > S > xyz
+Expected:      Bot responds naturally from Utterances.txt
+               Stays in SCOOTER_LOAN state for retry
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       SL-007
+Purpose:       Direct access to scooter loans from main menu
+Input:         S > 1
+Expected:      Directly enters SCOOTER_LOAN state and displays Make 1 plans
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+====================================================
+TEST CASES: Cross-Feature Navigation
+====================================================
+
+Test ID:       NAV-001
+Purpose:       Switch between different loan types
+Input:         A > C > 1 > A > S > 1 > A > H > 1
+Expected:      Successfully navigates through car, scooter, and home loans
+               Each displays correct data without mixing
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+---------------------------------------------------------
+
+Test ID:       NAV-002
+Purpose:       Exit from any loan type view
+Input:         A > C > 1 > X
+Expected:      Exits chatbot cleanly with goodbye message
+Actual:        [TO BE FILLED]
+Result:        [Pass/Fail]
+
+====================================================
+END OF CAR & SCOOTER TEST CASES - 17 Total Tests
+====================================================
