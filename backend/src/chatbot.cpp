@@ -59,7 +59,7 @@ void runChatbot()
         }
         else if(state == "CAR_LOAN_AREA")
         {
-            handleCarLoan(userInput, lowerInput,state, currentArea);
+            handleCarLoan(userInput, lowerInput,state, currentMake);
         }
         else if(state == "SCOOTER_LOAN_AREA")
         {
