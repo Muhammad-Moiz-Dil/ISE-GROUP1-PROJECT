@@ -170,7 +170,10 @@ void CarPlanManager::displayMonthlyInstallment(string make, int planIndex)
         int n = stoi(noOfInstallments);
         carPrice = trim(carPrice);
         int price = stoi(carPrice);
+        //cout << price <<endl;
+        dp = trim(dp);
         int Dp = stoi(dp);
+       // cout << dp<<endl;
         price -= Dp;
 
         int currentBalance = price;

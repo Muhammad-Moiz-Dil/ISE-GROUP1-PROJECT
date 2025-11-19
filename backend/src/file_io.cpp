@@ -1,7 +1,9 @@
 #include "file_io.h"
 #include "loan_plan.h"  // Need this to populate LoanPlanManager
 #include "car.h"
+#include "scooter.h"
 #include "utils.h"       // for trim() function
+#include "scooter.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -204,11 +206,87 @@ bool loadCarPlans(const string &filePath)
             carPlanObj.setEngine(Engine);
             carPlanObj.setUsed(Used);
             carPlanObj.setUsedManufacturingYear(Manufacturing);
+            carPlanObj.setMake(make);
 
 
             CarPlanManagerObj.setMake(make, carPlanObj);
         }
     }
     carFile.close();
+    return true;
+}
+//==================================================================================================================
+bool loadScooterPlans(const string &filePath)
+{
+    ifstream scooterFile;
+    scooterFile.open(filePath);
+    if (!scooterFile.is_open())
+    {
+        cout << "File not opened." << endl;
+        return false;
+    }
+    else
+    {
+        string line;
+        int i = 0;
+        while (getline(scooterFile, line))
+        {
+            stringstream ss(line);
+            string make, modal, distancePerCharge, chargingTime, maxSpeed, installments,Price,DownPayment;
+
+            getline(ss, make, '#');
+            getline(ss, modal, '#');
+            getline(ss, distancePerCharge, '#');
+            getline(ss, chargingTime, '#');
+            getline(ss, maxSpeed, '#');
+            getline(ss, installments, '#');
+            getline(ss, Price, '#');
+            getline(ss, DownPayment, '#');
+            if (i == 0) // ignore the first line of txt file.
+            {
+                i++;
+                continue;
+            }
+
+            string inst = trim(installments);
+            int Installments = stoi(inst);
+            int totalPrice = 0;
+            int downPayments = 0;
+            string actualPrice = "";
+            for (int i = 0; i < Price.length(); i++)
+            {
+                if (Price[i] != ',')
+                {
+                    actualPrice = actualPrice + Price[i];
+                }
+            }
+            totalPrice = stoi(actualPrice);
+
+            string actualDownPayment = "";
+            for (int i = 0; i < DownPayment.length(); i++)
+            {
+                if (DownPayment[i] != ',')
+                {
+                    actualDownPayment = actualDownPayment + DownPayment[i];
+                }
+            }
+            downPayments = stoi(actualDownPayment);
+
+            int monthlyInstallment = (totalPrice - downPayments) / Installments;
+            ScooterPlan ScooterPlan;
+            ScooterPlan.setModel(modal);
+            ScooterPlan.setDownPayment(DownPayment);
+            ScooterPlan.setInstallments(installments);
+            ScooterPlan.setPrice(Price);
+            ScooterPlan.setMonthlyInstallments(monthlyInstallment);
+            ScooterPlan.setDistancePerChargeKm(distancePerCharge);
+            ScooterPlan.setChargingTimeHrs(chargingTime);
+            ScooterPlan.setMaxSpeedKmh(maxSpeed);
+            ScooterPlan.setMake(make);
+
+            ScooterPlanManagerObj.setMake(make, ScooterPlan);
+        }
+    }
+    scooterFile.close();
     return true;
 }

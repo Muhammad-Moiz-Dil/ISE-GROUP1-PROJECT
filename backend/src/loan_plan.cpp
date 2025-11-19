@@ -149,7 +149,7 @@ void LoanPlanManager::displayMonthlyInstallment(string area, int planIndex)
             cout << "==========================================================================" << endl;
             cout << left << setw(8) << "MONTH" 
                  << right << setw(23) << "START BALANCE" 
-                 << right << setw(18) << "PAYMENT" 
+                 << right << setw(14) << "PAYMENT" 
                  << right << setw(23) << "REMAINING BALANCE" << endl;
             cout << "==========================================================================" << endl;
 
