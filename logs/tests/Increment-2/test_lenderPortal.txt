@@ -1,0 +1,248 @@
+====================================================
+TEST CASES: Lender Portal Functionality
+====================================================
+
+SETUP:
+------
+Before testing, ensure you have some test applications in output/applications.txt
+You can create these by:
+1. Running chatbot.exe
+2. Going through the application form (A > H > 1 > fill out form > S to submit)
+3. Submit 2-3 applications with different loan types and statuses
+
+====================================================
+SECTION 1: LENDER PORTAL STARTUP
+====================================================
+
+Test ID:       LP-001
+Purpose:       Lender portal launches successfully
+Input:         Run: .\lender.exe
+Expected:      Displays welcome header:
+               "LENDER PORTAL - LOAN MANAGEMENT"
+               Shows: "Loaded X applications."
+               Displays main menu with 4 options
+Actual:        Correctly displays main menu
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-002
+Purpose:       Handle missing applications file
+Setup:         Temporarily rename/delete output/applications.txt
+Input:         Run: .\lender.exe
+Expected:      Shows: "Error: Could not open applications file."
+               Shows: "Failed to load applications. Exiting."
+               Program exits gracefully
+Actual:        Correctly displays error message
+Result:        Pass
+
+====================================================
+SECTION 2: VIEW ALL APPLICATIONS
+====================================================
+
+Test ID:       LP-003
+Purpose:       View all applications in table format
+Input:         1 (View All Applications)
+Expected:      Displays table with columns:
+               - ID (8 chars)
+               - Name (25 chars)
+               - Loan Type (15 chars)
+               - Status (15 chars)
+               - Date (15 chars)
+               Shows: "Total Applications: X"
+               Returns to main menu
+Actual:        Correctly displays table
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-004
+Purpose:       View all when no applications exist
+Setup:         Empty applications.txt (keep header only)
+Input:         Run lender.exe > 1
+Expected:      Shows: "No applications found."
+               Returns to main menu
+Actual:        Correctly displays error message
+Result:        Pass
+
+====================================================
+SECTION 3: SEARCH APPLICATION BY ID
+====================================================
+
+Test ID:       LP-005
+Purpose:       Search for existing application
+Input:         2 > [valid application ID, e.g., 1001]
+Expected:      Displays detailed application information:
+               - Application ID
+               - Status
+               - Submission Date
+               - Personal Information (name, father's name, CNIC, contact, email)
+               - Financial Information (employment, income, dependents)
+               - Loan Details (type, area)
+               Returns to main menu
+Actual:        Correctly displays application details
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-006
+Purpose:       Search for non-existent application
+Input:         2 > 99999
+Expected:      Shows: "I couldn't find that application. Please check the ID and try again."
+               Returns to main menu
+Actual:        Correctly displays error message and returns to main menu
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-007
+Purpose:       Handle empty input for application ID
+Input:         2 > [press Enter without typing]
+Expected:      Shows: "I couldn't find that application. Please check the ID and try again."
+               Returns to main menu
+Actual:        Correctly displays error message and returns to main menu
+Result:        Pass
+
+====================================================
+SECTION 4: APPROVE APPLICATION
+====================================================
+
+Test ID:       LP-008
+Purpose:       Approve a pending application
+Setup:         Have at least one application with status "Pending"
+Input:         3 > [application ID] > 1 (Approve)
+Expected:      Shows application details
+               Shows options: 1. Approve, 2. Reject, 3. Cancel
+               After selecting 1:
+               Shows: "Application approved successfully!"
+               Verify: Check applications.txt - status changed to "Approved"
+Actual:        Correctly approves validation and changes applications.txt
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-009
+Purpose:       Verify approved status persists
+Setup:         After LP-008
+Input:         Exit lender.exe > Re-run lender.exe > 2 > [same app ID]
+Expected:      Application still shows status: "Approved"
+               Status change was saved to file
+Actual:        Correctly displays approved status
+Result:        Pass
+
+====================================================
+SECTION 5: REJECT APPLICATION
+====================================================
+
+Test ID:       LP-010
+Purpose:       Reject a pending application
+Setup:         Have at least one application with status "Pending"
+Input:         3 > [application ID] > 2 (Reject)
+Expected:      Shows application details
+               Shows options: 1. Approve, 2. Reject, 3. Cancel
+               After selecting 2:
+               Shows: "Application rejected successfully!"
+               Verify: Check applications.txt - status changed to "Rejected"
+Actual:        Correctly rejects validation and changes applications.txt
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-011
+Purpose:       Cancel approve/reject operation
+Input:         3 > [application ID] > 3 (Cancel)
+Expected:      Returns to main menu
+               Status remains unchanged
+Actual:        Correctly returns to main menu
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-012
+Purpose:       Approve/reject with invalid application ID
+Input:         3 > 99999
+Expected:      Shows: "I couldn't find that application. Please check the ID and try again."
+               Returns to main menu
+Actual:        Correctly displays error message
+Result:        Pass
+
+====================================================
+SECTION 6: NAVIGATION & EXIT
+====================================================
+
+Test ID:       LP-013
+Purpose:       Handle invalid menu choice
+Input:         5 (invalid option)
+Expected:      Shows: "Invalid choice. Please try again."
+               Redisplays main menu
+Actual:        Correctly displays error message
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-014
+Purpose:       Handle non-numeric menu input
+Input:         abc
+Expected:      Shows: "Invalid choice. Please try again."
+               Redisplays main menu
+Actual:        Correctly displays error message
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-015
+Purpose:       Exit lender portal
+Input:         4
+Expected:      Shows: "Exiting Lender Portal. Goodbye!"
+               Program terminates gracefully
+Actual:        Correctly exits
+Result:        Pass
+
+====================================================
+SECTION 7: DATA INTEGRITY
+====================================================
+
+Test ID:       LP-016
+Purpose:       Multiple approve/reject operations
+Input:         3 > [app1 ID] > 1 (Approve)
+               3 > [app2 ID] > 2 (Reject)
+               1 (View All)
+Expected:      Both status changes are reflected
+               Table shows correct statuses
+               File contains both changes
+Actual:        Correctly applies changes
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LP-017
+Purpose:       View details shows all required fields
+Input:         2 > [application ID with complete data]
+Expected:      Details display shows:
+               ✓ Application ID
+               ✓ Status
+               ✓ Submission Date
+               ✓ Full Name
+               ✓ Father's Name
+               ✓ CNIC
+               ✓ Contact
+               ✓ Email
+               ✓ Employment
+               ✓ Annual Income
+               ✓ Dependents
+               ✓ Loan Type
+               ✓ Loan Area
+Actual:        Correctly displays all required fields
+Result:        Pass
+
+====================================================
+END OF LENDER PORTAL TEST CASES - 17 Total Tests
+====================================================
+
+TESTING NOTES:
+--------------
+1. Create 3-4 test applications with different loan types (Home, Car, Scooter)
+2. Keep applications.txt backed up before testing
+3. Verify file changes after approve/reject operations
+4. Test with both fresh startup and mid-session operations
+5. Check that main menu redisplays after each operation

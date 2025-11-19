@@ -126,8 +126,19 @@ public:
     string getFathersName() const { return fathersName; }
     string getContact() const { return contact; }
     string getEmail() const { return email; }
-    string getLoanType() const { return selectedLoanType; }
     string getSubmissionDate() const { return submissionDate; }
+    string getPostalAddress() const { return postalAddress; }
+    
+    // Financial Information Getters
+    string getEmployment() const { return employment; }
+    int getDependents() const { return dependents; }
+    long getAnnualIncome() const { return annualIncome; } 
+    long getAvgElectricityBill() const { return avgElectricityBill; }
+    long getCurrentElectricityBill() const { return currentElectricityBill; }
+
+    // Loan Details Getters
+    string getLoanType() const { return selectedLoanType; }
+    string getLoanArea() const { return selectedLoanDetails; }
     
     // [<-| FILE OPERATIONS |->]
     /**

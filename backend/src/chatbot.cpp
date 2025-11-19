@@ -22,7 +22,8 @@ void runChatbot()
 
     string state = "MAIN_MENU";
     string currentArea = "";
-    string currentMake = "";
+    string currentCarMake = "";
+    string currentScooterMake = "";
 
     while (true)
     {
@@ -62,20 +63,19 @@ void runChatbot()
         }
         else if (state == "CAR_LOAN")
         {
-            handleCarLoan(userInput, lowerInput, state, currentMake);
+            handleCarLoan(userInput, lowerInput, state, currentCarMake);
         }
         else if (state == "SCOOTER_LOAN_AREA")
         {
-            handleScooterLoan(userInput, lowerInput, state, currentMake);
-            continue;
+            handleScooterLoan(userInput, lowerInput, state, currentScooterMake);
         }
         else if (state == "VIEW_CAR_MONTHLY_INSTALLMENTS")
         {
-            handleViewCarMonthlyInstallments(userInput, lowerInput, state, currentMake);
+            handleViewCarMonthlyInstallments(userInput, lowerInput, state, currentCarMake);
         }
         else if(state == "VIEW_SCOOTER_MONTHLY_INSTALLMENTS")
         {
-            handleViewScooterMonthlyInstallments(userInput, lowerInput, state, currentMake);
+            handleViewScooterMonthlyInstallments(userInput, lowerInput, state, currentScooterMake);
         }
         else if (state == "VIEW_MONTHLY_INSTALLMENTS")
         {
@@ -106,16 +106,16 @@ void handleMainMenu(string userInput, string lowerInput, string &state)
         state = "QUERY_APPLICATION";
     }
 }
-void handleScooterLoan(string &userInput, string &lowerInput, string &state,string &currentMake)
+void handleScooterLoan(string &userInput, string &lowerInput, string &state,string &currentScooterMake)
 {
     if (userInput == "1")
     {
-        currentMake = "Make 1";
-        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        currentScooterMake = "Make 1";
+        int planCount = CarPlanManagerObj.getPlanCount(currentScooterMake);
         
         if (planCount > 0)
         {
-            ScooterPlanManagerObj.displayScooterPlan(currentMake);
+            ScooterPlanManagerObj.displayScooterPlan(currentScooterMake);
             cout << "\nWould you like to view monthly installments for any plan?\n";
             cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
             state = "VIEW_SCOOTER_MONTHLY_INSTALLMENTS";
@@ -128,12 +128,12 @@ void handleScooterLoan(string &userInput, string &lowerInput, string &state,stri
     }
     else if (userInput == "2")
     {
-        currentMake = "Make 2";
-        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        currentScooterMake = "Make 2";
+        int planCount = CarPlanManagerObj.getPlanCount(currentScooterMake);
         
         if (planCount > 0)
         {
-            CarPlanManagerObj.displayCarPlan(currentMake);
+            CarPlanManagerObj.displayCarPlan(currentScooterMake);
             cout << "\nWould you like to view monthly installments for any plan?\n";
             cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
             state = "VIEW_SCOOTER_MONTHLY_INSTALLMENTS";
@@ -188,18 +188,16 @@ void handleLoanCategory(string userInput, string lowerInput, string &state)
     }
 }
 
-void handleCarLoan(string &userInput, string &lowerInput, string &state, string &currentMake)
-{
-    // Just use the userInput parameter directly - no need to get input again!
-    
+void handleCarLoan(string &userInput, string &lowerInput, string &state, string &currentCarMake)
+{    
     if (userInput == "1")
     {
-        currentMake = "Make 1";
-        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        currentCarMake = "Make 1";
+        int planCount = CarPlanManagerObj.getPlanCount(currentCarMake);
         
         if (planCount > 0)
         {
-            CarPlanManagerObj.displayCarPlan(currentMake);
+            CarPlanManagerObj.displayCarPlan(currentCarMake);
             cout << "\nWould you like to view monthly installments for any plan?\n";
             cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
             state = "VIEW_CAR_MONTHLY_INSTALLMENTS";
@@ -212,12 +210,12 @@ void handleCarLoan(string &userInput, string &lowerInput, string &state, string 
     }
     else if (userInput == "2")
     {
-        currentMake = "Make 2";
-        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        currentCarMake = "Make 2";
+        int planCount = CarPlanManagerObj.getPlanCount(currentCarMake);
         
         if (planCount > 0)
         {
-            CarPlanManagerObj.displayCarPlan(currentMake);
+            CarPlanManagerObj.displayCarPlan(currentCarMake);
             cout << "\nWould you like to view monthly installments for any plan?\n";
             cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
             state = "VIEW_CAR_MONTHLY_INSTALLMENTS";
@@ -554,7 +552,7 @@ void displayWelcomeHeader()
     cout << "\033[1;36m" // Cyan for header border
          << "=============================================\n";
     cout << "\033[1;32m" // Green for title
-         << "           WELCOME TO SMART CHATBOT!        \n";
+         << "           WELCOME TO THE CHATBOT!        \n";
     cout << "\033[1;36m" // Cyan again for separator
          << "---------------------------------------------\n";
     cout << "\033[1;33m" // Yellow for message line

@@ -215,7 +215,8 @@ bool loadCarPlans(const string &filePath)
     carFile.close();
     return true;
 }
-//==================================================================================================================
+
+// ==================== Scooter Loading Functions ====================
 bool loadScooterPlans(const string &filePath)
 {
     ifstream scooterFile;
@@ -283,7 +284,6 @@ bool loadScooterPlans(const string &filePath)
             ScooterPlan.setChargingTimeHrs(chargingTime);
             ScooterPlan.setMaxSpeedKmh(maxSpeed);
             ScooterPlan.setMake(make);
-
             ScooterPlanManagerObj.setMake(make, ScooterPlan);
         }
     }
