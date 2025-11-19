@@ -4,6 +4,7 @@
 #include "../../logs/include/car.h"
 #include "../../logs/include/utils.h"
 #include "../../logs/include/application.h"
+#include "../../logs/include/scooter.h"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -65,12 +66,16 @@ void runChatbot()
         }
         else if (state == "SCOOTER_LOAN_AREA")
         {
-            cout << "Coming soon." << endl;
+            handleScooterLoan(userInput, lowerInput, state, currentMake);
             continue;
         }
         else if (state == "VIEW_CAR_MONTHLY_INSTALLMENTS")
         {
             handleViewCarMonthlyInstallments(userInput, lowerInput, state, currentMake);
+        }
+        else if(state == "VIEW_SCOOTER_MONTHLY_INSTALLMENTS")
+        {
+            handleViewScooterMonthlyInstallments(userInput, lowerInput, state, currentMake);
         }
         else if (state == "VIEW_MONTHLY_INSTALLMENTS")
         {
@@ -101,7 +106,66 @@ void handleMainMenu(string userInput, string lowerInput, string &state)
         state = "QUERY_APPLICATION";
     }
 }
+void handleScooterLoan(string &userInput, string &lowerInput, string &state,string &currentMake)
+{
+    if (userInput == "1")
+    {
+        currentMake = "Make 1";
+        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        
+        if (planCount > 0)
+        {
+            ScooterPlanManagerObj.displayScooterPlan(currentMake);
+            cout << "\nWould you like to view monthly installments for any plan?\n";
+            cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
+            state = "VIEW_SCOOTER_MONTHLY_INSTALLMENTS";
+        }
+        else
+        {
+            cout << "No such make found." << endl;
+            state = "MAIN_MENU";
+        }
+    }
+    else if (userInput == "2")
+    {
+        currentMake = "Make 2";
+        int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+        
+        if (planCount > 0)
+        {
+            CarPlanManagerObj.displayCarPlan(currentMake);
+            cout << "\nWould you like to view monthly installments for any plan?\n";
+            cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
+            state = "VIEW_SCOOTER_MONTHLY_INSTALLMENTS";
+        }
+        else
+        {
+            cout << "No such make found." << endl;
+            state = "MAIN_MENU";
+        }
+    }
+    else
+    {
+        bool isNumeric = true;
+        for (char c : userInput)
+        {
+            if (!isdigit(c))
+            {
+                isNumeric = false;
+                break;
+            }
+        }
 
+        if (isNumeric && userInput.length() > 0)
+        {
+            cout << "You probably meant to select from 1-2. Please try again." << endl;
+        }
+        else
+        {
+            cout << uttrObj.getResponse(lowerInput) << endl;
+        }
+    }
+}
 void handleLoanCategory(string userInput, string lowerInput, string &state)
 {
     cout << uttrObj.getResponse(lowerInput) << endl;
@@ -281,6 +345,73 @@ void handleHomeLoanArea(string userInput, string lowerInput, string &state, stri
         {
             cout << uttrObj.getResponse(lowerInput) << endl;
         }
+    }
+}
+void handleViewScooterMonthlyInstallments(string userInput, string  lowerInput, string &state,string &currentMake)
+{
+    userInput = trim(userInput); 
+    lowerInput = toLower(userInput); 
+    
+    int planCount = CarPlanManagerObj.getPlanCount(currentMake);
+
+    // Check if user wants to return to main menu
+    if (userInput == "A" || userInput == "a")
+    {
+        state = "MAIN_MENU";
+        cout << uttrObj.getResponse(lowerInput) << endl;
+        return;
+    }
+
+    // Check if user wants to submit application
+    if (userInput == "S" || userInput == "s")
+    {
+        state = "SUBMIT_APPLICATION";
+        return;
+    }
+
+    // Check if input is a valid plan number
+    bool isNumeric = true;
+    bool hasNegativeSign = false;
+
+    // Check for negative sign at start
+    if (!userInput.empty() && userInput[0] == '-')
+    {
+        hasNegativeSign = true;
+    }
+
+    // Check if all characters (after optional negative sign) are digits
+    for (int i = (hasNegativeSign ? 1 : 0); i < userInput.length(); i++)
+    {
+        if (!isdigit(userInput[i]))
+        {
+            isNumeric = false;
+            break;
+        }
+    }
+
+    // If it's a number (positive or negative)
+    if (isNumeric && userInput.length() > 0 && (hasNegativeSign || isdigit(userInput[0])))
+    {
+        int planChoice = stoi(userInput);
+
+        if (planChoice >= 1 && planChoice <= planCount)
+        {
+            ScooterPlanManagerObj.displayMonthlyInstallment(currentMake, planChoice - 1);
+
+            cout << "\nWhat would you like to do next?" << endl;
+            cout << " S - Submit loan application" << endl;
+            cout << " (Enter plan number 1-" << planCount << " to view another)" << endl;
+            cout << " A - Return to main menu" << endl;
+        }
+        else
+        {
+            cout << "You probably meant to select from 1-" << planCount << ". Please try again." << endl;
+        }
+    }
+    else
+    {
+        // Non-numeric input
+        cout << uttrObj.getResponse(lowerInput) << endl;
     }
 }
 void handleViewCarMonthlyInstallments(string userInput, string lowerInput, string &state, string &currentMake)

@@ -7,7 +7,7 @@ using std::cout;
 using std::endl;
 
 // Build Command (run while in src):
-// For User: g++ -I..\..\logs\include main.cpp file_io.cpp chatbot.cpp utils.cpp application.cpp loan_plan.cpp car.cpp -o chatbot.exe
+// For User: g++ -I..\..\logs\include main.cpp file_io.cpp chatbot.cpp utils.cpp application.cpp loan_plan.cpp car.cpp scooter.cpp -o chatbot.exe
 // For Lender: g++ -I..\..\logs\include lender_main.cpp application.cpp utils.cpp -o lender.exe
 // Then run with: chatbot.exe / ./chatbot.exe (user), or lender.exe / ./lender.exe (lender) 
 
@@ -26,6 +26,12 @@ int main()
     }
 
     if (!loadCarPlans("output/Car.txt"))
+    {
+        cout << "Chatbot could not load car plans. Exiting." << endl;
+        return 1;
+    }
+
+    if (!loadScooterPlans("output/Scooter.txt"))
     {
         cout << "Chatbot could not load car plans. Exiting." << endl;
         return 1;

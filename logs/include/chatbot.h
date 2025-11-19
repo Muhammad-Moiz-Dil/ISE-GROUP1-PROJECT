@@ -81,5 +81,7 @@ void handleQueryApplications(std::string &state);
 
 void handleCarLoan(string &userInput, string &lowerInput, string &state, string &currentMake);
 void handleViewCarMonthlyInstallments(string userInput, string lowerInput, string &state, string &currentMake);
+void handleScooterLoan(string &userInput, string &lowerInput, string &state,string &currentMake);
+void handleViewScooterMonthlyInstallments(string userInput, string  lowerInput, string &state,string &currentMake);
 
 #endif

@@ -53,6 +53,7 @@ bool loadUtterances(const string& filePath);
  */
 bool loadLoanPlans(const string& filePath);
 bool loadCarPlans(const string& filePath);
+bool loadScooterPlans(const string& filePath);
 // Global Utterance object declaration
 extern Utterance uttrObj;
 
