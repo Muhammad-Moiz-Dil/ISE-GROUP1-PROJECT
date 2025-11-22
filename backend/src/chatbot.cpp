@@ -137,11 +137,11 @@ void handleScooterLoan(string &userInput, string &lowerInput, string &state,stri
     else if (userInput == "2")
     {
         currentScooterMake = "Make 2";
-        int planCount = CarPlanManagerObj.getPlanCount(currentScooterMake);
+        int planCount = ScooterPlanManagerObj.getPlanCount(currentScooterMake);
         
         if (planCount > 0)
         {
-            CarPlanManagerObj.displayCarPlan(currentScooterMake);
+            ScooterPlanManagerObj.displayScooterPlan(currentScooterMake);
             cout << "\nWould you like to view monthly installments for any plan?\n";
             cout << "(Enter plan number 1-" << planCount << ", or A to return to main menu)\n";
             state = "VIEW_SCOOTER_MONTHLY_INSTALLMENTS";
