@@ -70,7 +70,7 @@ Expected:      Fallback response: "Hi! I'll be happy to help. Please press A if 
                 Stay in VIEW_MONTHLY_INSTALLMENTS state
 
 Actual:        Correctly gives fallback message
-Result:        [Pass/Fail]
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-008
@@ -80,7 +80,7 @@ Expected:      Fallback response: "Hi! I'll be happy to help. Please press A if 
                 Stay in VIEW_MONTHLY_INSTALLMENTS state
 
 Actual:        Correctly gives fallback message
-Result:        [Pass/Fail]
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-009
@@ -101,7 +101,7 @@ Expected:      Monthly Installment = (Price - Down Payment) / Installments
                 Verify calculation is correct
 
 Actual:        Correctly displays monthly installment value.
-Result:        [Pass/Fail]
+Result:        Pass
 
 ---------------------------------------------------------
 Test ID:       DMI-011
@@ -174,7 +174,7 @@ Expected:      Non-numeric detection triggers fallback response
                 Stay in VIEW_MONTHLY_INSTALLMENTS state
 
 Actual:        Correctly gives fallback message
-Result:        [Pass/Fail]
+Result:        Pass
 
 ====================================================
 END OF TEST CASES

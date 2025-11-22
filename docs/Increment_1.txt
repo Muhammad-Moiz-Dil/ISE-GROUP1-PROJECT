@@ -1,7 +1,0 @@
-Start working on your project. A file Utterances.txt is attached. 
-- A # symbol separates the user input and your program's response. 
-- A '*' in the file indicates a user input that is not listed in the file, so a general response is given in this case.
-- This file shall keep on evolving as our project evolves.
-
-A working program implementing this initial interface should be completed over this weekend.
-A sample file with home loan related detail is also shown. Similar files shall be shared later for other types of loan.
