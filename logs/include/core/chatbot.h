@@ -6,18 +6,6 @@
 using std::string;
 
 /**
- * Displays a welcome header for the chatbot session.
- * @return void
- */
-void displayWelcomeHeader();
-
-/**
- * Displays a goodbye footer when the chatbot session ends.
- * @return void
- */
-void displayGoodbyeFooter();
-
-/**
  * Main chatbot loop that handles user interaction and state management.
  * Manages conversation flow through MAIN_MENU, LOAN_CATEGORY, and
  * HOME_LOAN_AREA states.

@@ -1,57 +1,15 @@
-#include "../../logs/include/utils.h"
-#include <algorithm>
+#include "helpers/error_handling.h"
+#include "helpers/utils.h"
 #include <cctype>
 #include <string>
+#include <fstream>
 
-using std::find_if;
+
 using std::string;
+using std::stoi;
+using std::stol;
 
-/**
- * Converts a string to lowercase.
- * Iterates through each character and converts it using tolower().
- * @param str: the input string
- * @return: lowercase version of the string
- */
-string toLower(string str)
-{
-    for (int i = 0; i < str.length(); i++)
-    {
-        str[i] = tolower(str[i]);
-    }
-    return str;
-}
-
-string trim(const string &s)
-{
-    string result = "";
-    int start = 0;
-    int end = s.length() - 1;
-
-    // Skip leading whitespace
-    while (start < s.length() && (s[start] == ' ' || s[start] == '\t' || s[start] == '\r' || s[start] == '\n'))
-    {
-        start++;
-    }
-
-    // Skip trailing whitespace
-    while (end >= start && (s[end] == ' ' || s[end] == '\t' || s[end] == '\r' || s[end] == '\n'))
-    {
-        end--;
-    }
-
-    // Build result string
-    for (int i = start; i <= end; i++)
-    {
-        if (s[i] != ',')
-        {
-            result += s[i];
-        }
-    }
-
-    return result;
-}
-
-// ==================== NEW VALIDATION FUNCTIONS ====================
+// ==================== INPUT VALIDATION IMPLEMENTATIONS ====================
 
 bool isValidName(const string& name)
 {
@@ -140,15 +98,57 @@ bool isValidDate(const string& date)
     for (char c : yearStr) if (!isdigit(c)) return false;
     
     // Validate ranges
-    int day = std::stoi(dayStr);
-    int month = std::stoi(monthStr);
-    int year = std::stoi(yearStr);
+    int day = stoi(dayStr);
+    int month = stoi(monthStr);
+    int year = stoi(yearStr);
     
     if (day < 1 || day > 31) return false;
     if (month < 1 || month > 12) return false;
     if (year < 1900 || year > 2100) return false;
     
     return true;
+}
+
+bool isValidReasonableAmount(const string& input)
+{
+    if (input.empty()) return false;
+    
+    for (char c : input)
+    {
+        if (!isdigit(c)) return false;
+    }
+    
+    try
+    {
+        long value = stol(input);
+        return (value >= 0 && value <= 1000000000);  // Max 1 billion PKR
+    }
+    catch (...)
+    {
+        return false;
+    }
+}
+
+bool isValidIntegerInRange(const string& input, int min, int max)
+{
+    if (input.empty()) return false;
+    
+    // Check if all characters are digits
+    for (char c : input)
+    {
+        if (!isdigit(c)) return false;
+    }
+    
+    // Convert to integer and check range
+    try
+    {
+        int value = stoi(input);
+        return (value >= min && value <= max);
+    }
+    catch (...)
+    {
+        return false;  // Number too large for int
+    }
 }
 
 bool isValidPositiveInteger(const string& str)
@@ -160,7 +160,15 @@ bool isValidPositiveInteger(const string& str)
         if (!isdigit(c)) return false;
     }
     
-    return true;
+    try
+    {
+        long value = stol(str);
+        return (value > 0);
+    }
+    catch (...)
+    {
+        return false;  // Number too large for long
+    }
 }
 
 bool isValidPositiveAmount(const string& str)
@@ -169,11 +177,18 @@ bool isValidPositiveAmount(const string& str)
     
     for (char c : str)
     {
-        if (!isdigit(c)) return false;
+        if (!isdigit(c) && c != '.') return false;
     }
     
-    long amount = std::stol(str);
-    return amount > 0;
+    try
+    {
+        double value = stod(str);
+        return (value > 0);
+    }
+    catch (...)
+    {
+        return false;  // Number too large for double
+    }
 }
 
 bool isValidMenuChoice(const string& choice, int min, int max)
@@ -185,6 +200,22 @@ bool isValidMenuChoice(const string& choice, int min, int max)
         if (!isdigit(c)) return false;
     }
     
-    int num = std::stoi(choice);
+    int num = stoi(choice);
     return num >= min && num <= max;
+}
+
+bool isValidFilePath(const string& filepath)
+{
+    if (filepath.empty()) return false;
+    
+    std::ifstream file(filepath);
+    return file.good();
+}
+
+bool isValidImageFile(const string& filepath)
+{
+    if (!isValidFilePath(filepath)) return false;
+    
+    string ext = getFileExtension(filepath);
+    return (ext == ".jpg" || ext == ".jpeg" || ext == ".png");
 }
