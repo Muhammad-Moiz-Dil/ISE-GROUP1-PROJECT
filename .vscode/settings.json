@@ -115,6 +115,12 @@
     "sstream": "cpp",
     "unordered_map": "cpp",
     "xhash": "cpp",
-    "filesystem": "cpp"
+    "filesystem": "cpp",
+    "chrono": "cpp",
+    "forward_list": "cpp",
+    "map": "cpp",
+    "ratio": "cpp",
+    "set": "cpp",
+    "xtree": "cpp"
   }
 }

@@ -127,15 +127,39 @@ void handleResumeApplication(string &state);
  */
 void handleApplicationSubmission(string &state, string &currentArea);
 
+// ==================== STATE HANDLER FUNCTION DECLARATIONS ====================
+
 /**
- * Handles user input in the QUERY_APPLICATIONS state.
+ * Handles user input in the PERSONAL_LOAN state.
+ * User can select a specific personal loan category to view its plans.
+ * @param userInput: the original user input
+ * @param lowerInput: lowercase version for utterance lookups
+ * @param state: reference to current state string (modified by this function)
+ * @param currentCategory: reference to the personal loan category being viewed (used to fetch correct plans)
+ * @param personalLoanSubState: reference to the sub-state of the personal loan state (modified by this function)
+ * @return void
+ */
+void handlePersonalLoan(string &userInput, string &lowerInput, string &state, string &currentCategory, string &personalLoanSubState);
+
+/**
+ * Handles user input in the VIEW_PERSONAL_INSTALLMENTS state.
+ * User can view the monthly installments for each personal loan plan.
+ * @param userInput: the original user input
+ * @param lowerInput: lowercase version for utterance lookups
+ * @param state: reference to current state string (modified by this function)
+ * @param currentCategory: reference to the personal loan category being viewed (used to fetch correct plans)
+ * @return void
+ */
+void handleViewPersonalInstallments(string userInput, string lowerInput, string &state, string &currentCategory);
+
+/**
+ * Handles user input in the GENERAL_CONVERSATION state.
+ * User can have a general conversation with the chatbot.
+ * @param userInput: the original user input
+ * @param lowerInput: lowercase version for utterance lookups
  * @param state: reference to current state string (modified by this function)
  * @return void
  */
-void handleQueryApplications(string &state);
-
-void handlePersonalLoan(string &userInput, string &lowerInput, string &state, string &currentCategory, string &personalLoanSubState);
-
-void handleViewPersonalInstallments(string userInput, string lowerInput, string &state, string &currentCategory);
+void handleGeneralConversation(string userInput, string lowerInput, string &state);
 
 #endif // STATE_HANDLERS_H

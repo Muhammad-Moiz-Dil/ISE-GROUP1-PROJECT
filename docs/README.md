@@ -21,6 +21,7 @@ ISE-Project/
 │       │   ├── application.cpp/.h      # Application data model and management
 │       │   ├── file_io.cpp/.h          # File loading utilities
 │       │   └── lender.cpp/.h           # Lender portal management
+            |_ chat_corpus.cpp
 │       │
 │       ├── helpers/                    # Reusable utility functions
 │       │   ├── utils.cpp/.h            # String manipulation and display helpers

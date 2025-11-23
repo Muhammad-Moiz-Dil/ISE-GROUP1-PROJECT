@@ -182,3 +182,4 @@ string getFileExtension(const string& path)
     
     return "";
 }
+
