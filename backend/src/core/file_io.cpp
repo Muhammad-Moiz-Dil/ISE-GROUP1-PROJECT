@@ -22,7 +22,6 @@ using std::stringstream;
 
 // Global Utterance object definition
 Utterance uttrObj;
-ChatCorpus globalChatCorpus;
 
 // ==================== UTTERANCE CLASS METHODS ====================
 
@@ -285,9 +284,10 @@ bool loadPersonalPlans(const string &filePath)
     file.close();
     return true;
 }
+
 bool loadChatCorpus(const std::string &filename)
 {
-    bool success = globalChatCorpus.loadCorpus(filename);
+    bool success = chatCorpusObj.loadCorpus(filename);
 
     if (success)
     {
@@ -299,7 +299,8 @@ bool loadChatCorpus(const std::string &filename)
     }
     return success;
 }
+
 ChatCorpus &getChatCorpus()
 {
-    return globalChatCorpus;
+    return chatCorpusObj;
 }

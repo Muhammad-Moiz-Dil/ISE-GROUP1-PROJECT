@@ -22,10 +22,10 @@ using std::string;
  * @return true if input collected successfully, false if user pressed X
  */
 bool getValidatedInput(const string& prompt, 
-                       bool (*validator)(const string&), 
-                       const string& errorMsg,
-                       string& state,
-                       string& output);
+                    bool (*validator)(const string&), 
+                    const string& errorMsg,
+                    string& state,
+                    string& output);
 
 /**
  * @brief Collects personal information from user (10 fields)

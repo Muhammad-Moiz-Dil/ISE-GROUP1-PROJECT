@@ -14,6 +14,7 @@ core/chatbot.cpp `
 core/state_handlers.cpp `
 core/file_io.cpp `
 core/application.cpp `
+core/chat_corpus.cpp `
 helpers/utils.cpp `
 helpers/error_handling.cpp `
 helpers/ui_display.cpp `

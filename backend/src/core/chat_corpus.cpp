@@ -4,77 +4,116 @@
 #include <algorithm>
 #include <set>
 #include <cctype>
+#include <iostream>
 
-// Tokenize function - space se split karo
-std::vector<std::string> ChatCorpus::tokenize(const std::string &text)
+using std::ifstream;
+using std::set;
+using std::string;
+using std::stringstream;
+using std::vector;
+
+// Global instance definition
+ChatCorpus chatCorpusObj;
+
+// ==================== PRIVATE HELPERS ====================
+
+vector<string> ChatCorpus::tokenize(const string &text) const
 {
-    std::vector<std::string> tokens;
-    std::stringstream ss(text);
-    std::string token;
+    vector<string> tokens;
+    stringstream ss(text);
+    string token;
 
     while (ss >> token)
     {
-        // Convert to lowercase
-        std::transform(token.begin(), token.end(), token.begin(), ::tolower);
-        
-        // Remove punctuation (ADD THIS PART)
-        token.erase(std::remove_if(token.begin(), token.end(), ::ispunct), token.end());
-        
-        // Only add non-empty tokens
-        if (!token.empty()) {
+        // 1. Convert to lowercase
+        std::transform(token.begin(), token.end(), token.begin(),
+                    [](unsigned char c)
+                    { return static_cast<char>(std::tolower(c)); });
+
+        // 2. Remove punctuation AND control characters (\r, \n, etc.)
+        // This fixes the Windows line ending bug where "word\r" != "word"
+        token.erase(std::remove_if(token.begin(), token.end(),
+                                [](unsigned char c)
+                                {
+                                    return std::ispunct(c) || std::iscntrl(c);
+                                }),
+                    token.end());
+
+        // 3. Only add non-empty tokens
+        if (!token.empty())
+        {
             tokens.push_back(token);
         }
     }
+
     return tokens;
 }
 
-// IoU calculation
-double ChatCorpus::calculateIoU(const std::string &input, const std::string &corpusText)
+double ChatCorpus::calculateIoU(const string &input, const string &corpusText) const
 {
-    auto tokens1 = tokenize(input);
-    auto tokens2 = tokenize(corpusText);
+    vector<string> tokens1 = tokenize(input);
+    vector<string> tokens2 = tokenize(corpusText);
 
-    std::set<std::string> set1(tokens1.begin(), tokens1.end());
-    std::set<std::string> set2(tokens2.begin(), tokens2.end());
+    set<string> set1(tokens1.begin(), tokens1.end());
+    set<string> set2(tokens2.begin(), tokens2.end());
 
     // Intersection
-    std::set<std::string> intersection;
+    set<string> intersection;
     std::set_intersection(set1.begin(), set1.end(),
-                          set2.begin(), set2.end(),
-                          std::inserter(intersection, intersection.begin()));
+                        set2.begin(), set2.end(),
+                        std::inserter(intersection, intersection.begin()));
 
     // Union
-    std::set<std::string> unionSet;
+    set<string> unionSet;
     std::set_union(set1.begin(), set1.end(),
-                   set2.begin(), set2.end(),
-                   std::inserter(unionSet, unionSet.begin()));
+                set2.begin(), set2.end(),
+                std::inserter(unionSet, unionSet.begin()));
 
     if (unionSet.empty())
+    {
         return 0.0;
+    }
 
-    return static_cast<double>(intersection.size()) / unionSet.size();
+    return static_cast<double>(intersection.size()) /
+        static_cast<double>(unionSet.size());
 }
 
-// Load corpus from file
-bool ChatCorpus::loadCorpus(const std::string &filepath)
-{
-    std::ifstream file(filepath);
-    if (!file.is_open())
-        return false;
+// ==================== PUBLIC METHODS ====================
 
-    std::string line;
-    std::string currentHuman1;
+bool ChatCorpus::loadCorpus(const string &filepath)
+{
+    ifstream file(filepath);
+    if (!file.is_open())
+    {
+        return false;
+    }
+
+    string line;
+    string currentHuman1;
 
     while (std::getline(file, line))
     {
+        // Handle Windows line endings explicitly for the raw line too
+        if (!line.empty() && line.back() == '\r')
+        {
+            line.pop_back();
+        }
+
         if (line.find("Human 1:") == 0)
         {
-            currentHuman1 = line.substr(9); // Remove "Human 1: "
+            // Remove "Human 1: "
+            currentHuman1 = line.substr(9);
         }
         else if (line.find("Human 2:") == 0 && !currentHuman1.empty())
         {
-            std::string human2 = line.substr(9); // Remove "Human 2: "
-            conversations.push_back({currentHuman1, human2});
+            // Remove "Human 2: "
+            string human2 = line.substr(9);
+
+            ConversationPair pair;
+            pair.human1 = currentHuman1;
+            pair.human2 = human2;
+
+            conversations.push_back(pair);
             currentHuman1.clear();
         }
     }
@@ -83,20 +122,23 @@ bool ChatCorpus::loadCorpus(const std::string &filepath)
     return !conversations.empty();
 }
 
-// Get best matching response
-std::string ChatCorpus::getResponse(const std::string &userInput)
+string ChatCorpus::getResponse(const string &userInput)
 {
     if (conversations.empty())
     {
-        return "I'm not sure how to respond to that.";
+        return "I'm not sure how to respond to that (Knowledge base empty).";
     }
 
     double maxIoU = 0.0;
-    std::string bestResponse;
+    string bestResponse;
 
-    for (const auto &pair : conversations)
+    for (const ConversationPair &pair : conversations)
     {
         double iou = calculateIoU(userInput, pair.human1);
+
+        // Debug print (Uncomment if you still have issues)
+        // std::cout << "User: " << userInput << " | Corpus: " << pair.human1 << " | IoU: " << iou << std::endl;
+
         if (iou > maxIoU)
         {
             maxIoU = iou;
@@ -104,10 +146,11 @@ std::string ChatCorpus::getResponse(const std::string &userInput)
         }
     }
 
-    // Threshold check - agar IoU bahut kam hai toh generic response
-    if (maxIoU < 0.1)
+    // Threshold check
+    const double MIN_IOU_THRESHOLD = 0.10;
+    if (maxIoU < MIN_IOU_THRESHOLD)
     {
-        return "I'm not quite sure what you mean. Could you rephrase that?";
+        return "I'm not sure how to respond to that.";
     }
 
     return bestResponse;

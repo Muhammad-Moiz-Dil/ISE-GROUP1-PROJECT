@@ -29,30 +29,33 @@ extern HomeLoanManager HomeLoanManagerObj;
 extern CarPlanManager CarPlanManagerObj;
 extern ScooterPlanManager ScooterPlanManagerObj;
 extern PersonalLoanManager PersonalLoanManagerObj;
+
 extern Utterance uttrObj;
 
 // ==================== MAIN MENU HANDLER ====================
 
 void handleMainMenu(string userInput, string lowerInput, string &state)
 {
-    cout << uttrObj.getResponse(lowerInput) << endl;
-    if(uttrObj.getResponse(lowerInput) == "")
+    // Check Utterances.txt first
+    string response = uttrObj.getResponse(lowerInput);
+
+    // If we found a specific match (response is NOT empty)
+    if (!response.empty())
     {
+        cout << response << endl;
+    }
+    else
+    {
+        // No match in Utterances.txt -> Switch to General Conversation mode
+        cout << COLOR_YELLOW << "\n[Switching to General Conversation Mode]" << COLOR_RESET << endl;
+        cout << COLOR_CYAN << "Type 'back' to return to the main menu." << COLOR_RESET << endl;
+
         state = "GENERAL_CONVERSATION";
-    }
-    if (userInput == "A" || userInput == "a")
-    {
-        state = "LOAN_CATEGORY";
-    }
-    else if (userInput == "3")
-    {
-        state = "SUBMIT_APPLICATION";
-    }
-    else if (userInput == "4")
-    {
-        state = "QUERY_APPLICATIONS";
+        // Pass the *current* input immediately so the user doesn't have to re-type "How are you?"
+        handleGeneralConversation(userInput, lowerInput, state);
     }
 }
+
 void handleLoanCategory(string userInput, string lowerInput, string &state)
 {
     cout << uttrObj.getResponse(lowerInput) << endl;
@@ -72,7 +75,7 @@ void handleLoanCategory(string userInput, string lowerInput, string &state)
     else if (userInput == "P" || userInput == "p")
     {
         state = "PERSONAL_LOAN";
-    }  
+    }
     else if (userInput == "A" || userInput == "a")
     {
         return;
@@ -112,6 +115,30 @@ void handleHomeLoanArea(string userInput, string lowerInput, string &state, stri
         // Non-numeric input
         cout << uttrObj.getResponse(lowerInput) << endl;
     }
+}
+
+// ==================== GENERAL CONVERSATION HANDLER =================
+void handleGeneralConversation(string userInput, string lowerInput, string &state)
+{
+    // Check for exit commands to return to Main Menu
+    if (lowerInput == "back" || lowerInput == "b")
+    {
+        cout << COLOR_YELLOW << "Returning to Main Menu..." << COLOR_RESET << endl;
+        state = "MAIN_MENU";
+        return;
+    }
+
+    // Skip empty input
+    if (userInput.empty())
+    {
+        return;
+    }
+
+    // Use IoU logic from Chat Corpus to find best match
+    string response = chatCorpusObj.getResponse(userInput);
+
+    // Print the response
+    cout << COLOR_GREEN << "Bot: " << COLOR_RESET << response << endl;
 }
 
 // ==================== CAR LOAN HANDLER ====================
@@ -386,7 +413,8 @@ void handlePersonalLoan(string &userInput, string &lowerInput, string &state, st
     // Initial Entry
     if (personalLoanSubState.empty())
     {
-        cout << "\n" << COLOR_CYAN << "--- PERSONAL LOAN MENU ---" << COLOR_RESET << endl;
+        cout << "\n"
+             << COLOR_CYAN << "--- PERSONAL LOAN MENU ---" << COLOR_RESET << endl;
         cout << "1. Wedding Loan" << endl;
         cout << "2. Education Loan" << endl;
         cout << "3. Business Loan" << endl;
@@ -395,7 +423,7 @@ void handlePersonalLoan(string &userInput, string &lowerInput, string &state, st
         cout << "6. Check Status" << endl;
         cout << "A. Apply (General)" << endl;
         cout << "X. Exit" << endl;
-        
+
         personalLoanSubState = "MENU";
         return; // Return to let main loop capture input
     }
@@ -403,39 +431,60 @@ void handlePersonalLoan(string &userInput, string &lowerInput, string &state, st
     // Handle Menu Selection
     if (personalLoanSubState == "MENU")
     {
-        if (lowerInput == "a") {
+        if (lowerInput == "a")
+        {
             personalLoanSubState = "CATEGORY";
             cout << "\nPlease select category (1-Wedding, 2-Education, 3-Business): ";
             return;
         }
-        else if (userInput == "1") currentCategory = "Wedding";
-        else if (userInput == "2") currentCategory = "Education";
-        else if (userInput == "3") currentCategory = "Business";
-        else if (userInput == "4") {
+        else if (userInput == "1")
+            currentCategory = "Wedding";
+        else if (userInput == "2")
+            currentCategory = "Education";
+        else if (userInput == "3")
+            currentCategory = "Business";
+        else if (userInput == "4")
+        {
             printInfo("Available Categories: Wedding, Education, Business");
             return;
         }
-        else if (userInput == "5") { state = "RESUME_APPLICATION"; return; }
-        else if (userInput == "6") { state = "CHECK_STATUS"; return; }
-        else if (lowerInput == "x") { state = "MAIN_MENU"; return; }
-        else {
+        else if (userInput == "5")
+        {
+            state = "RESUME_APPLICATION";
+            return;
+        }
+        else if (userInput == "6")
+        {
+            state = "CHECK_STATUS";
+            return;
+        }
+        else if (lowerInput == "x")
+        {
+            state = "MAIN_MENU";
+            return;
+        }
+        else
+        {
             printError("Invalid option. Please choose 1-6, A, or X.");
             return;
         }
 
         // If we got here, a category was selected (1, 2, or 3)
         int planCount = PersonalLoanManagerObj.getPlanCount(currentCategory);
-        
-        if (planCount > 0) {
+
+        if (planCount > 0)
+        {
             PersonalLoanManagerObj.displayPersonalLoanPlan(currentCategory);
             cout << "\nWhat would you like to do?" << endl;
             cout << "Enter plan number (1-" << planCount << ") to view installments" << endl;
             cout << "S - Submit Application" << endl;
             cout << "A - Return to Main Menu" << endl;
-            
+
             state = "VIEW_PERSONAL_INSTALLMENTS";
             personalLoanSubState = ""; // Reset sub-state
-        } else {
+        }
+        else
+        {
             printError("No plans available for " + currentCategory);
             state = "MAIN_MENU";
         }
@@ -443,14 +492,18 @@ void handlePersonalLoan(string &userInput, string &lowerInput, string &state, st
     // Handle Category Selection Sub-state
     else if (personalLoanSubState == "CATEGORY")
     {
-        if (userInput == "1") currentCategory = "Wedding";
-        else if (userInput == "2") currentCategory = "Education";
-        else if (userInput == "3") currentCategory = "Business";
-        else {
+        if (userInput == "1")
+            currentCategory = "Wedding";
+        else if (userInput == "2")
+            currentCategory = "Education";
+        else if (userInput == "3")
+            currentCategory = "Business";
+        else
+        {
             printError("Invalid category. Please choose 1, 2, or 3.");
             return;
         }
-        
+
         // Same display logic as above...
         int planCount = PersonalLoanManagerObj.getPlanCount(currentCategory);
         PersonalLoanManagerObj.displayPersonalLoanPlan(currentCategory);
@@ -516,7 +569,6 @@ void handleViewPersonalInstallments(string userInput, string lowerInput, string 
         cout << uttrObj.getResponse(lowerInput) << endl;
     }
 }
-
 
 // ==================== CHECK STATUS HANDLER ====================
 
@@ -676,14 +728,14 @@ void handleApplicationSubmission(string &state, string &currentArea)
 
     // Display application header
     cout << "\n"
-        << COLOR_YELLOW << "=============================================" << endl;
+         << COLOR_YELLOW << "=============================================" << endl;
     cout << "       LOAN APPLICATION FORM" << endl;
     cout << "=============================================" << endl;
     cout << "You are applying for: " << currentArea << endl;
     cout << "Application ID: " << newApp.getApplicationID() << endl;
     cout << "=============================================" << endl;
     cout << "Type 'X' at any time to save and exit (Resume later)\n"
-        << COLOR_RESET << endl;
+         << COLOR_RESET << endl;
 
     // Collect information with checkpoints
     if (!collectPersonalInformation(newApp, state))
@@ -715,30 +767,5 @@ void handleApplicationSubmission(string &state, string &currentArea)
 
     string dummy;
     getline(cin, dummy);
-    state = "MAIN_MENU";
-}
-
-// ==================== QUERY APPLICATIONS HANDLER ====================
-
-void handleQueryApplications(string &state)
-{
-    string cnic;
-    cout << "\nEnter CNIC to query (13 digits): ";
-    getline(cin, cnic);
-    cnic = trim(cnic);
-
-    int submitted = appManager.getCountByStatus(cnic, "Submitted");
-    int approved = appManager.getCountByStatus(cnic, "Approved");
-    int rejected = appManager.getCountByStatus(cnic, "Rejected");
-
-    cout << "\n";
-    cout << "=============================================\n";
-    cout << "  APPLICATION STATUS FOR CNIC: " << cnic << "\n";
-    cout << "=============================================\n";
-    cout << "Submitted:  " << submitted << "\n";
-    cout << "Approved:   " << approved << "\n";
-    cout << "Rejected:   " << rejected << "\n";
-    cout << "=============================================\n";
-
     state = "MAIN_MENU";
 }
