@@ -56,6 +56,24 @@ string trim(const string& s)
     return result;
 }
 
+/**
+ * @brief Parses a string with commas into an integer
+ */
+int parseNumberWithCommas(string s)
+{
+    string numStr = "";
+    for (char c : s) {
+        if (c != ',') {
+            numStr += c;
+        }
+    }
+    try {
+        return std::stoi(numStr);
+    } catch (...) {
+        return 0;
+    }
+}
+
 // ==================== DISPLAY HELPERS ====================
 
 /**

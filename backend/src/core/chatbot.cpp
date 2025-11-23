@@ -23,6 +23,9 @@ void runChatbot() {
   string currentArea = "";
   string currentCarMake = "";
   string currentScooterMake = "";
+  string currentCategory = "";
+  string personalLoanSubState = ""; 
+
 
   while (true) {
     // Check for action states that don't need input
@@ -61,12 +64,16 @@ void runChatbot() {
       handleCarLoan(userInput, lowerInput, state, currentCarMake);
     } else if (state == "SCOOTER_LOAN_AREA") {
       handleScooterLoan(userInput, lowerInput, state, currentScooterMake);
+    } else if (state == "PERSONAL_LOAN") {
+    handlePersonalLoan(userInput, lowerInput, state, currentCategory, personalLoanSubState);
     } else if (state == "VIEW_CAR_MONTHLY_INSTALLMENTS") {
       handleViewCarMonthlyInstallments(userInput, lowerInput, state, currentCarMake);
     } else if (state == "VIEW_SCOOTER_MONTHLY_INSTALLMENTS") {
       handleViewScooterMonthlyInstallments(userInput, lowerInput, state, currentScooterMake);
     } else if (state == "VIEW_MONTHLY_INSTALLMENTS") {
       handleViewMonthlyInstallments(userInput, lowerInput, state, currentArea);
+    } else if (state == "VIEW_PERSONAL_INSTALLMENTS") {
+      handleViewPersonalInstallments(userInput, lowerInput, state, currentCategory);
     }
   }
 

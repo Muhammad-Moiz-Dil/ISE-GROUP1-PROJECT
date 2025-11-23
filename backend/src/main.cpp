@@ -7,19 +7,20 @@ using std::cout;
 using std::endl;
 
 /* [CHATBOT.EXE COMPILATION]
-g++ -I..\..\logs\include ^
-main.cpp ^
-core\chatbot.cpp ^
-core\state_handlers.cpp ^
-core\file_io.cpp ^
-core\application.cpp ^
-helpers\utils.cpp ^
-helpers\error_handling.cpp ^
-helpers\ui_display.cpp ^
-helpers\application_input.cpp ^
-models\home_loan.cpp ^
-models\car.cpp ^
-models\scooter.cpp ^
+g++ -I..\..\logs\include `
+main.cpp `
+core/chatbot.cpp `
+core/state_handlers.cpp `
+core/file_io.cpp `
+core/application.cpp `
+helpers/utils.cpp `
+helpers/error_handling.cpp `
+helpers/ui_display.cpp `
+helpers/application_input.cpp `
+models/home_loan.cpp `
+models/car.cpp `
+models/scooter.cpp `
+models/personal_loan.cpp `
 -o chatbot.exe
 */
 
@@ -47,6 +48,12 @@ int main()
     if (!loadScooterPlans("output/Scooter.txt"))
     {
         cout << "Error: Could not load scooter plans. Exiting." << endl;
+        return 1;
+    }
+
+    if (!loadPersonalPlans("output/Personal.txt"))
+    {
+        cout << "Error: Could not load personal loan plans. Exiting." << endl;
         return 1;
     }
 

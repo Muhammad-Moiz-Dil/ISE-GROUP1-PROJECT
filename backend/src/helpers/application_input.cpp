@@ -370,7 +370,7 @@ bool collectFinancialInformation(Application &app, string &state)
         // Category
         while (true)
         {
-            cout << "Category (Car/Home/Bike): ";
+            cout << "Category (Car/Home/Bike/Personal): ";
             getline(cin, input);
             input = trim(input);
             
@@ -380,7 +380,7 @@ bool collectFinancialInformation(Application &app, string &state)
             }
             
             string lowerCategory = toLower(input);
-            if (lowerCategory == "car" || lowerCategory == "home" || lowerCategory == "bike") {
+            if (lowerCategory == "car" || lowerCategory == "home" || lowerCategory == "bike" || lowerCategory == "personal") {
                 loan.category = input;
                 break;
             }
@@ -459,7 +459,7 @@ bool collectReferenceInformation(Application &app, string &state)
 bool collectDocuments(Application &app, string &state)
 {
     printSectionHeader("DOCUMENT UPLOAD");
-    cout << "Please provide the full path to each document.\n";
+    cout << "Please provide the full path to the SOURCE file (e.g., C:\\Images\\cnic.jpg).\n";
     cout << "Accepted formats: JPG, JPEG, PNG\n";
     cout << "Files will be copied to output/application_documents/\n\n";
     
@@ -467,11 +467,11 @@ bool collectDocuments(Application &app, string &state)
     string cnicF, cnicB, bill, salary;
     
     // Helper lambda to process document upload
-    auto processDocument = [&](const string& docName, string& outputPath) -> bool
+    auto processDocument = [&](const string& docName, const string& suffix, string& outputPath) -> bool
     {
         while (true)
         {
-            cout << docName << " (full path): ";
+            cout << docName << " (Source Path): ";
             string inputPath;
             getline(cin, inputPath);
             inputPath = trim(inputPath);
@@ -498,15 +498,16 @@ bool collectDocuments(Application &app, string &state)
                 continue;
             }
             
-            // Extract filename and create destination path
-            string filename = extractFilename(inputPath);
-            string destPath = DOC_DIR + filename;
+            // Generate new filename: CNIC_SUFFIX.ext
+            string ext = getFileExtension(inputPath);
+            string newFilename = app.getCNIC() + "_" + suffix + ext;
+            string destPath = DOC_DIR + newFilename;
             
             // Copy file to application_documents folder
             if (copyFile(inputPath, destPath))
             {
                 outputPath = destPath;
-                printSuccess("File uploaded: " + filename);
+                printSuccess("File uploaded: " + newFilename);
                 return true;
             }
             else
@@ -517,10 +518,10 @@ bool collectDocuments(Application &app, string &state)
     };
     
     // Collect all 4 documents
-    if (!processDocument("CNIC Front", cnicF)) return false;
-    if (!processDocument("CNIC Back", cnicB)) return false;
-    if (!processDocument("Electricity Bill", bill)) return false;
-    if (!processDocument("Salary Slip", salary)) return false;
+    if (!processDocument("CNIC Front", "CNIC_FRONT", cnicF)) return false;
+    if (!processDocument("CNIC Back", "CNIC_BACK", cnicB)) return false;
+    if (!processDocument("Electricity Bill", "BILL", bill)) return false;
+    if (!processDocument("Salary Slip", "SALARY", salary)) return false;
     
     // Set document paths in application
     app.setDocumentPaths(cnicF, cnicB, bill, salary);
