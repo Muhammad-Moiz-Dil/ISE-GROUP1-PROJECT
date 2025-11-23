@@ -28,6 +28,13 @@ string toLower(string str);
  */
 string trim(const string& s);
 
+/**
+ * @brief Parses a string with commas into an integer
+ * @param s: The input string (e.g., "1,000,000")
+ * @return: Integer value
+ */
+int parseNumberWithCommas(string s);
+
 // ==================== DISPLAY HELPERS ====================
 
 /**

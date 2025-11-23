@@ -1,0 +1,7 @@
+Category#PlanName#Installments#TotalAmount#DownPayment
+Wedding#Gold#12#500,000#50,000
+Wedding#Platinum#24#1,000,000#100,000
+Education#Semester#6#200,000#20,000
+Education#Degree#48#1,500,000#150,000
+Business#Startup#36#2,000,000#200,000
+Business#Expansion#60#5,000,000#500,000

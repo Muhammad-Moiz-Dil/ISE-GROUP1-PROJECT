@@ -100,11 +100,14 @@ void LenderManager::displayAllApplications() const
     // Table rows
     for (const auto& app : applications)
     {
-        cout << left << setw(8) << app.getApplicationID()
-             << setw(25) << app.getFullName()
-             << setw(15) << app.getLoanType()
-             << setw(15) << app.getStatus()
-             << setw(15) << app.getSubmissionDate() << endl;
+        if (app.getStatus() == "Submitted")
+        {
+            cout << left << setw(8) << app.getApplicationID()
+                 << setw(25) << app.getFullName()
+                 << setw(15) << app.getLoanType()
+                 << setw(15) << app.getStatus()
+                 << setw(15) << app.getSubmissionDate() << endl;
+        }
     }
 
     // Footer
@@ -162,6 +165,13 @@ void LenderManager::displayApplicationDetails(int index) const
     cout << "  Dependents: " << app.getDependents() << endl;
     cout << "  Avg. Electricity Bill: " << app.getAvgElectricityBill() << " PKR" << endl;
     cout << "  Current Bill: " << app.getCurrentElectricityBill() << " PKR" << endl;
+
+    // Documents
+    cout << "\n" << COLOR_YELLOW << "DOCUMENTS:" << COLOR_RESET << endl;
+    cout << "  CNIC Front: " << app.getCNICFrontPath() << endl;
+    cout << "  CNIC Back: " << app.getCNICBackPath() << endl;
+    cout << "  Electricity Bill: " << app.getBillPath() << endl;
+    cout << "  Salary Slip: " << app.getSalaryPath() << endl;
 
     // Loan Details
     cout << "\n" << COLOR_YELLOW << "LOAN DETAILS:" << COLOR_RESET << endl;

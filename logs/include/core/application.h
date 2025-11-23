@@ -159,6 +159,11 @@ public:
     long getCurrentElectricityBill() const { return currentElectricityBill; }
     string getLoanType() const { return selectedLoanType; }
     string getLoanArea() const { return selectedLoanDetails; }
+    
+    string getCNICFrontPath() const { return cnicFrontPath; }
+    string getCNICBackPath() const { return cnicBackPath; }
+    string getBillPath() const { return billPath; }
+    string getSalaryPath() const { return salaryPath; }
 
     // ==================== FILE OPERATIONS ====================
     

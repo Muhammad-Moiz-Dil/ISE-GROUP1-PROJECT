@@ -20,6 +20,7 @@ helpers\application_input.cpp ^
 models\home_loan.cpp ^
 models\car.cpp ^
 models\scooter.cpp ^
+models\personal_loan.cpp ^
 -o chatbot.exe
 */
 
@@ -47,6 +48,12 @@ int main()
     if (!loadScooterPlans("output/Scooter.txt"))
     {
         cout << "Error: Could not load scooter plans. Exiting." << endl;
+        return 1;
+    }
+
+    if (!loadPersonalPlans("output/Personal.txt"))
+    {
+        cout << "Error: Could not load personal loan plans. Exiting." << endl;
         return 1;
     }
 

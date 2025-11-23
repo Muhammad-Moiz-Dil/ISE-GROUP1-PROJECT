@@ -87,4 +87,15 @@ bool loadCarPlans(const string &filePath);
  */
 bool loadScooterPlans(const string &filePath);
 
+/**
+ * @brief Loads personal loan plans from file
+ * 
+ * File format (CSV with # delimiter):
+ * Category#PlanName#Installments#TotalAmount#DownPayment
+ * 
+ * @param filePath Path to personal plans file (e.g., "input/Personal.txt")
+ * @return true if file loaded successfully, false otherwise
+ */
+bool loadPersonalPlans(const string &filePath);
+
 #endif // FILE_IO_H

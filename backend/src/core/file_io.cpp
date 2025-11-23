@@ -2,6 +2,7 @@
 #include "models/home_loan.h"
 #include "models/car.h"
 #include "models/scooter.h"
+#include "models/personal_loan.h"
 #include "helpers/utils.h"
 
 #include <iostream>
@@ -44,24 +45,6 @@ string Utterance::getResponse(string userInput)
 // ==================== HELPER FUNCTIONS ====================
 
 namespace {
-    /**
-     * @brief Removes commas from a string and converts to integer
-     * @param str String with possible commas (e.g., "1,234,567")
-     * @return Integer value without commas
-     */
-    int parseNumberWithCommas(const string& str)
-    {
-        string cleaned = "";
-        for (char c : str)
-        {
-            if (c != ',')
-            {
-                cleaned += c;
-            }
-        }
-        return stoi(cleaned);
-    }
-
     /**
      * @brief Calculates monthly installment amount
      * @param price Total price
@@ -242,6 +225,50 @@ bool loadScooterPlans(const string &filePath)
         scooterPlanObj.setMonthlyInstallments(monthlyInstallment);
 
         ScooterPlanManagerObj.setMake(make, scooterPlanObj);
+    }
+
+    file.close();
+    return true;
+}
+
+bool loadPersonalPlans(const string &filePath)
+{
+    ifstream file(filePath);
+    if (!file.is_open())
+    {
+        cout << "Error: Could not open personal plans file: " << filePath << endl;
+        return false;
+    }
+
+    string line;
+    getline(file, line); // Skip header row
+
+    while (getline(file, line))
+    {
+        stringstream ss(line);
+        string category, planName, installmentStr, amountStr, downPaymentStr;
+
+        getline(ss, category, '#');
+        getline(ss, planName, '#');
+        getline(ss, installmentStr, '#');
+        getline(ss, amountStr, '#');
+        getline(ss, downPaymentStr, '#');
+
+        // Parse values
+        int installments = stoi(trim(installmentStr));
+        int totalAmount = parseNumberWithCommas(amountStr);
+        int downPayment = parseNumberWithCommas(downPaymentStr);
+        int monthlyInstallment = calculateMonthlyInstallment(totalAmount, downPayment, installments);
+
+        // Create and populate personal loan plan
+        PersonalLoanPlan personalPlanObj;
+        personalPlanObj.setPlanName(planName);
+        personalPlanObj.setInstallments(installmentStr);
+        personalPlanObj.setTotalAmount(amountStr);
+        personalPlanObj.setDownPayment(downPaymentStr);
+        personalPlanObj.setMonthlyInstallments(monthlyInstallment);
+
+        PersonalLoanManagerObj.setCategory(category, personalPlanObj);
     }
 
     file.close();

@@ -8,6 +8,7 @@
 #include "models/car.h"
 #include "models/scooter.h"
 #include "models/home_loan.h"
+#include "models/personal_loan.h"
 
 #include <iostream>
 #include <string>
@@ -26,17 +27,24 @@ extern ApplicationManager appManager;
 extern HomeLoanManager HomeLoanManagerObj;
 extern CarPlanManager CarPlanManagerObj;
 extern ScooterPlanManager ScooterPlanManagerObj;
+extern PersonalLoanManager PersonalLoanManagerObj;
 extern Utterance uttrObj;
 
 // ==================== MAIN MENU HANDLER ====================
 
 void handleMainMenu(string userInput, string lowerInput, string &state)
 {
+    cout<<"checking main menu";
     cout << uttrObj.getResponse(lowerInput) << endl;
 
     if (userInput == "A" || userInput == "a")
     {
         state = "LOAN_CATEGORY";
+    }
+    else if (userInput == "P" || userInput == "p")
+    {
+        state = "PERSONAL_LOAN";
+        cout<<"state has been set to personal loan";
     }
     else if (userInput == "H" || userInput == "h")
     {
@@ -391,6 +399,138 @@ void handleViewMonthlyInstallments(string userInput, string lowerInput, string &
         cout << uttrObj.getResponse(lowerInput) << endl;
     }
 }
+
+// ==================== PERSONAL LOAN HANDLER ====================
+
+void handlePersonalLoan(string &userInput, string &lowerInput, string &state,
+                        string &currentCategory, string &personalLoanSubState)
+{
+    // Initial menu
+    cout<<"checking personal loan";
+    if (personalLoanSubState.empty())
+    {
+        cout << "Hi! I'll be happy to help." << endl;
+        cout << "Press A to apply for a loan." << endl;
+        cout << "Press 1 for Wedding" << endl;
+        cout << "Press 2 for Education" << endl;
+        cout << "Press 3 for Business" << endl;
+        cout << "Press 4 to view all categories" << endl;
+        cout << "Press 5 to Resume an incomplete application." << endl;
+        cout << "Press 6 to Check Status." << endl;
+        cout << "Press X to exit" << endl;
+
+        personalLoanSubState = "MENU";
+        return;
+    }
+
+    // Handle main options
+    if (personalLoanSubState == "MENU")
+    {
+        if (lowerInput == "a")
+        {
+            personalLoanSubState = "CATEGORY";
+            cout << "\nPlease select category:" << endl;
+            cout << "1 - Wedding" << endl;
+            cout << "2 - Education" << endl;
+            cout << "3 - Business" << endl;
+            return;
+        }
+
+        else if (userInput == "1") currentCategory = "Wedding";
+        else if (userInput == "2") currentCategory = "Education";
+        else if (userInput == "3") currentCategory = "Business";
+        else if (userInput == "4")
+        {
+            cout << "Categories: Wedding, Education, Business" << endl;
+            return;
+        }
+        else if (userInput == "5") { state = "RESUME_APPLICATION"; return; }
+        else if (userInput == "6") { state = "CHECK_STATUS"; return; }
+        else if (lowerInput == "x") { state = "MAIN_MENU"; return; }
+        else
+        {
+            printError("Invalid option. Please choose 1–4 or A.");
+            return;
+        }
+
+        // Load plans
+        int planCount = PersonalLoanManagerObj.getPlanCount(currentCategory);
+
+        PersonalLoanManagerObj.displayPersonalLoanPlan(currentCategory);
+        cout << "\nEnter plan number 1-" << planCount << " to view monthly installments," << endl;
+        cout << "S - Submit loan application" << endl;
+        cout << "A - Return to main menu" << endl;
+
+        state = "VIEW_PERSONAL_INSTALLMENTS";
+        personalLoanSubState = "";
+    }
+}
+
+
+
+// ==================== VIEW PERSONAL MONTHLY INSTALLMENTS ====================
+
+void handleViewPersonalInstallments(string userInput, string lowerInput, string &state, string &currentCategory)
+{
+    userInput = trim(userInput);
+    lowerInput = toLower(userInput);
+    int planCount = PersonalLoanManagerObj.getPlanCount(currentCategory);
+
+    // Return to main menu
+    if (userInput == "A" || userInput == "a")
+    {
+        state = "MAIN_MENU";
+        return;
+    }
+
+    // Submit application
+    if (userInput == "S" || userInput == "s")
+    {
+        state = "SUBMIT_APPLICATION";
+        return;
+    }
+
+    // Check if numeric plan number
+    bool isNumeric = true;
+    for (char c : userInput)
+    {
+        if (!isdigit(c))
+        {
+            isNumeric = false;
+            break;
+        }
+    }
+
+    if (isNumeric && !userInput.empty())
+    {
+        int planChoice = stoi(userInput);
+
+        if (planChoice >= 1 && planChoice <= planCount)
+        {
+            PersonalLoanPlan plan = PersonalLoanManagerObj.getPlan(currentCategory, planChoice - 1);
+
+            int amount = parseNumberWithCommas(plan.getTotalAmount());
+            int downPayment = parseNumberWithCommas(plan.getDownPayment());
+            int installments = stoi(trim(plan.getInstallments()));
+
+            displayPaymentSchedule("Personal", amount, downPayment, installments);
+
+            cout << "\nWhat would you like to do next?" << endl;
+            cout << "S - Submit loan application" << endl;
+            cout << "(Enter plan number 1-" << planCount << " to view another plan)" << endl;
+            cout << "A - Return to main menu" << endl;
+        }
+        else
+        {
+            cout << "You probably meant to select from 1-" << planCount << ". Please try again." << endl;
+        }
+    }
+    else
+    {
+        cout << uttrObj.getResponse(lowerInput) << endl;
+    }
+}
+
 
 // ==================== CHECK STATUS HANDLER ====================
 

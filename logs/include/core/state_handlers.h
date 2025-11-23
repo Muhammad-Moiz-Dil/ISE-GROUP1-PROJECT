@@ -134,4 +134,8 @@ void handleApplicationSubmission(string &state, string &currentArea);
  */
 void handleQueryApplications(string &state);
 
+void handlePersonalLoan(string &userInput, string &lowerInput, string &state, string &currentCategory, string &personalLoanSubState);
+
+void handleViewPersonalInstallments(string userInput, string lowerInput, string &state, string &currentCategory);
+
 #endif // STATE_HANDLERS_H
