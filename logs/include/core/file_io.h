@@ -16,6 +16,7 @@ using std::map;
  * and values are corresponding bot responses. Supports fallback
  * response for unrecognized inputs using "*" key.
  */
+class ChatCorpus;
 class Utterance {
 private:
     map<string, string> responseTable;
@@ -34,6 +35,8 @@ public:
      * @return Corresponding response, or fallback "*" response if not found
      */
     string getResponse(string userInput);
+
+    bool hasResponse(const string &userInput) const;
 };
 
 /**
@@ -97,5 +100,6 @@ bool loadScooterPlans(const string &filePath);
  * @return true if file loaded successfully, false otherwise
  */
 bool loadPersonalPlans(const string &filePath);
-
+bool loadChatCorpus(const std::string& filename);
+ChatCorpus& getChatCorpus();
 #endif // FILE_IO_H

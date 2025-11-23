@@ -2,6 +2,11 @@
 #define UTILS_H
 
 #include <string>
+#include <vector>
+#include <set>
+#include <sstream>
+#include <algorithm>
+#include <cctype>
 using std::string;
 
 // ==================== COLOR CODES ====================

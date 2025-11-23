@@ -102,4 +102,7 @@ void handleViewScooterMonthlyInstallments(string userInput, string lowerInput,
                                           string &state,
                                           string &currentScooterMake);
 
+
+void startGeneralConversation();
+
 #endif

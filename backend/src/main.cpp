@@ -2,6 +2,7 @@
 #include "core/file_io.h"
 #include "core/chatbot.h"
 #include "core/application.h"
+#include "core/chat_corpus.h"
 
 using std::cout;
 using std::endl;
@@ -23,7 +24,7 @@ models/scooter.cpp `
 models/personal_loan.cpp `
 -o chatbot.exe
 */
-
+//./chatbot.exe
 int main()
 {
     // Load all required data files
@@ -57,6 +58,11 @@ int main()
         return 1;
     }
 
+    if (!loadChatCorpus("output/human_chat_corpus.txt"))
+    {
+        cout << "Warning: Could not load chat corpus. General conversation will be limited." << endl;
+        // Don't exit - let it continue without general chat
+    }
     // Load existing applications
     appManager.loadApplications("output/applications.txt");
 

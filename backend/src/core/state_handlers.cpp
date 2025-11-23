@@ -1,4 +1,5 @@
 #include "core/state_handlers.h"
+#include "core/chat_corpus.h"
 #include "core/application.h"
 #include "core/file_io.h"
 #include "helpers/application_input.h"
@@ -35,7 +36,10 @@ extern Utterance uttrObj;
 void handleMainMenu(string userInput, string lowerInput, string &state)
 {
     cout << uttrObj.getResponse(lowerInput) << endl;
-
+    if(uttrObj.getResponse(lowerInput) == "")
+    {
+        state = "GENERAL_CONVERSATION";
+    }
     if (userInput == "A" || userInput == "a")
     {
         state = "LOAN_CATEGORY";
@@ -48,18 +52,7 @@ void handleMainMenu(string userInput, string lowerInput, string &state)
     {
         state = "QUERY_APPLICATIONS";
     }
-    else if (userInput == "5")
-    {
-        state = "RESUME_APPLICATION";
-    }
-    else if (userInput == "6")
-    {
-        state = "CHECK_STATUS";
-    }
 }
-
-// ==================== LOAN CATEGORY HANDLER ====================
-
 void handleLoanCategory(string userInput, string lowerInput, string &state)
 {
     cout << uttrObj.getResponse(lowerInput) << endl;

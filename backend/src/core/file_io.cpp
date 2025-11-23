@@ -4,21 +4,25 @@
 #include "models/scooter.h"
 #include "models/personal_loan.h"
 #include "helpers/utils.h"
+#include "core/chat_corpus.h"
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <algorithm>
+#include <cctype>
 
 using std::cout;
 using std::endl;
 using std::ifstream;
+using std::stoi;
 using std::string;
 using std::stringstream;
-using std::stoi;
 
 // Global Utterance object definition
 Utterance uttrObj;
+ChatCorpus globalChatCorpus;
 
 // ==================== UTTERANCE CLASS METHODS ====================
 
@@ -26,7 +30,12 @@ void Utterance::setResponse(string userInput, string response)
 {
     responseTable[userInput] = response;
 }
-
+bool Utterance::hasResponse(const string &userInput) const
+{
+    string key = userInput;
+    key = toLower(key); // uses your helpers/utils.h function
+    return responseTable.find(key) != responseTable.end();
+}
 string Utterance::getResponse(string userInput)
 {
     // Convert input to lowercase for case-insensitive matching
@@ -39,12 +48,13 @@ string Utterance::getResponse(string userInput)
     }
 
     // Return fallback response if no match found
-    return responseTable["*"];
+    return "";
 }
 
 // ==================== HELPER FUNCTIONS ====================
 
-namespace {
+namespace
+{
     /**
      * @brief Calculates monthly installment amount
      * @param price Total price
@@ -73,7 +83,8 @@ bool loadUtterances(const string &filePath)
     while (getline(file, line))
     {
         int pos = line.find('#');
-        if (pos == string::npos) continue;
+        if (pos == string::npos)
+            continue;
 
         string userInput = toLower(line.substr(0, pos));
         string response = line.substr(pos + 1);
@@ -273,4 +284,22 @@ bool loadPersonalPlans(const string &filePath)
 
     file.close();
     return true;
+}
+bool loadChatCorpus(const std::string &filename)
+{
+    bool success = globalChatCorpus.loadCorpus(filename);
+
+    if (success)
+    {
+        std::cout << " Chat corpus loaded successfully!" << std::endl;
+    }
+    else
+    {
+        std::cerr << " Failed to load chat corpus from " << filename << std::endl;
+    }
+    return success;
+}
+ChatCorpus &getChatCorpus()
+{
+    return globalChatCorpus;
 }
