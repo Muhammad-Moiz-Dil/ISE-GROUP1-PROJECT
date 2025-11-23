@@ -370,7 +370,7 @@ bool collectFinancialInformation(Application &app, string &state)
         // Category
         while (true)
         {
-            cout << "Category (Car/Home/Bike): ";
+            cout << "Category (Car/Home/Bike/Personal): ";
             getline(cin, input);
             input = trim(input);
             
@@ -380,7 +380,7 @@ bool collectFinancialInformation(Application &app, string &state)
             }
             
             string lowerCategory = toLower(input);
-            if (lowerCategory == "car" || lowerCategory == "home" || lowerCategory == "bike") {
+            if (lowerCategory == "car" || lowerCategory == "home" || lowerCategory == "bike" || lowerCategory == "personal") {
                 loan.category = input;
                 break;
             }

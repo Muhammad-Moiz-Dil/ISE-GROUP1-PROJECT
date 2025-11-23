@@ -6,47 +6,39 @@
 using std::cout;
 using std::endl;
 using std::string;
-using std::stoi;
 
-// Global PersonalLoanManager object definition
+// Global Manager Instance
 PersonalLoanManager PersonalLoanManagerObj;
 
-// ==================== PERSONAL LOAN PLAN CLASS METHODS ====================
+// ==================== PERSONAL LOAN PLAN METHODS ====================
 
-void PersonalLoanPlan::display(bool showMonthly) const
-{
+void PersonalLoanPlan::display(bool showMonthly) const {
     cout << "  Plan: " << planName << " | ";
-    cout << "Installments: " << installments << " | ";
     cout << "Amount: " << totalAmount << " | ";
+    cout << "Installments: " << installments << " months | ";
     cout << "Down Payment: " << downPayment;
-    
-    if (showMonthly)
-    {
+
+    if (showMonthly) {
         cout << " | Monthly: " << monthlyInstallments << " PKR";
     }
-    
     cout << endl;
 }
 
-// ==================== PERSONAL LOAN MANAGER CLASS METHODS ====================
+// ==================== MANAGER METHODS ====================
 
-void PersonalLoanManager::displayPersonalLoanPlan(string category) const
-{
-    if (loanTable.count(category))
-    {
-        cout << "\n" << COLOR_CYAN << category << " - Available Personal Loan Plans:" << COLOR_RESET << endl;
+void PersonalLoanManager::displayPersonalLoanPlan(string category) const {
+    if (loanTable.count(category)) {
+        cout << "\n" << COLOR_CYAN << category << " - Available Plans:" << COLOR_RESET << endl;
         cout << COLOR_CYAN << "====================================================================================" << COLOR_RESET << endl;
-        
-        for (size_t i = 0; i < loanTable.at(category).size(); i++)
-        {
+
+        const vector<PersonalLoanPlan>& plans = loanTable.at(category);
+        for (size_t i = 0; i < plans.size(); i++) {
             cout << "Plan " << (i + 1) << ": ";
-            loanTable.at(category)[i].display(false);
+            plans[i].display(false);
         }
-        
+
         cout << COLOR_CYAN << "====================================================================================" << COLOR_RESET << endl;
-    }
-    else
-    {
-        printError("No such category found.");
+    } else {
+        printError("No plans found for category: " + category);
     }
 }

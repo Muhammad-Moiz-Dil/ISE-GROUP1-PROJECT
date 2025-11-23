@@ -34,29 +34,11 @@ extern Utterance uttrObj;
 
 void handleMainMenu(string userInput, string lowerInput, string &state)
 {
-    cout<<"checking main menu";
     cout << uttrObj.getResponse(lowerInput) << endl;
 
     if (userInput == "A" || userInput == "a")
     {
         state = "LOAN_CATEGORY";
-    }
-    else if (userInput == "P" || userInput == "p")
-    {
-        state = "PERSONAL_LOAN";
-        cout<<"state has been set to personal loan";
-    }
-    else if (userInput == "H" || userInput == "h")
-    {
-        state = "HOME_LOAN_AREA";
-    }
-    else if (userInput == "C" || userInput == "c")
-    {
-        state = "CAR_LOAN";
-    }
-    else if (userInput == "S" || userInput == "s")
-    {
-        state = "SCOOTER_LOAN_AREA";
     }
     else if (userInput == "3")
     {
@@ -94,6 +76,10 @@ void handleLoanCategory(string userInput, string lowerInput, string &state)
     {
         state = "SCOOTER_LOAN_AREA";
     }
+    else if (userInput == "P" || userInput == "p")
+    {
+        state = "PERSONAL_LOAN";
+    }  
     else if (userInput == "A" || userInput == "a")
     {
         return;
@@ -402,71 +388,84 @@ void handleViewMonthlyInstallments(string userInput, string lowerInput, string &
 
 // ==================== PERSONAL LOAN HANDLER ====================
 
-void handlePersonalLoan(string &userInput, string &lowerInput, string &state,
-                        string &currentCategory, string &personalLoanSubState)
+void handlePersonalLoan(string &userInput, string &lowerInput, string &state, string &currentCategory, string &personalLoanSubState)
 {
-    // Initial menu
-    cout<<"checking personal loan";
+    // Initial Entry
     if (personalLoanSubState.empty())
     {
-        cout << "Hi! I'll be happy to help." << endl;
-        cout << "Press A to apply for a loan." << endl;
-        cout << "Press 1 for Wedding" << endl;
-        cout << "Press 2 for Education" << endl;
-        cout << "Press 3 for Business" << endl;
-        cout << "Press 4 to view all categories" << endl;
-        cout << "Press 5 to Resume an incomplete application." << endl;
-        cout << "Press 6 to Check Status." << endl;
-        cout << "Press X to exit" << endl;
-
+        cout << "\n" << COLOR_CYAN << "--- PERSONAL LOAN MENU ---" << COLOR_RESET << endl;
+        cout << "1. Wedding Loan" << endl;
+        cout << "2. Education Loan" << endl;
+        cout << "3. Business Loan" << endl;
+        cout << "4. View All Categories" << endl;
+        cout << "5. Resume Application" << endl;
+        cout << "6. Check Status" << endl;
+        cout << "A. Apply (General)" << endl;
+        cout << "X. Exit" << endl;
+        
         personalLoanSubState = "MENU";
-        return;
+        return; // Return to let main loop capture input
     }
 
-    // Handle main options
+    // Handle Menu Selection
     if (personalLoanSubState == "MENU")
     {
-        if (lowerInput == "a")
-        {
+        if (lowerInput == "a") {
             personalLoanSubState = "CATEGORY";
-            cout << "\nPlease select category:" << endl;
-            cout << "1 - Wedding" << endl;
-            cout << "2 - Education" << endl;
-            cout << "3 - Business" << endl;
+            cout << "\nPlease select category (1-Wedding, 2-Education, 3-Business): ";
             return;
         }
-
         else if (userInput == "1") currentCategory = "Wedding";
         else if (userInput == "2") currentCategory = "Education";
         else if (userInput == "3") currentCategory = "Business";
-        else if (userInput == "4")
-        {
-            cout << "Categories: Wedding, Education, Business" << endl;
+        else if (userInput == "4") {
+            printInfo("Available Categories: Wedding, Education, Business");
             return;
         }
         else if (userInput == "5") { state = "RESUME_APPLICATION"; return; }
         else if (userInput == "6") { state = "CHECK_STATUS"; return; }
         else if (lowerInput == "x") { state = "MAIN_MENU"; return; }
-        else
-        {
-            printError("Invalid option. Please choose 1–4 or A.");
+        else {
+            printError("Invalid option. Please choose 1-6, A, or X.");
             return;
         }
 
-        // Load plans
+        // If we got here, a category was selected (1, 2, or 3)
         int planCount = PersonalLoanManagerObj.getPlanCount(currentCategory);
-
+        
+        if (planCount > 0) {
+            PersonalLoanManagerObj.displayPersonalLoanPlan(currentCategory);
+            cout << "\nWhat would you like to do?" << endl;
+            cout << "Enter plan number (1-" << planCount << ") to view installments" << endl;
+            cout << "S - Submit Application" << endl;
+            cout << "A - Return to Main Menu" << endl;
+            
+            state = "VIEW_PERSONAL_INSTALLMENTS";
+            personalLoanSubState = ""; // Reset sub-state
+        } else {
+            printError("No plans available for " + currentCategory);
+            state = "MAIN_MENU";
+        }
+    }
+    // Handle Category Selection Sub-state
+    else if (personalLoanSubState == "CATEGORY")
+    {
+        if (userInput == "1") currentCategory = "Wedding";
+        else if (userInput == "2") currentCategory = "Education";
+        else if (userInput == "3") currentCategory = "Business";
+        else {
+            printError("Invalid category. Please choose 1, 2, or 3.");
+            return;
+        }
+        
+        // Same display logic as above...
+        int planCount = PersonalLoanManagerObj.getPlanCount(currentCategory);
         PersonalLoanManagerObj.displayPersonalLoanPlan(currentCategory);
-        cout << "\nEnter plan number 1-" << planCount << " to view monthly installments," << endl;
-        cout << "S - Submit loan application" << endl;
-        cout << "A - Return to main menu" << endl;
-
+        // ... (display prompt)
         state = "VIEW_PERSONAL_INSTALLMENTS";
         personalLoanSubState = "";
     }
 }
-
-
 
 // ==================== VIEW PERSONAL MONTHLY INSTALLMENTS ====================
 
@@ -490,29 +489,22 @@ void handleViewPersonalInstallments(string userInput, string lowerInput, string 
         return;
     }
 
-    // Check if numeric plan number
-    bool isNumeric = true;
-    for (char c : userInput)
-    {
-        if (!isdigit(c))
-        {
-            isNumeric = false;
-            break;
-        }
-    }
-
-    if (isNumeric && !userInput.empty())
+    // Use helper function instead of manual loop
+    if (isValidPositiveAmount(userInput))
     {
         int planChoice = stoi(userInput);
 
         if (planChoice >= 1 && planChoice <= planCount)
         {
+            // Get plan data
             PersonalLoanPlan plan = PersonalLoanManagerObj.getPlan(currentCategory, planChoice - 1);
 
+            // Parse with helper (already correct in your snippet)
             int amount = parseNumberWithCommas(plan.getTotalAmount());
             int downPayment = parseNumberWithCommas(plan.getDownPayment());
             int installments = stoi(trim(plan.getInstallments()));
 
+            // Display using standard UI helper
             displayPaymentSchedule("Personal", amount, downPayment, installments);
 
             cout << "\nWhat would you like to do next?" << endl;
@@ -522,7 +514,8 @@ void handleViewPersonalInstallments(string userInput, string lowerInput, string 
         }
         else
         {
-            cout << "You probably meant to select from 1-" << planCount << ". Please try again." << endl;
+            // Use standard error printer
+            printError("You probably meant to select from 1-" + std::to_string(planCount) + ". Please try again.");
         }
     }
     else

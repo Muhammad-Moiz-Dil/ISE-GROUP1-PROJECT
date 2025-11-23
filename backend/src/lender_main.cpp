@@ -5,13 +5,18 @@ using std::cout;
 using std::endl;
 
 /* [LENDER.EXE COMPILATION]
-g++ -I..\..\logs\include ^
-lender_main.cpp ^
-core\lender.cpp ^
-core\application.cpp ^
-helpers\utils.cpp ^
-helpers\error_handling.cpp ^
-helpers\ui_display.cpp ^
+g++ -I..\..\logs\include `
+lender_main.cpp `
+core/lender.cpp `
+core/application.cpp `
+core/file_io.cpp `
+helpers/utils.cpp `
+helpers/error_handling.cpp `
+helpers/ui_display.cpp `
+models/home_loan.cpp `
+models/car.cpp `
+models/scooter.cpp `
+models/personal_loan.cpp `
 -o lender.exe
 */
 

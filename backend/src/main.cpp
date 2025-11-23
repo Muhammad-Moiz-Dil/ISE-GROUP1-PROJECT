@@ -7,20 +7,20 @@ using std::cout;
 using std::endl;
 
 /* [CHATBOT.EXE COMPILATION]
-g++ -I..\..\logs\include ^
-main.cpp ^
-core\chatbot.cpp ^
-core\state_handlers.cpp ^
-core\file_io.cpp ^
-core\application.cpp ^
-helpers\utils.cpp ^
-helpers\error_handling.cpp ^
-helpers\ui_display.cpp ^
-helpers\application_input.cpp ^
-models\home_loan.cpp ^
-models\car.cpp ^
-models\scooter.cpp ^
-models\personal_loan.cpp ^
+g++ -I..\..\logs\include `
+main.cpp `
+core/chatbot.cpp `
+core/state_handlers.cpp `
+core/file_io.cpp `
+core/application.cpp `
+helpers/utils.cpp `
+helpers/error_handling.cpp `
+helpers/ui_display.cpp `
+helpers/application_input.cpp `
+models/home_loan.cpp `
+models/car.cpp `
+models/scooter.cpp `
+models/personal_loan.cpp `
 -o chatbot.exe
 */
 
