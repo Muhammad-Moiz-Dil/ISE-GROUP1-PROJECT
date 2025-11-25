@@ -192,10 +192,10 @@ bool collectFinancialInformation(Application &app, string &state)
         printError("Invalid number. Please enter a value between 0 and 20.");
     }
     
-    // Annual Income (minimum 100,000 PKR)
+    // Annual Income (minimum 5,000 PKR)
     while (true)
     {
-        cout << "Annual Income (PKR, minimum 100,000): ";
+        cout << "Annual Income: ";
         getline(cin, input);
         input = trim(input);
         
@@ -206,19 +206,19 @@ bool collectFinancialInformation(Application &app, string &state)
         
         if (isValidReasonableAmount(input)) {
             long income = stol(input);
-            if (income >= 100000) {
+            if (income >= 5000) {
                 app.setAnnualIncome(income);
                 break;
             }
         }
         
-        printError("Invalid amount. Please enter at least 100,000 PKR.");
+        printError("Invalid amount. Please enter a valid amount.");
     }
     
-    // Average Monthly Electricity Bill (0-100,000 PKR)
+    // Average Monthly Electricity Bill (0-10M PKR)
     while (true)
     {
-        cout << "Average Monthly Electricity Bill (PKR, 0-100,000): ";
+        cout << "Average Monthly Electricity Bill: ";
         getline(cin, input);
         input = trim(input);
         
@@ -227,18 +227,18 @@ bool collectFinancialInformation(Application &app, string &state)
             return false;
         }
         
-        if (isValidIntegerInRange(input, 0, 100000)) {
+        if (isValidIntegerInRange(input, 0, 10000000)) {
             app.setAvgElectricityBill(stol(input));
             break;
         }
         
-        printError("Invalid amount. Please enter between 0 and 100,000 PKR.");
+        printError("Invalid amount. Please enter a valid amount.");
     }
     
-    // Current Electricity Bill (0-100,000 PKR)
+    // Current Electricity Bill (0-10M PKR)
     while (true)
     {
-        cout << "Current Electricity Bill (PKR, 0-100,000): ";
+        cout << "Current Electricity Bill: ";
         getline(cin, input);
         input = trim(input);
         
@@ -247,12 +247,12 @@ bool collectFinancialInformation(Application &app, string &state)
             return false;
         }
         
-        if (isValidIntegerInRange(input, 0, 100000)) {
+        if (isValidIntegerInRange(input, 0, 10000000)) {
             app.setCurrentElectricityBill(stol(input));
             break;
         }
         
-        printError("Invalid amount. Please enter between 0 and 100,000 PKR.");
+        printError("Invalid amount. Please enter a valid amount.");
     }
     
     // Existing Loan
@@ -322,30 +322,8 @@ bool collectFinancialInformation(Application &app, string &state)
         }
         
         // Amount Due
-        while (true)
-        {
-            cout << "Amount Due (PKR): ";
-            getline(cin, input);
-            input = trim(input);
-            
-            if (input == "X" || input == "x") {
-                state = "MAIN_MENU";
-                return false;
-            }
-            
-            if (isValidReasonableAmount(input)) {
-                long due = stol(input);
-                // Verify: totalAmount - returned should equal due
-                long expectedDue = loan.totalAmount - loan.amountReturned;
-                if (due == expectedDue) {
-                    loan.amountDue = due;
-                    break;
-                }
-                printError("Amount due should equal Total - Returned = " + std::to_string(expectedDue) + " PKR");
-            } else {
-                printError("Invalid amount. Please enter a valid amount.");
-            }
-        }
+        long due = loan.totalAmount - loan.amountReturned;
+        loan.amountDue = due;
         
         // Bank Name
         while (true)

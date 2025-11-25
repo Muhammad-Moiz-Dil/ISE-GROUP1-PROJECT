@@ -227,6 +227,9 @@ bool ApplicationManager::loadApplications(const string &filename) {
     std::ifstream file(filename);
     if (!file.is_open()) return false;
 
+    // clear existing list before reloading (or initially loading)
+    applications.clear(); 
+
     string line;
     std::getline(file, line); // Skip header
 
@@ -281,13 +284,14 @@ bool ApplicationManager::saveAllApplications(const string &filename) {
         << "Referee1Name#Referee1CNIC#Referee1IssueDate#Referee1Phone#Referee1Email#"
         << "Referee2Name#Referee2CNIC#Referee2IssueDate#Referee2Phone#Referee2Email#"
         << "CNICFrontPath#CNICBackPath#ElectricityBillPath#SalarySlipPath#"
-        << "SelectedLoanType#SelectedLoanDetails#SubmissionDate#Checkpoint\n";
+        << "SelectedLoanType#SelectedLoanDetails#SubmissionDate#Checkpoint" << std::endl;
 
     // Write all applications
     for (const auto &app : applications) {
-        file << app.toFileFormat() << "\n";
+        file << app.toFileFormat() << std::endl;
     }
 
+    file.flush();
     file.close();
     return true;
 }
