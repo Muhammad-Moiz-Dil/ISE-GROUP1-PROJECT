@@ -119,12 +119,12 @@ int LenderManager::findApplicationByID(const string& appID) const
 {
     for (size_t i = 0; i < applications.size(); i++)
     {
-        if (applications[i].getApplicationID() == appID)
+        if (applications[i].getApplicationID() == appID && applications[i].getStatus() == "Submitted")
         {
             return static_cast<int>(i);
         }
     }
-    return -1;
+    return -1; // if not found
 }
 
 void LenderManager::displayApplicationDetails(int index) const
@@ -214,6 +214,12 @@ void displayLenderMenu()
     cout << "  3. Approve/Reject Application" << endl;
     cout << "  4. Exit" << endl;
     cout << "\nEnter your choice (1-4 or X to exit): ";
+
+    if (appManager.loadApplications("output/applications.txt")) {
+        cout << " [Data Refreshed]" << endl;
+    } else {
+        printError("Failed to refresh data.");
+    }
 }
 
 void handleViewAllApplications(LenderManager& manager)
@@ -303,7 +309,7 @@ void runLenderPortal(LenderManager& manager)
 {
     displayLenderHeader();
 
-    // Load applications
+    // Initial Load
     if (!manager.loadApplications())
     {
         printError("Failed to load applications. Exiting.");
@@ -316,7 +322,12 @@ void runLenderPortal(LenderManager& manager)
     string choice;
     while (true)
     {
-        displayLenderMenu();
+        if (manager.loadApplications()) {
+            cout << " [Data Refreshed]" << endl;
+        }
+
+        displayLenderMenu(); // Just print the menu options
+        
         getline(cin, choice);
         choice = trim(choice);
 

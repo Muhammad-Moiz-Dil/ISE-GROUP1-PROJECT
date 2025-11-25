@@ -27,7 +27,7 @@ void runChatbot() {
   string personalLoanSubState = "";
 
   while (true) {
-    // Action States
+    // Action States (No User Input Required)
     if (state == "SUBMIT_APPLICATION") {
       handleApplicationSubmission(state, currentArea);
       continue;
@@ -49,24 +49,46 @@ void runChatbot() {
 
     string lowerInput = toLower(userInput);
 
+    // ========================================
     // Global Navigation Shortcuts
-    // Allows user to jump to main features from ANY state (including General Convo)
+    // ========================================
     if (userInput == "A" || userInput == "a") {
       state = "LOAN_CATEGORY";
-      // If switching to category, we don't process this input in the current state handler
-    } else if (userInput == "5") {
+    } 
+    else if (userInput == "H" || userInput == "h") {
+      cout << "You are applying for a home loan. Please select area. Options are 1, 2, 3, 4" << endl;
+      state = "HOME_LOAN_AREA";
+      continue;
+    }
+    else if (userInput == "C" || userInput == "c") {
+      cout << "You are applying for a car loan. Please select car options. Options are 1, 2." << endl;
+      state = "CAR_LOAN";
+      continue;
+    }
+    else if (userInput == "E" || userInput == "e") {
+      cout << "You are applying for a scooter loan. Please select scooter options. Options are 1, 2." << endl;
+      state = "SCOOTER_LOAN_AREA";
+      continue;
+    }
+    else if (userInput == "P" || userInput == "p") {
+      cout << "You are applying for a personal loan. Please select options. Options are 1, 2, 3." << endl;
+      state = "PERSONAL_LOAN";
+      continue;
+    }
+    else if (userInput == "5") {
       state = "RESUME_APPLICATION";
       continue;
-    } else if (userInput == "6") {
+    } 
+    else if (userInput == "6") {
       state = "CHECK_STATUS";
       continue;
     }
 
+    // ========================================
     // Route to State Handlers
+    // ========================================
     if (state == "MAIN_MENU") {
       handleMainMenu(userInput, lowerInput, state);
-    } else if (state == "GENERAL_CONVERSATION") {
-      handleGeneralConversation(userInput, lowerInput, state);
     } else if (state == "LOAN_CATEGORY") {
       handleLoanCategory(userInput, lowerInput, state);
     } else if (state == "HOME_LOAN_AREA") {

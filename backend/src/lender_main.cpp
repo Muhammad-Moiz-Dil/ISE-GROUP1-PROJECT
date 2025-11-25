@@ -10,6 +10,7 @@ lender_main.cpp `
 core/lender.cpp `
 core/application.cpp `
 core/file_io.cpp `
+core/chat_corpus.cpp `
 helpers/utils.cpp `
 helpers/error_handling.cpp `
 helpers/ui_display.cpp `

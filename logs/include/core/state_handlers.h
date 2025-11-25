@@ -8,6 +8,15 @@ using std::string;
 // ==================== STATE HANDLER FUNCTION DECLARATIONS ====================
 
 /**
+ * @brief Handles unexpected input in workflow states
+ * 
+ * Checks if input matches a system command (utterances), 
+ * otherwise prints a generic "invalid input" message.
+ * Does NOT change state.
+ */
+void handleUnexpectedInput(string &lowerInput);
+
+/**
  * Handles user input in the MAIN_MENU state.
  * @param userInput: the original user input (case-sensitive for state
  * transitions)
