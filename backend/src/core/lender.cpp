@@ -72,6 +72,7 @@ bool LenderManager::saveApplications()
         file << app.toFileFormat() << endl;
     }
 
+    file.flush();
     file.close();
     return true;
 }
@@ -145,8 +146,7 @@ void LenderManager::displayApplicationDetails(int index) const
     // Metadata
     cout << "\n" << COLOR_YELLOW << "METADATA:" << COLOR_RESET << endl;
     cout << "  Application ID: " << app.getApplicationID() << endl;
-    cout << "  Status: ";
-    displayApplicationStatus(app.getStatus());
+    cout << "  Status: " << app.getStatus() << endl;
     cout << "  Submission Date: " << app.getSubmissionDate() << endl;
 
     // Personal Information
@@ -215,9 +215,8 @@ void displayLenderMenu()
     cout << "  4. Exit" << endl;
     cout << "\nEnter your choice (1-4 or X to exit): ";
 
-    if (appManager.loadApplications("output/applications.txt")) {
-        cout << " [Data Refreshed]" << endl;
-    } else {
+    if (!appManager.loadApplications("output/applications.txt")) 
+    {
         printError("Failed to refresh data.");
     }
 }
@@ -322,8 +321,9 @@ void runLenderPortal(LenderManager& manager)
     string choice;
     while (true)
     {
-        if (manager.loadApplications()) {
-            cout << " [Data Refreshed]" << endl;
+        if (!manager.loadApplications()) {
+            printError("Failed to load applications. Exiting.");
+            return;
         }
 
         displayLenderMenu(); // Just print the menu options
@@ -353,7 +353,7 @@ void runLenderPortal(LenderManager& manager)
         }
         else
         {
-            printWarning("Invalid option. Please choose 1-4, or press X to exit.");
+            printError("Invalid option. Please choose 1-4, or press X to exit.");
         }
     }
 }

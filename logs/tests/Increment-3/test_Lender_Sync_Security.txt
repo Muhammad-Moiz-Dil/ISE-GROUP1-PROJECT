@@ -1,0 +1,53 @@
+====================================================
+TEST CASES: Lender Sync & Access Control
+====================================================
+
+SETUP:
+Open TWO terminals.
+- Terminal A: Run chatbot.exe
+- Terminal B: Run lender.exe
+
+====================================================
+SECTION 1: ACCESS CONTROL (INCOMPLETE APPS)
+====================================================
+
+Test ID:       LS-001
+Purpose:       Ensure Lender CANNOT see incomplete applications
+Input:         Terminal A (Chatbot): Start app, fill Name, press X (Save as draft)
+               Terminal B (Lender): Press 1 (View All)
+Expected:      The incomplete application ID from Terminal A should NOT appear in the list.
+Actual:        Incomplete app is hidden
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LS-002
+Purpose:       Ensure Lender CANNOT approve incomplete applications by ID
+Input:         Terminal B (Lender): Press 3 (Approve/Reject) > Enter [Incomplete App ID]
+Expected:      Shows: "Access Denied: This application is incomplete" or "Application not found"
+               Returns to menu
+Actual:        Blocked access
+Result:        Pass
+
+====================================================
+SECTION 2: REAL-TIME SYNC
+====================================================
+
+Test ID:       LS-003
+Purpose:       Verify Data Sync (User Submit -> Lender See)
+Input:         Terminal A: Resume the incomplete app and finish it (Status becomes "Submitted")
+               Terminal B: Press 1 (View All)
+Expected:      Shows: "[Data Refreshed]"
+               The application ID NOW appears in the list with status "Submitted"
+Actual:        App appeared immediately without restarting lender
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       LS-004
+Purpose:       Verify Status Update (Lender Approve -> User Check)
+Input:         Terminal B: Press 3 > [ID] > 1 (Approve)
+               Terminal A: Press 6 (Check Status) > [CNIC]
+Expected:      Chatbot displays status: "Approved"
+Actual:        Status updated in chatbot immediately
+Result:        Pass

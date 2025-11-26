@@ -1,0 +1,66 @@
+====================================================
+TEST CASES: General Conversation & Personal Loan
+====================================================
+
+SETUP:
+- Run chatbot.exe
+
+====================================================
+SECTION 1: GENERAL CONVERSATION (IoU)
+====================================================
+
+Test ID:       GC-001
+Purpose:       Test Basic Greeting (Utterance Match)
+Input:         Hi
+Expected:      "Hello! Please press A to apply..." (Matches Utterances.txt)
+Actual:        Correct greeting
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       GC-002
+Purpose:       Test Corpus Match (IoU)
+Input:         How are you
+Expected:      Bot replies with a human-like response (e.g., "I am fine") from corpus
+Actual:        Got reasonable response
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       GC-003
+Purpose:       Test Fallback (Low IoU)
+Input:         askdjfh skdjfh (Gibberish)
+Expected:      "I'm not sure how to respond to that."
+Actual:        Fallback message displayed
+Result:        Pass
+
+====================================================
+SECTION 2: PERSONAL LOAN
+====================================================
+
+Test ID:       PL-001
+Purpose:       Access Personal Loan via Menu
+Input:         A > P
+Expected:      Shows: "You are applying for a personal loan."
+               Shows Categories: Wedding, Education, Business
+Actual:        Correct menu
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       PL-002
+Purpose:       Global Shortcut 'P'
+Input:         (From Main Menu) Type: P
+Expected:      Immediately jumps to Personal Loan menu
+Actual:        Shortcut worked
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       PL-003
+Purpose:       Select Personal Loan Category
+Input:         1 (Wedding)
+Expected:      Displays Wedding Loan Plans table
+               Asks to View Monthly Installments
+Actual:        Displayed correct plans
+Result:        Pass

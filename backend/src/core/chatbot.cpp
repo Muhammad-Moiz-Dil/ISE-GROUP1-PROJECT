@@ -24,12 +24,13 @@ void runChatbot() {
   string currentCarMake = "";
   string currentScooterMake = "";
   string currentCategory = "";
+  string currentLoanType = "";
   string personalLoanSubState = "";
 
   while (true) {
     // Action States (No User Input Required)
     if (state == "SUBMIT_APPLICATION") {
-      handleApplicationSubmission(state, currentArea);
+        handleApplicationSubmission(state, currentArea, currentLoanType, currentCarMake, currentScooterMake, currentCategory);
       continue;
     } else if (state == "RESUME_APPLICATION") {
       handleResumeApplication(state);
@@ -58,21 +59,25 @@ void runChatbot() {
     else if (userInput == "H" || userInput == "h") {
       cout << "You are applying for a home loan. Please select area. Options are 1, 2, 3, 4" << endl;
       state = "HOME_LOAN_AREA";
+      currentLoanType = "Home";
       continue;
     }
     else if (userInput == "C" || userInput == "c") {
       cout << "You are applying for a car loan. Please select car options. Options are 1, 2." << endl;
       state = "CAR_LOAN";
+      currentLoanType = "Car";
       continue;
     }
     else if (userInput == "E" || userInput == "e") {
       cout << "You are applying for a scooter loan. Please select scooter options. Options are 1, 2." << endl;
       state = "SCOOTER_LOAN_AREA";
+      currentLoanType = "Scooter";
       continue;
     }
     else if (userInput == "P" || userInput == "p") {
       cout << "You are applying for a personal loan. Please select options. Options are 1, 2, 3." << endl;
       state = "PERSONAL_LOAN";
+      currentLoanType = "Personal";
       continue;
     }
     else if (userInput == "5") {
@@ -90,7 +95,7 @@ void runChatbot() {
     if (state == "MAIN_MENU") {
       handleMainMenu(userInput, lowerInput, state);
     } else if (state == "LOAN_CATEGORY") {
-      handleLoanCategory(userInput, lowerInput, state);
+      handleLoanCategory(userInput, lowerInput, state, currentLoanType);
     } else if (state == "HOME_LOAN_AREA") {
       handleHomeLoanArea(userInput, lowerInput, state, currentArea);
     } else if (state == "CAR_LOAN") {

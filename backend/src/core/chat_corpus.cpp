@@ -25,19 +25,16 @@ vector<string> ChatCorpus::tokenize(const string &text) const
 
     while (ss >> token)
     {
-        // 1. Convert to lowercase
-        std::transform(token.begin(), token.end(), token.begin(),
-                    [](unsigned char c)
-                    { return static_cast<char>(std::tolower(c)); });
+        // Convert to lowercase
+        std::transform(token.begin(), token.end(), token.begin(), [](unsigned char c) 
+        { return static_cast<char>(std::tolower(c)); });
 
-        // 2. Remove punctuation AND control characters (\r, \n, etc.)
-        // This fixes the Windows line ending bug where "word\r" != "word"
-        token.erase(std::remove_if(token.begin(), token.end(),
-                                [](unsigned char c)
-                                {
-                                    return std::ispunct(c) || std::iscntrl(c);
-                                }),
-                    token.end());
+        // Remove punctuation AND control characters (\r, \n, etc.)
+        token.erase(std::remove_if(token.begin(), token.end(), [](unsigned char c)
+        {
+            return std::ispunct(c) || std::iscntrl(c);
+        }),
+        token.end());
 
         // 3. Only add non-empty tokens
         if (!token.empty())
@@ -59,23 +56,18 @@ double ChatCorpus::calculateIoU(const string &input, const string &corpusText) c
 
     // Intersection
     set<string> intersection;
-    std::set_intersection(set1.begin(), set1.end(),
-                        set2.begin(), set2.end(),
-                        std::inserter(intersection, intersection.begin()));
+    std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(intersection, intersection.begin()));
 
     // Union
     set<string> unionSet;
-    std::set_union(set1.begin(), set1.end(),
-                set2.begin(), set2.end(),
-                std::inserter(unionSet, unionSet.begin()));
+    std::set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(unionSet, unionSet.begin()));
 
     if (unionSet.empty())
     {
         return 0.0;
     }
 
-    return static_cast<double>(intersection.size()) /
-        static_cast<double>(unionSet.size());
+    return static_cast<double>(intersection.size()) / static_cast<double>(unionSet.size());
 }
 
 // ==================== PUBLIC METHODS ====================
@@ -147,7 +139,7 @@ string ChatCorpus::getResponse(const string &userInput)
     }
 
     // Threshold check
-    const double MIN_IOU_THRESHOLD = 0.10;
+    const double MIN_IOU_THRESHOLD = 0.30;
     if (maxIoU < MIN_IOU_THRESHOLD)
     {
         return "I'm not sure how to respond to that.";
