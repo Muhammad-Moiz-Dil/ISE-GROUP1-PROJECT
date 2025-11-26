@@ -31,9 +31,10 @@ void handleMainMenu(string userInput, string lowerInput, string &state);
  * @param userInput: the original user input
  * @param lowerInput: lowercase version for utterance lookups
  * @param state: reference to current state string (modified by this function)
+ * @param currentLoanCategory: reference to the current loan category string (modified by this function)
  * @return void
  */
-void handleLoanCategory(string userInput, string lowerInput, string &state);
+void handleLoanCategory(string userInput, string lowerInput, string &state, string &currentLoanCategory);
 
 /**
  * Handles user input in the HOME_LOAN_AREA state.
@@ -129,12 +130,11 @@ void handleResumeApplication(string &state);
 
 /**
  * Handles user input in the SUBMIT_APPLICATION state.
- * @param state: reference to current state string (modified by this function)
- * @param currentArea: reference to the area being viewed (used to fetch correct
- * plans)
+ * @param state reference to current state string (modified by this function)
+ * @param currentArea reference to the area being viewed (used to fetch correct plans)
  * @return void
  */
-void handleApplicationSubmission(string &state, string &currentArea);
+void handleApplicationSubmission(string &state, string &currentArea, string &currentLoanType, string &currentCarMake, string &currentScooterMake, string &currentCategory);
 
 // ==================== STATE HANDLER FUNCTION DECLARATIONS ====================
 

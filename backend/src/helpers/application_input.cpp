@@ -94,7 +94,7 @@ bool collectPersonalInformation(Application &app, string &state)
     app.setCNIC(input);
     
     // CNIC Expiry
-    if (!getValidatedInput("CNIC Expiry Date (DD-MM-YYYY): ", isValidDate, "Invalid date format.", state, input))
+    if (!getValidatedInput("CNIC Expiry Date (DD-MM-YYYY): ", isValidExpiryDate, "Invalid date format.", state, input))
         return false;
     app.setCNICExpiry(input);
     
@@ -256,12 +256,20 @@ bool collectFinancialInformation(Application &app, string &state)
     }
     
     // Existing Loan
-    cout << "\nDo you have any existing loans? (Y/N): ";
-    getline(cin, input);
-    input = trim(input);
-    if (input == "X" || input == "x") {
-        state = "MAIN_MENU";
-        return false;
+    while (true)
+    {
+        cout << "\nDo you have any existing loans? (Y/N): ";
+        getline(cin, input);
+        input = trim(input);
+        if (input == "X" || input == "x") {
+            state = "MAIN_MENU";
+            return false;
+        }
+        
+        if (toupper(input[0]) == 'Y' || toupper(input[0]) == 'N') {
+            break;
+        }
+        printError("Invalid option selected. Try again.");
     }
     
     if (toupper(input[0]) == 'Y')
@@ -391,8 +399,9 @@ bool collectReferenceInformation(Application &app, string &state)
         return false;
     ref1.cnic = input;
     
-    if (!getValidatedInput("Issue Date (DD-MM-YYYY): ", isValidDate, "Invalid date.", state, input))
+    if (!getValidatedInput("Issue Date (DD-MM-YYYY): ", isValidIssueDate, "Invalid date.", state, input))
         return false;
+    
     ref1.issueDate = input;
     
     if (!getValidatedInput("Phone: ", isValidContact, "Invalid phone.", state, input))
@@ -415,8 +424,9 @@ bool collectReferenceInformation(Application &app, string &state)
         return false;
     ref2.cnic = input;
     
-    if (!getValidatedInput("Issue Date (DD-MM-YYYY): ", isValidDate, "Invalid date.", state, input))
+    if (!getValidatedInput("Issue Date (DD-MM-YYYY): ", isValidIssueDate, "Invalid date.", state, input))
         return false;
+
     ref2.issueDate = input;
     
     if (!getValidatedInput("Phone: ", isValidContact, "Invalid phone.", state, input))

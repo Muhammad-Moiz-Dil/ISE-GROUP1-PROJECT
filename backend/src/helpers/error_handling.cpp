@@ -82,7 +82,34 @@ bool isValidEmail(const string& email)
     return true;
 }
 
-bool isValidDate(const string& date)
+bool isValidIssueDate(const string& date)
+{
+    if (date.length() != 10) return false;
+    if (date[2] != '-' || date[5] != '-') return false;
+    
+    // Extract components
+    string dayStr = date.substr(0, 2);
+    string monthStr = date.substr(3, 2);
+    string yearStr = date.substr(6, 4);
+    
+    // Check all are digits
+    for (char c : dayStr) if (!isdigit(c)) return false;
+    for (char c : monthStr) if (!isdigit(c)) return false;
+    for (char c : yearStr) if (!isdigit(c)) return false;
+    
+    // Validate ranges
+    int day = stoi(dayStr);
+    int month = stoi(monthStr);
+    int year = stoi(yearStr);
+    
+    if (day < 1 || day > 31) return false;
+    if (month < 1 || month > 12) return false;
+    if (year < 1900 || year > 2025) return false;
+    
+    return true;
+}
+
+bool isValidExpiryDate(const string& date)
 {
     if (date.length() != 10) return false;
     if (date[2] != '-' || date[5] != '-') return false;

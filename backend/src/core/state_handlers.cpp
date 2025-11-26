@@ -14,6 +14,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <ctime>
 
 using std::cin;
 using std::cout;
@@ -54,25 +55,29 @@ void handleMainMenu(string userInput, string lowerInput, string &state)
     }
 }
 
-void handleLoanCategory(string userInput, string lowerInput, string &state)
+void handleLoanCategory(string userInput, string lowerInput, string &state, string &currentLoanType)
 {
     cout << uttrObj.getResponse(lowerInput) << endl;
 
     if (userInput == "H" || userInput == "h")
     {
         state = "HOME_LOAN_AREA";
+        currentLoanType = "Home";
     }
     else if (userInput == "C" || userInput == "c")
     {
         state = "CAR_LOAN";
+        currentLoanType = "Car";
     }
     else if (userInput == "E" || userInput == "e")
     {
         state = "SCOOTER_LOAN_AREA";
+        currentLoanType = "Scooter";
     }
     else if (userInput == "P" || userInput == "p")
     {
         state = "PERSONAL_LOAN";
+        currentLoanType = "Personal";
     }
     else if (userInput == "A" || userInput == "a")
     {
@@ -501,6 +506,12 @@ void handleCheckStatus(string &state)
 {
     printSectionHeader("CHECK APPLICATION STATUS");
 
+    
+    if (!appManager.loadApplications("output/applications.txt")) 
+    {
+        printError("Warning: Could not refresh data. Showing cached status.");
+    }
+
     cout << "Enter your CNIC (without dashes) >> ";
     string input;
     getline(cin, input);
@@ -549,26 +560,17 @@ void handleResumeApplication(string &state)
     getline(cin, id);
     id = trim(id);
 
-    if (id == "X" || id == "x")
-    {
-        state = "MAIN_MENU";
-        return;
-    }
+    if (id == "X" || id == "x") { state = "MAIN_MENU"; return; }
 
     cout << "Enter CNIC: ";
     string cnic;
     getline(cin, cnic);
     cnic = trim(cnic);
 
-    if (cnic == "X" || cnic == "x")
-    {
-        state = "MAIN_MENU";
-        return;
-    }
+    if (cnic == "X" || cnic == "x") { state = "MAIN_MENU"; return; }
 
     Application *app = appManager.getApplicationByID(id);
 
-    // Validate application exists and CNIC matches
     if (app == nullptr || app->getCNIC() != cnic)
     {
         printError("Invalid Application ID or CNIC.");
@@ -578,7 +580,6 @@ void handleResumeApplication(string &state)
         return;
     }
 
-    // Check if already completed
     if (app->getStatus() == "Submitted" || app->getStatus() == "Approved" || app->getStatus() == "Rejected")
     {
         printWarning("This application is already completed/submitted.");
@@ -589,37 +590,52 @@ void handleResumeApplication(string &state)
         return;
     }
 
-    // Resume flow based on checkpoint
     printSuccess("Resuming application from Checkpoint " + std::to_string(app->getCheckpoint()) + "...");
 
+    // Checkpoint 1: Personal Info
     if (app->getCheckpoint() < 1)
     {
-        if (!collectPersonalInformation(*app, state))
+        if (!collectPersonalInformation(*app, state)) {
+            // User pressed X
+            cout << "\n" << COLOR_GREEN << ">> Progress saved as draft (ID: " << app->getApplicationID() << ")" << COLOR_RESET << endl;
             return;
+        }
         app->setCheckpoint(1);
         appManager.saveApplication(*app);
+        cout << ">> Personal Information saved." << endl;
     }
 
+    // Checkpoint 2: Financial Info
     if (app->getCheckpoint() < 2)
     {
-        if (!collectFinancialInformation(*app, state))
+        if (!collectFinancialInformation(*app, state)) {
+            cout << "\n" << COLOR_GREEN << ">> Progress saved at Checkpoint 1 (ID: " << app->getApplicationID() << ")" << COLOR_RESET << endl;
             return;
+        }
         app->setCheckpoint(2);
         appManager.saveApplication(*app);
+        cout << ">> Financial Information saved." << endl;
     }
 
+    // Checkpoint 3: Reference Info
     if (app->getCheckpoint() < 3)
     {
-        if (!collectReferenceInformation(*app, state))
+        if (!collectReferenceInformation(*app, state)) {
+            cout << "\n" << COLOR_GREEN << ">> Progress saved at Checkpoint 2 (ID: " << app->getApplicationID() << ")" << COLOR_RESET << endl;
             return;
+        }
         app->setCheckpoint(3);
         appManager.saveApplication(*app);
+        cout << ">> Reference Information saved." << endl;
     }
 
-    if (!collectDocuments(*app, state))
+    // Checkpoint 4: Documents
+    if (!collectDocuments(*app, state)) {
+        cout << "\n" << COLOR_GREEN << ">> Progress saved at Checkpoint 3 (ID: " << app->getApplicationID() << ")" << COLOR_RESET << endl;
         return;
+    }
 
-    // Finalize submission
+    // Finalize
     app->setStatus("Submitted");
     app->setCheckpoint(4);
     appManager.saveApplication(*app);
@@ -633,45 +649,82 @@ void handleResumeApplication(string &state)
 
 // ==================== APPLICATION SUBMISSION HANDLER ====================
 
-void handleApplicationSubmission(string &state, string &currentArea)
+void handleApplicationSubmission(string &state, string &currentArea, string &currentLoanType, string &currentCarMake, string &currentScooterMake, string &currentCategory)
 {
     Application newApp;
     newApp.setApplicationID(appManager.generateApplicationID());
-    newApp.setLoanDetails(currentArea, "Standard Plan");
 
-    // Display application header
-    cout << "\n"
-         << COLOR_YELLOW << "=============================================" << endl;
+    string finalDetails = "Standard Plan";
+    
+    if (currentLoanType == "Home") {
+        finalDetails = currentArea;
+    } else if (currentLoanType == "Car") {
+        finalDetails = currentCarMake;
+    } else if (currentLoanType == "Scooter") {
+        finalDetails = currentScooterMake;
+    } else if (currentLoanType == "Personal") {
+        finalDetails = currentCategory;
+    }
+
+    newApp.setLoanDetails(currentLoanType, finalDetails);
+
+    cout << "\n" << COLOR_YELLOW << "=============================================" << endl;
     cout << "       LOAN APPLICATION FORM" << endl;
     cout << "=============================================" << endl;
-    cout << "You are applying for: " << currentArea << endl;
+    cout << "You are applying for: " << currentLoanType << " Loan (" << finalDetails << ")" << endl;
     cout << "Application ID: " << newApp.getApplicationID() << endl;
     cout << "=============================================" << endl;
-    cout << "Type 'X' at any time to save and exit (Resume later)\n"
-         << COLOR_RESET << endl;
+    cout << "Type 'X' at any time to save and exit (Resume later)\n" << COLOR_RESET << endl;
 
-    // Collect information with checkpoints
-    if (!collectPersonalInformation(newApp, state))
+    // We save immediately to reserve the ID
+    appManager.saveApplication(newApp);
+
+    // Checkpoint 1: Personal Info
+    if (!collectPersonalInformation(newApp, state)) {
+        // User pressed X
+        cout << "\n" << COLOR_GREEN << ">> Application saved as draft (ID: " << newApp.getApplicationID() << ")" << COLOR_RESET << endl;
         return;
+    }
     newApp.setCheckpoint(1);
     appManager.saveApplication(newApp);
+    cout << ">> Personal Information saved." << endl;
 
-    if (!collectFinancialInformation(newApp, state))
+    // Checkpoint 2: Financial Info
+    if (!collectFinancialInformation(newApp, state)) {
+        cout << "\n" << COLOR_GREEN << ">> Progress saved at Checkpoint 1 (ID: " << newApp.getApplicationID() << ")" << COLOR_RESET << endl;
         return;
+    }
     newApp.setCheckpoint(2);
     appManager.saveApplication(newApp);
+    cout << ">> Financial Information saved." << endl;
 
-    if (!collectReferenceInformation(newApp, state))
+    // Checkpoint 3: Reference Info
+    if (!collectReferenceInformation(newApp, state)) {
+        cout << "\n" << COLOR_GREEN << ">> Progress saved at Checkpoint 2 (ID: " << newApp.getApplicationID() << ")" << COLOR_RESET << endl;
         return;
+    }
     newApp.setCheckpoint(3);
     appManager.saveApplication(newApp);
+    cout << ">> Reference Information saved." << endl;
 
-    if (!collectDocuments(newApp, state))
+    // Checkpoint 4: Documents
+    if (!collectDocuments(newApp, state)) {
+        cout << "\n" << COLOR_GREEN << ">> Progress saved at Checkpoint 3 (ID: " << newApp.getApplicationID() << ")" << COLOR_RESET << endl;
         return;
+    }
 
     // Finalize submission
     newApp.setStatus("Submitted");
     newApp.setCheckpoint(4);
+    
+    // Calculate todays date to save as "submissionDate"
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    char buffer[20];
+    // Format: DD-MM-YYYY
+    sprintf(buffer, "%02d-%02d-%04d", ltm->tm_mday, 1 + ltm->tm_mon, 1900 + ltm->tm_year);
+    newApp.setSubmissionDate(string(buffer));
+
     appManager.saveApplication(newApp);
 
     printSuccess("Application Submitted Successfully!");

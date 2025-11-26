@@ -1,0 +1,81 @@
+====================================================
+TEST CASES: Multi-Session & Resume Functionality
+====================================================
+
+SETUP:
+- Ensure applications.txt exists.
+- Run chatbot.exe.
+
+====================================================
+SECTION 1: CHECKPOINT SAVING
+====================================================
+
+Test ID:       MS-001
+Purpose:       Verify saving after Personal Info (Checkpoint 1)
+Input:         A > H > 1 (Select Plan) > S (Submit)
+               Fill Personal Info (Name, CNIC, etc.)
+               When asked for "Annual Income", type: X (to exit)
+Expected:      Shows: "Application saved at Checkpoint 1."
+               Shows: "Your Application ID is: [ID]"
+               Returns to Main Menu or Exits
+Actual:        Saved successfully
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       MS-002
+Purpose:       Verify saving after Financial Info (Checkpoint 2)
+Input:         Start new app (A > C > 1 > S)
+               Fill Personal Info
+               Fill Financial Info
+               When asked for "Referee 1 Name", type: X
+Expected:      Shows: "Application saved at Checkpoint 2."
+               Shows ID
+Actual:        Saved successfully
+Result:        Pass
+
+====================================================
+SECTION 2: RESUMING APPLICATIONS
+====================================================
+
+Test ID:       MS-003
+Purpose:       Resume application from Checkpoint 1
+Input:         5 (Resume) > [ID from MS-001] > [CNIC from MS-001]
+Expected:      Shows: "Resuming application from Checkpoint 1..."
+               Skips Personal Info
+               Immediately asks: "Enter Annual Income:"
+Actual:        Resumed correctly at Financial step
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       MS-004
+Purpose:       Resume with wrong CNIC (Security Check)
+Input:         5 (Resume) > [Valid ID] > [Wrong CNIC]
+Expected:      Shows: "Invalid Application ID or CNIC."
+               Returns to Main Menu
+Actual:        Blocked access
+Result:        Pass
+
+----------------------------------------------------
+
+Test ID:       MS-005
+Purpose:       Try to resume a COMPLETED application
+Input:         5 (Resume) > [ID of an app that is already 'Submitted'] > [CNIC]
+Expected:      Shows: "This application is already completed/submitted."
+               Does not allow editing
+Actual:        Blocked access to completed app
+Result:        Pass
+
+====================================================
+SECTION 3: FIELD VALIDATION (Increment 3 Req)
+====================================================
+
+Test ID:       MS-006
+Purpose:       Validate numeric fields (Income)
+Input:         (During application) Enter Income: "Ten Thousand" or "10,000"
+Expected:      Shows: "Invalid input. Please enter numeric value without commas."
+               Prompts again
+Actual:        caught invalid input
+Result:        Pass
+

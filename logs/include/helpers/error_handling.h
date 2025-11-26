@@ -40,7 +40,14 @@ bool isValidEmail(const string& email);
  * @param date: The date string to validate
  * @return true if format is correct and values are in valid ranges, false otherwise
  */
-bool isValidDate(const string& date);
+bool isValidIssueDate(const string& date);
+
+/**
+ * @brief Validates a date in DD-MM-YYYY format
+ * @param date: The date string to validate
+ * @return true if format is correct and values are in valid ranges, false otherwise
+ */
+bool isValidExpiryDate(const string& date);
 
 /**
  * @brief Validates a positive integer (no leading zeros, digits only)
